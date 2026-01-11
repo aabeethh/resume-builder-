@@ -11,17 +11,23 @@
    
     <form>
          <h1>Login</h1>
-        <div>
-             <label>username</label>  
-             <input type="text" required>
-        </div>
-        <div>
-             <label>password</label>  
-             <input type="password" required>
-        </div>
+                    <div>
+                    
+                    <input type="username" placeholder="username" required>
+                    </div>
+                    <div>
+                    <input type="password" placeholder="password" required> 
+                   
+                    </div>
         <button type="submit">Submit</button>
+
+        <p>
+            dont have an account ?
+            <a href="Register.html">Register here</a>
+        </p>
     
 </form>
+
 
 <style>
 
@@ -31,8 +37,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  padding:40px;
-  
+  padding: 60px;  
   background-color:rgba(255, 255, 255, 0.8);
   border-radius: 30px;
   box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
@@ -41,6 +46,7 @@
     form h1{
         color: teal;
         font-family: sans-serif;
+        font-size: 45px;
     }
 
     
@@ -60,19 +66,32 @@
     }
     button{
        margin-top: 20px;
-        padding:10px;      
+        padding:10px;
+        padding-left: 30px;   
+        padding-right: 30px;    
         background: rgb(64, 154, 199);
         border-radius:10px;
         cursor :pointer;
+        font-size: 20px;
      
     }
     button:hover{
   
-        background: rgb(255, 255, 255);
+        background: rgba(255, 255, 255, 0.8); ;
+    }
+
+    p{
+        font-size: 15px;
+    }
+
+    form div input{
+
+        padding:10px;
+        border-radius: 10px;
+        border: 1px solid gray;
+        font-size: 20px;
     }
 </style>
-
-
 
 </body>
 </html>
