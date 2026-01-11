@@ -1,0 +1,30 @@
+h1{
+    text-align: center;
+    color: blue;
+    font-family: Verdana;
+}
+p{
+    margin: 10px 0;
+    padding: 50px;
+    font-size: 20px;
+    line-height: 1.5;
+    color: #333333;
+    font-family: sans-serif;
+}
+div{
+    margin :20px;
+    font-size: large;
+}
+body{
+    
+    position: relative;
+}
+nav{
+    display:flex;
+    justify-content: center;
+    justify-self: center;
+    position: absolute;
+   top:0;
+   background-color: lightskyblue;
+
+}
