@@ -13,43 +13,62 @@
          <h1>Login</h1>
         <div>
              <label>username</label>  
-             <input type="text">
+             <input type="text" required>
         </div>
         <div>
              <label>password</label>  
-             <input type="password">
+             <input type="password" required>
         </div>
+        <button type="submit">Submit</button>
     
 </form>
 
 <style>
-*{
-    box-sizing: border-box;
-}
+
     form{
         display: flex;
   flex-direction: column; 
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin: 80vh;
-  padding:50px;
-  padding-left:30px;
-  background-color: white;
+  padding:40px;
+  
+  background-color:rgba(255, 255, 255, 0.8);
   border-radius: 30px;
-  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
   font-family: Arial, sans-serif;
     }
     form h1{
         color: teal;
+        font-family: sans-serif;
     }
 
     
     body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+          height: 100vh; 
         overflow: hidden;
-       
-        background-color: antiquewhite;
-        background-image:url("Gemini_Generated_Image_82sewa82sewa82se.png")
+
+        box-sizing: border-box;
+      
+        background-image:url("Gemini_Generated_Image_82sewa82sewa82se.png");
+         background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+    }
+    button{
+       margin-top: 20px;
+        padding:10px;      
+        background: rgb(64, 154, 199);
+        border-radius:10px;
+        cursor :pointer;
+     
+    }
+    button:hover{
+  
+        background: rgb(255, 255, 255);
     }
 </style>
 
