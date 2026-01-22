@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            padding: 40px;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* ACTION PANEL */
+        .actions {
+            width: 220px;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            height: fit-content;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .actions h3 {
+            font-family: "Poppins", sans-serif;
+            margin-bottom: 15px;
+        }
+
+        .actions button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background-color: #eee;
+        }
+
+        .download-btn {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background-color: #5a0cb0;
+        }
+
+        /* RESUME PREVIEW */
+        .resume {
+            flex: 1;
+            background: white;
+            padding: 40px 50px;
+          
+        }
+
+        .resume h1 {
+            font-family: "Poppins", sans-serif;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .resume .contact {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            font-family: "Poppins", sans-serif;
+            font-size: 18px;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+        }
+
+        .section p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .actions {
+                display: none;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // get stored resume data
+    const resumeData = JSON.parse(localStorage.getItem("resumeData"));
+
+    if (!resumeData) {
+        alert("No resume data found. Please fill the resume form first.");
+        window.location.href = "/resume-form.html";
+        return;
+    }
+
+    // inject data into preview
+    document.getElementById("fullName").textContent = resumeData.name;
+    document.getElementById("email").textContent = resumeData.email;
+    document.getElementById("phone").textContent = resumeData.phone;
+    document.getElementById("summary").textContent = resumeData.summary;
+    document.getElementById("education").textContent = resumeData.education;
+    document.getElementById("experience").textContent = resumeData.experience;
+    document.getElementById("skills").textContent = resumeData.skills;
+    document.getElementById("projects").textContent = resumeData.projects;
+
+});
+</script>
+
+
+<body>
+
+<div class="container">
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+        <h3>Actions</h3>
+        <button class="edit-btn" onclick="editResume()">Edit Resume</button>
+        <button class="download-btn" onclick="downloadResume()">Download / Print</button>
+    </div>
+
+   <!-- RESUME PREVIEW -->
+<div class="resume" id="resumeContent">
+
+    <h1 id="fullName"></h1>
+
+    <div class="contact">
+        <span id="email"></span> | 
+        <span id="phone"></span>
+    </div>
+
+    <div class="section">
+        <h3>Professional Summary</h3>
+        <p id="summary"></p>
+    </div>
+
+    <div class="section">
+        <h3>Education</h3>
+        <p id="education"></p>
+    </div>
+
+    <div class="section">
+        <h3>Work Experience</h3>
+        <p id="experience"></p>
+    </div>
+
+    <div class="section">
+        <h3>Skills</h3>
+        <p id="skills"></p>
+    </div>
+
+    <div class="section">
+        <h3>Projects</h3>
+        <p id="projects"></p>
+    </div>
+
+</div>
+
+
+<script>
+function editResume() {
+    window.location.href = "/resume-form.html";
+}
+
+function downloadResume() {
+    window.print();
+}
+</script>
+
+</body>
+</html>

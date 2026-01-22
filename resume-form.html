@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Details | Resume Builder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 50px;
+            border-radius: 18px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-family: "Poppins", sans-serif;
+            color: #6a0dad;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            font-family: "Poppins", sans-serif;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #5a0cb0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Resume Details</h2>
+    <p class="subtitle">
+        Fill in your details to generate an ATS-friendly resume.
+    </p>
+
+   <form onsubmit="goToTemplates(event)">
+
+    <!-- PERSONAL DETAILS -->
+    <div class="section">
+        <h3>Personal Information</h3>
+        <div class="field-group">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="text" id="phone" placeholder="Phone Number" required>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="section">
+        <h3>Professional Summary</h3>
+        <textarea id="summary" placeholder="Brief summary about yourself"></textarea>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section">
+        <h3>Education</h3>
+        <textarea id="education" placeholder="Degree, Institution, Year"></textarea>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="section">
+        <h3>Work Experience</h3>
+        <textarea id="experience" placeholder="Job title, company, responsibilities"></textarea>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section">
+        <h3>Skills</h3>
+        <textarea id="skills" placeholder="Example: Java, HTML, CSS, JavaScript, SQL"></textarea>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section">
+        <h3>Projects (Optional)</h3>
+        <textarea id="projects" placeholder="Project title and description"></textarea>
+    </div>
+
+    <!-- SUBMIT -->
+    <button type="submit" class="submit-btn">
+        Continue to Template Selection
+    </button>
+
+</form>
+
+
+</div>
+
+<script>
+function goToTemplates(event) {
+    event.preventDefault();
+
+    const resumeData = {
+        name: document.getElementById("fullName").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        summary: document.getElementById("summary").value,
+        education: document.getElementById("education").value,
+        experience: document.getElementById("experience").value,
+        skills: document.getElementById("skills").value,
+        projects: document.getElementById("projects").value
+    };
+
+    // store resume data
+    localStorage.setItem("resumeData", JSON.stringify(resumeData));
+
+    window.location.href = "/template-selection.html";
+}
+</script>
+
+
+</body>
+</html>

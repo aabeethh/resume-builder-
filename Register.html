@@ -1,90 +1,120 @@
-<!Doctype html>
-<html lang ="en">
-    <head>
-        <meta charset="UTF8">
-        <meta name="viewport" content="width=device-width ,initial-scale=0.2">
-        <title>register page </title>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register | Resume Builder</title>
 
-    <body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <form>
-            <h1>
-        Get Started 
-            </h1>
-               <div>
-                    
-                    <input type="username" id="username"placeholder="username" required>
-               </div>
-               <div>
-                    <input type="password" id="password" placeholder="password" required> 
-                   
-               </div>
-             
-                 <button onclick="register()">Register</button>
-                    <p>
-                already have a account ?
-                <a href="login.html">login</a>
-               </p>
-        </form>
-        
-             
-              
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            font-family: Arial, sans-serif;
+        }
 
-        <style>
-            body{
-                display:flex;
-                flex-direction: column;
-                justify-content:center ;
-                align-items:center;
-                height:100vh;
-                overflow:hidden;
-                background-color: rgba(129, 130, 121, 0.375);
-               margin:0px;
-               background-image:url("Gemini_Generated_Image_ujrs3gujrs3gujrs.png");
-               background-size:cover;
-            }
-            form{
-                  display:flex;
-                flex-direction: column;
-                justify-content:center ;
-                align-items:center;
-                gap: 20px;
-                  padding:70px;
-                padding-bottom:30px;
-                padding-top:30px;
-                background-color:rgba(255,255,255,0.6);
-                box-shadow:10px 10px 30px rgba(0,0,0,0.7);
-                border-radius:30px;
-               
-            }
-            Form h1{
-                color:teal;
-                font-family:sans-serif;
-                font-size:40px;
-            }
-            button{
-                margin-top:20px;
-                background:skyblue;
-                border-radius:10px;
-                padding: 15px;
-                border:none;
-                cursor:pointer;
-                font-size :15px;
-            }
-            button:hover{
-                background: rgba(255, 255, 255, 0.8); 
-            }
-            div input{
-                padding:10px;
-                border-radius:10px;
-                font-size: 15px;
-           
-            }
-            p{
-                font-size: 15px;
-            }
+        .register-container {
+            background-color: white;
+            padding: 40px 35px;
+            width: 360px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
 
-        </style>
-    </body>
- </html>
+        .register-container h1 {
+            margin-bottom: 25px;
+            font-size: 36px;
+            color: #6a0dad;
+        }
+
+        .register-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        .register-container button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .register-container button:hover {
+            background-color: #5a0cb0;
+        }
+
+        .register-container p {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .register-container a {
+            color: #6a0dad;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form class="register-container" onsubmit="register(event)">
+        <h1>Get Started</h1>
+
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <button type="submit">Create Account</button>
+
+        <p>
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+    </form>
+
+    <script>
+
+  
+function register(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.message.includes("successfully")) {
+            window.location.href = "login.html";
+        }
+    });
+}
+</script>
+
+</body>
+</html>

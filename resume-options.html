@@ -1,0 +1,114 @@
+<body>
+
+<div class="container">
+
+    <h2>Create Your Resume</h2>
+    <p class="subtitle">
+        Choose how you want to start building your resume
+    </p>
+
+    <div class="options">
+
+        <!-- UPLOAD RESUME -->
+        <div class="option-card">
+            <h3>Upload Existing Resume</h3>
+            <p>Drag & drop your resume here (PDF only)</p>
+
+            <div class="drop-zone" id="dropZone">
+                <span id="dropText">Drop resume here or click to upload</span>
+                <input type="file" id="resumeFile" accept=".pdf" hidden>
+            </div>
+
+            <button onclick="uploadResume()">Continue</button>
+        </div>
+
+        <!-- MANUAL CREATION (PRIORITY) -->
+        <div class="option-card primary">
+            <h3>Start From Scratch</h3>
+            <p>Enter resume details manually and build your resume step by step.</p>
+            <button onclick="startManual()">Enter Details</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function startManual() {
+  window.location.href = "/resume-form.html";
+}
+
+function uploadResume() {
+  window.location.href = "/template-selection.html";
+}
+</script>
+<style>
+  /* PAGE BACKGROUND */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a0dad, #9b59b6);
+    padding: 60px;
+}
+
+/* MAIN CONTENT WRAPPER (OPTIONAL BUT RECOMMENDED) */
+.container {
+    background: #ffffff;
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 50px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+}
+
+/* HEADER FONT CHANGE */
+h1, h2 {
+    font-family: "Poppins", "Segoe UI", sans-serif;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+/* SUBTITLE */
+.subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+/* SECTION HEADINGS */
+h3 {
+    font-family: "Poppins", sans-serif;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* DRAG & DROP AREA */
+.drop-zone {
+    border: 2px dashed #6a0dad;
+    border-radius: 12px;
+    padding: 28px;
+    background-color: #f8f4ff;
+    color: #6a0dad;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+}
+
+/* BUTTONS */
+button {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #5a0cb0;
+}
+
+</style>
+</body>

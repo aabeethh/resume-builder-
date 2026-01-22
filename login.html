@@ -1,97 +1,121 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login</title>
- <meta charset="UTF-8">
- <meta name ="viewport" content="width:device-width initial-scale:1.0">
+    <title>Login | Resume Builder</title>
 
-</head>   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px 35px;
+            width: 350px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            margin-bottom: 25px;
+            font-size: 36px;
+            color: #6a0dad;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        .login-container button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-container button:hover {
+            background-color: #5a0cb0;
+        }
+
+        .login-container p {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .login-container a {
+            color: #6a0dad;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
 <body>
 
-   
-    <form>
-         <h1>Login</h1>
-                    <div>
-                    
-                    <input type="username" placeholder="username" required>
-                    </div>
-                    <div>
-                    <input type="password" placeholder="password" required> 
-                   
-                    </div>
-        <button type="submit">Submit</button>
+    <form onsubmit="login(event)" class="login-container">
+
+        <h1>Login</h1>
+
+     <input type="text" id="username" placeholder="Username or Email" required>
+<input type="password" id="password" placeholder="Password" required>
+
+        <button type="submit">Login</button>
 
         <p>
-            dont have an account ?
-            <a href="Register.html">Register here</a>
+            Don’t have an account?
+            <a href="register.html">Register here</a>
         </p>
-    
-</form>
+    </form>
 
+    <script>
+function login(event) {
+    event.preventDefault();
 
-<style>
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-    form{
-        display: flex;
-  flex-direction: column; 
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  padding: 60px; 
-  padding-bottom:30px;
-  padding-top:30px; 
-  background-color:rgba(255, 255, 255, 0.4);
-  border-radius: 30px;
-  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
-  font-family: Arial, sans-serif;
-    }
-
-    form h1{
-        color: teal;
-        font-family: sans-serif;
-        font-size: 40px;
-    }
-
-    
-    body{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-          height: 100vh; 
-         overflow: hidden;
-         box-sizing: border-box;
-        background-image:url("ChatGPT Image Jan 14, 2026, 11_00_43 AM.png");
-         background-size: cover;
-        
-    }
-    button{
-       margin-top: 20px;
-        padding:10px;
-        padding-left: 30px;   
-        padding-right: 30px;    
-        background: rgba(64, 154, 199, 0.8);
-        border-radius:10px;
-        border:none;
-        cursor:pointer;
-        font-size:10px;
-     }
-    button:hover{
-  
-        background: rgba(255, 255, 255, 0.8); ;
-    }
-
-    p{
-        font-size: 10px;
-    }
-
-    form div input{
-
-        padding:10px;
-        border-radius: 10px;
-        border: 1px solid gray;
-        font-size: 15px;
-    }
-</style>
+    fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Login successful");
+            window.location.href = "dashboard.html";
+        } else {
+            alert("Invalid username or password");
+        }
+    });
+}
+</script>
 
 </body>
 </html>

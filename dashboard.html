@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dashboard | Resume Builder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+    h1 {
+      color: #6a0dad;
+    }
+    .card-container {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      width: 280px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .card h3 {
+      margin-bottom: 10px;
+    }
+    .card button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Welcome to Your Dashboard</h1>
+<p>Start by creating your resume. You can optionally analyze it later.</p>
+
+<div class="card-container">
+
+  <!-- PRIORITY MODULE -->
+  <div class="card">
+    <h3>Create Resume (Recommended)</h3>
+    <p>Build your resume from scratch or upload an existing one.</p>
+    <button onclick="location.href='resume-options.html'">
+      Create Resume
+    </button>
+  </div>
+
+  <!-- OPTIONAL -->
+  <div class="card">
+    <h3>Check ATS Score</h3>
+    <p>Upload your resume and check ATS compatibility.</p>
+    <button onclick="location.href='ats.html'">
+      Check ATS
+    </button>
+  </div>
+
+  <!-- OPTIONAL -->
+  <div class="card">
+    <h3>Job Role Optimization</h3>
+    <p>Check how suitable your resume is for a job role.</p>
+    <button onclick="location.href='job-role.html'">
+      Optimize Resume
+    </button>
+  </div>
+
+</div>
+
+</body>
+</html>

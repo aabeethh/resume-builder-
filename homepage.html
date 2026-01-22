@@ -1,64 +1,174 @@
-<!Doctype html>
-<html lang="eng">
-    <html>
-
-    <head>
-        <title>
-            Resume Builder 
-        </title>
-    </head>
-
-    <body>
-    
-        <h1>
-            Create your resume 
-        </h1>
-
-        <p>
-           / Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem deserunt illum necessitatibus labore nulla nostrum nemo temporibus ex recusandae, excepturi quo architecto dolore, dolorum, repellat esse. Quod commodi recusandae in?
-        </p>
-
-        <nav>
-            <a href="">profile</a>
-        
-            <a href="">home</a>
-                <a href="">Templates</a>
-                    <a href="">download</a>
-                <a href="">check your ats </a>
-         </nav>
-
-    <p>
-       Create an account to get started 
-       <button>
-        <a href="Register.html">Register</a>
-    </button>
-    
-    </p>
-    </body>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Builder</title>
 
     <style>
-nav{
-    display:flex;
-    justify-content:center;
-    background-color:blueviolet;
-}
-h1{
-     display:flex;
-    justify-content:center;
-    height:10vh;
-    font-size:50px;
-    color:black;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
 
-}
-p{
-    padding:40px;
-}
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: #6a0dad;
+            color: white;
+        }
 
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background-color: white;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: auto;
+            color: #444;
+        }
+
+        /* Buttons */
+        .btn-container {
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6a0dad;
+            border: 2px solid #6a0dad;
+        }
+
+        /* Features */
+        .features {
+            background-color: #f0e6ff;
+            padding: 60px 40px;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .feature-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            width: 250px;
+            background-color: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #6a0dad;
+            color: white;
+        }
     </style>
+</head>
 
+<body>
 
+    <!-- NAVBAR -->
+    <nav>
+        <h2>Resume Builder</h2>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
 
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Create Your Professional Resume</h1>
+        <p>
+            Build an ATS-friendly resume using professional templates.
+            Enter your details, choose a template, and generate a job-ready resume
+            with optional ATS score checking and job role optimization.
+        </p>
 
-    </html>
+        <div class="btn-container">
+            <a href="register.html">
+                <button class="btn btn-primary">Create an Account</button>
+            </a>
+            <a href="login.html">
+                <button class="btn btn-secondary">Login</button>
+            </a>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features">
+        <h2>Why Use This Resume Builder?</h2>
+
+        <div class="feature-list">
+            <div class="feature">
+                <h3>ATS-Friendly Templates</h3>
+                <p>Single-column layouts designed to pass applicant tracking systems.</p>
+            </div>
+
+            <div class="feature">
+                <h3>Easy Resume Creation</h3>
+                <p>Fill simple forms and generate your resume instantly.</p>
+            </div>
+
+            <div class="feature">
+                <h3>ATS Score Checker</h3>
+                <p>Upload your resume and check its ATS compatibility.</p>
+            </div>
+
+            <div class="feature">
+                <h3>Job Role Optimization</h3>
+                <p>Analyze how well your resume matches a specific job role.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Resume Builder Project | Semester Project</p>
+    </footer>
+
+</body>
+</html>
