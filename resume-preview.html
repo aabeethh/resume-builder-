@@ -33,7 +33,7 @@ body {
 }
 
 .actions h3 {
-    font-family: Poppins;
+    font-family:Poppins;
 }
 
 .actions button {
@@ -60,7 +60,7 @@ body {
 }
 
 /* ================= TEMPLATE 1 ================= */
-/* CLEAN SINGLE COLUMN (Michael Harris) */
+
 .template-clean h1 {
     font-size: 34px;
 }
@@ -75,7 +75,7 @@ body {
 }
 
 /* ================= TEMPLATE 2 ================= */
-/* TWO COLUMN SIDEBAR (Andrew / Emily) */
+
 .template-sidebar {
     display: grid;
     grid-template-columns: 30% 70%;
@@ -95,7 +95,7 @@ body {
 }
 
 /* ================= TEMPLATE 3 ================= */
-/* ATS PROFESSIONAL */
+
 .template-ats h3 {
     border-bottom: 1px solid #000;
     text-transform: uppercase;
@@ -116,9 +116,18 @@ body {
 <!-- ACTIONS -->
 <div class="actions">
     <h3>Actions</h3>
+
     <button onclick="editResume()">Edit Resume</button>
-    <button class="download-btn" onclick="window.print()">Download / Print</button>
+
+    <button onclick="changeTemplate()">Change Template</button>
+
+    <button onclick="goToCreate()">Create New Resume</button>
+
+    <button class="download-btn" onclick="window.print()">
+        Download / Print
+    </button>
 </div>
+
 
 <!-- ================= TEMPLATE 1 ================= -->
 <div class="resume template-clean" id="template-clean">
@@ -247,7 +256,49 @@ set("skills3", data.skills);
 function editResume() {
     window.location.href = "/form-edit.html";
 }
+//changes the template being viewed
+const templates = ["clean", "sidebar", "ats"];
+
+function changeTemplate() {
+    let current = localStorage.getItem("selectedTemplate") || "clean";
+    let index = templates.indexOf(current);
+
+    // move to next template
+    let nextIndex = (index + 1) % templates.length;
+    let nextTemplate = templates[nextIndex];
+
+    localStorage.setItem("selectedTemplate", nextTemplate);
+
+    // hide all templates
+    document.querySelectorAll(".resume").forEach(r => {
+        r.style.display = "none";
+    });
+
+    // show new template
+    const map = {
+        clean: "template-clean",
+        sidebar: "template-sidebar",
+        ats: "template-ats"
+    };
+
+    document.getElementById(map[nextTemplate]).style.display = "block";
+}
+//goes to the resume creation page
+
+function goToCreate() {
+    // optional: clear previous resume data
+    localStorage.removeItem("resumeData");
+    localStorage.removeItem("resumeSource");
+    localStorage.removeItem("pdfResumeText");
+    localStorage.removeItem("selectedTemplate");
+
+    window.location.href = "/resume-options.html";
+}
+
+
 </script>
+
+
 
 </body>
 </html>
