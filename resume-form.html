@@ -85,10 +85,45 @@
         }
     </style>
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEditMode = urlParams.get("edit");
 
+    if (!isEditMode) return;
 
+    const resumeSource = localStorage.getItem("resumeSource");
 
+    // ===== MANUAL FORM EDIT =====
+    if (resumeSource === "manual") {
+        const resumeData = JSON.parse(localStorage.getItem("resumeData"));
+        if (!resumeData) return;
+
+        document.getElementById("fullName").value = resumeData.name || "";
+        document.getElementById("email").value = resumeData.email || "";
+        document.getElementById("phone").value = resumeData.phone || "";
+        document.getElementById("summary").value = resumeData.summary || "";
+        document.getElementById("education").value = resumeData.education || "";
+        document.getElementById("experience").value = resumeData.experience || "";
+        document.getElementById("skills").value = resumeData.skills || "";
+        document.getElementById("projects").value = resumeData.projects || "";
+    }
+
+    // ===== PDF UPLOAD EDIT =====
+    if (resumeSource === "pdf") {
+        const pdfText = localStorage.getItem("pdfResumeText");
+        if (!pdfText) return;
+
+        // Basic auto-fill from extracted text
+        document.getElementById("fullName").value = "Extracted Resume";
+        document.getElementById("summary").value = pdfText.slice(0, 600);
+        document.getElementById("experience").value = pdfText.slice(600, 1400);
+        document.getElementById("skills").value = "Extracted from uploaded PDF";
+    }
+
+});
+</script>
 
 <body>
 
@@ -168,7 +203,7 @@ function goToTemplates(event) {
 
     // store resume data
     localStorage.setItem("resumeData", JSON.stringify(resumeData));
-    localStorage.setItem("resumeSource", "manual");
+
     window.location.href = "/template-selection.html";
 }
 </script>

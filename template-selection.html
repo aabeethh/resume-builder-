@@ -44,7 +44,8 @@
         }
 
         .template-card1 {
-            border: 2px solid #eee;
+            font-family: "Times New Roman", serif;
+        border: 2px solid #eee;
             border-radius: 14px;
             overflow: hidden;
             text-align: center;
@@ -109,27 +110,10 @@
     <div class="template-grid">
 
         <!-- TEMPLATE 1 -->
-        <div class="template-card">
-            <div class="template-preview">Template 1</div>
-            <h3>Classic Professional</h3>
-            <p>Simple single-column layout optimized for ATS.</p>
-            <button onclick="selectTemplate('classic')">Use Template</button>
-        </div>
+        <button onclick="selectTemplate('clean')">Use Template</button>
+<button onclick="selectTemplate('sidebar')">Use Template</button>
+<button onclick="selectTemplate('ats')">Use Template</button>
 
-        <!-- TEMPLATE 2 -->
-        <div class="template-card">
-            <div class="template-preview">Template 2</div>
-            <h3>Modern Clean</h3>
-            <p>Clean typography with ATS-compatible structure.</p>
-            <button onclick="selectTemplate('modern')">Use Template</button>
-        </div>
-
-        <!-- TEMPLATE 3 -->
-        <div class="template-card">
-            <div class="template-preview">Template 3</div>
-            <h3>Minimal Resume</h3>
-            <p>Minimal layout with clear section hierarchy.</p>
-            <button onclick="selectTemplate('minimal')">Use Template</button>
         </div>
 
     </div>
@@ -137,14 +121,20 @@
 </div>
 
 <script>
-function selectTemplate(templateName) {
-    // store chosen template (for later use)
-    localStorage.setItem("selectedTemplate", templateName);
 
-    // redirect to preview
+function selectTemplate(templateName) {
+    /*
+      Allowed values:
+      clean     → single column (Michael Harris)
+      sidebar   → two column (Andrew / Emily)
+      ats       → ATS professional
+    */
+    localStorage.setItem("selectedTemplate", templateName);
     window.location.href = "/resume-preview.html";
 }
 </script>
+
+
 
 </body>
 </html>

@@ -1,555 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Preview</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<title>Resume Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            min-height: 100vh;
-            padding: 30px;
-            color: #333;
-            line-height: 1.6;
-        }
+<style>
+/* ===== PAGE ===== */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a0dad, #9b59b6);
+    padding: 40px;
+}
 
-        .container {
-            display: flex;
-            gap: 40px;
-            max-width: 1300px;
-            margin: 0 auto;
-            align-items: flex-start;
-        }
+.container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
 
-        /* ACTION PANEL */
-        .actions {
-            width: 250px;
-            background: white;
-            padding: 30px 25px;
-            border-radius: 16px;
-            height: fit-content;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-            position: sticky;
-            top: 30px;
-        }
+/* ===== ACTION PANEL ===== */
+.actions {
+    width: 220px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    height: fit-content;
+}
 
-        .actions h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
+.actions h3 {
+    font-family: Poppins;
+}
 
-        .actions button {
-            width: 100%;
-            padding: 15px 20px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+.actions button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
 
-        .edit-btn {
-            background-color: #f8f9fa;
-            color: #444;
-            border: 1px solid #e0e0e0;
-        }
+.download-btn {
+    background: #6a0dad;
+    color: #fff;
+}
 
-        .edit-btn:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+/* ===== COMMON RESUME BASE ===== */
+.resume {
+    background: #fff;
+    padding: 40px;
+    border-radius: 18px;
+    flex: 1;
+    display: none;
+}
 
-        .download-btn {
-            background: linear-gradient(135deg, #6a0dad, #8a2be2);
-            color: white;
-            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3);
-        }
+/* ================= TEMPLATE 1 ================= */
+/* CLEAN SINGLE COLUMN (Michael Harris) */
+.template-clean h1 {
+    font-size: 34px;
+}
 
-        .download-btn:hover {
-            background: linear-gradient(135deg, #5a0cb0, #7b1fd8);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(106, 13, 173, 0.4);
-        }
+.template-clean h3 {
+    border-bottom: 2px solid #000;
+    margin-top: 25px;
+}
 
-        /* RESUME PREVIEW */
-        .resume {
-            flex: 1;
-            background: white;
-            padding: 50px 60px;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-            min-height: 800px;
-        }
+.template-clean ul {
+    padding-left: 20px;
+}
 
-        .resume-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 25px;
-            border-bottom: 3px solid #f0f0f0;
-        }
+/* ================= TEMPLATE 2 ================= */
+/* TWO COLUMN SIDEBAR (Andrew / Emily) */
+.template-sidebar {
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
 
-        .resume h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
+.sidebar {
+    background: #f2e8dc;
+    padding: 25px;
+}
 
-        .contact {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+.main {
+    padding: 30px;
+}
 
-        .contact span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.sidebar h3 {
+    border-bottom: 1px solid #000;
+}
 
-        .section {
-            margin-bottom: 35px;
-            page-break-inside: avoid;
-        }
+/* ================= TEMPLATE 3 ================= */
+/* ATS PROFESSIONAL */
+.template-ats h3 {
+    border-bottom: 1px solid #000;
+    text-transform: uppercase;
+    font-size: 14px;
+}
 
-        .section h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #6a0dad;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section h3 i {
-            color: #6a0dad;
-            font-size: 20px;
-        }
-
-        .section-content {
-            font-size: 15px;
-            color: #444;
-            line-height: 1.8;
-            white-space: pre-line;
-            padding-left: 5px;
-        }
-
-        .section-content ul {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-
-        .section-content li {
-            margin-bottom: 8px;
-        }
-
-        .section-content p {
-            margin-bottom: 12px;
-        }
-
-        .section-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Styles for extracted text */
-        .extracted-text {
-            background-color: #f8f9fa;
-            border-left: 4px solid #6a0dad;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .extracted-text p {
-            margin-bottom: 10px;
-        }
-
-        .info-note {
-            background-color: #e8f4ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #007bff;
-            font-size: 14px;
-        }
-
-        .info-note i {
-            color: #007bff;
-            margin-right: 10px;
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .container {
-                display: block;
-                max-width: none;
-            }
-            
-            .actions {
-                display: none;
-            }
-            
-            .resume {
-                box-shadow: none;
-                padding: 30px 40px;
-                border-radius: 0;
-                min-height: auto;
-                width: 100%;
-            }
-            
-            .section {
-                break-inside: avoid;
-            }
-            
-            .info-note, .extracted-text {
-                display: none;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1100px) {
-            .container {
-                flex-direction: column;
-                gap: 30px;
-            }
-            
-            .actions {
-                width: 100%;
-                position: static;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-            
-            .actions h3 {
-                width: 100%;
-            }
-            
-            .actions button {
-                flex: 1;
-                min-width: 200px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 20px;
-            }
-            
-            .resume {
-                padding: 30px;
-            }
-            
-            .resume h1 {
-                font-size: 28px;
-            }
-            
-            .section h3 {
-                font-size: 20px;
-            }
-            
-            .actions button {
-                min-width: 150px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-            
-            .resume {
-                padding: 25px;
-            }
-            
-            .actions {
-                padding: 20px;
-            }
-            
-            .actions button {
-                min-width: 100%;
-            }
-        }
-    </style>
+@media print {
+    body { background: none; padding: 0; }
+    .actions { display: none; }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- ACTION BUTTONS -->
-    <div class="actions">
-        <h3>Actions</h3>
-        <button class="edit-btn" onclick="editResume()">
-            <i class="fas fa-edit"></i> Edit Resume
-        </button>
-        <button class="download-btn" onclick="window.print()">
-            <i class="fas fa-download"></i> Download / Print
-        </button>
+<!-- ACTIONS -->
+<div class="actions">
+    <h3>Actions</h3>
+    <button onclick="editResume()">Edit Resume</button>
+    <button class="download-btn" onclick="window.print()">Download / Print</button>
+</div>
+
+<!-- ================= TEMPLATE 1 ================= -->
+<div class="resume template-clean" id="template-clean">
+    <h1 id="name"></h1>
+    <p id="contact"></p>
+
+    <h3>Professional Summary</h3>
+    <p id="summary"></p>
+
+    <h3>Work Experience</h3>
+    <p id="experience"></p>
+
+    <h3>Education</h3>
+    <p id="education"></p>
+
+    <h3>Skills</h3>
+    <ul id="skills"></ul>
+</div>
+
+<!-- ================= TEMPLATE 2 ================= -->
+<div class="resume template-sidebar" id="template-sidebar">
+    <div class="sidebar">
+        <h2 id="name2"></h2>
+        <p id="contact2"></p>
+
+        <h3>Skills</h3>
+        <ul id="skills2"></ul>
     </div>
 
-    <!-- RESUME CONTENT -->
-    <div class="resume" id="resumeContent">
-        <div class="resume-header">
-            <h1 id="fullName">Resume Preview</h1>
-            <div class="contact">
-                <span><i class="fas fa-envelope"></i> <span id="email"></span></span>
-                <span><i class="fas fa-phone"></i> <span id="phone"></span></span>
-            </div>
-        </div>
+    <div class="main">
+        <h3>Summary</h3>
+        <p id="summary2"></p>
 
-        <!-- Info note for uploaded resumes -->
-        <div class="info-note" id="uploadInfo" style="display: none;">
-            <i class="fas fa-info-circle"></i>
-            <span>This resume was created from an uploaded PDF. Click "Edit Resume" to refine the extracted content.</span>
-        </div>
+        <h3>Experience</h3>
+        <p id="experience2"></p>
 
-        <div class="section">
-            <h3><i class="fas fa-user-circle"></i> Professional Summary</h3>
-            <div class="section-content" id="summary"></div>
-            <div class="extracted-text" id="summaryExtracted" style="display: none;"></div>
-        </div>
-
-        <div class="section">
-            <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-            <div class="section-content" id="education"></div>
-            <div class="extracted-text" id="educationExtracted" style="display: none;"></div>
-        </div>
-
-        <div class="section">
-            <h3><i class="fas fa-briefcase"></i> Work Experience</h3>
-            <div class="section-content" id="experience"></div>
-            <div class="extracted-text" id="experienceExtracted" style="display: none;"></div>
-        </div>
-
-        <div class="section">
-            <h3><i class="fas fa-tools"></i> Skills</h3>
-            <div class="section-content" id="skills"></div>
-            <div class="extracted-text" id="skillsExtracted" style="display: none;"></div>
-        </div>
-
-        <div class="section">
-            <h3><i class="fas fa-project-diagram"></i> Projects</h3>
-            <div class="section-content" id="projects"></div>
-            <div class="extracted-text" id="projectsExtracted" style="display: none;"></div>
-        </div>
+        <h3>Education</h3>
+        <p id="education2"></p>
     </div>
 </div>
 
+<!-- ================= TEMPLATE 3 ================= -->
+<div class="resume template-ats" id="template-ats">
+    <h1 id="name3"></h1>
+    <p id="contact3"></p>
+
+    <h3>Summary</h3>
+    <p id="summary3"></p>
+
+    <h3>Experience</h3>
+    <p id="experience3"></p>
+
+    <h3>Education</h3>
+    <p id="education3"></p>
+
+    <h3>Skills</h3>
+    <p id="skills3"></p>
+</div>
+
+</div>
+
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // Load resume data from localStorage
-    const resumeData = JSON.parse(localStorage.getItem("resumeData"));
-    const resumeSource = localStorage.getItem("resumeSource") || "manual";
-    const selectedTemplate = localStorage.getItem("selectedTemplate") || "default";
-
-    if (!resumeData) {
-        alert("No resume data found. Redirecting to create resume page.");
-        window.location.href = "/resume-options.html";
-        return;
-    }
-
-    // Show info if resume was uploaded
-    if (resumeSource === "pdf") {
-        document.getElementById("uploadInfo").style.display = "block";
-        
-        // Display extracted text in special containers
-        displayExtractedText(resumeData);
-    } else {
-        // Display formatted resume data
-        displayFormattedResume(resumeData);
-    }
-
-    // Apply template-specific styles if needed
-    applyTemplateStyles(selectedTemplate);
-});
-
-function displayExtractedText(resumeData) {
-    // For uploaded PDFs, show the raw extracted text in gray boxes
-    const fullText = resumeData.fullText || "";
-    
-    // Set extracted text in special containers
-    document.getElementById("summaryExtracted").textContent = resumeData.summary || fullText.slice(0, 600);
-    document.getElementById("summaryExtracted").style.display = "block";
-    
-    document.getElementById("educationExtracted").textContent = resumeData.education || fullText.slice(600, 900);
-    document.getElementById("educationExtracted").style.display = "block";
-    
-    document.getElementById("experienceExtracted").textContent = resumeData.experience || fullText.slice(900, 1400);
-    document.getElementById("experienceExtracted").style.display = "block";
-    
-    document.getElementById("skillsExtracted").textContent = resumeData.skills || "Extracted from uploaded resume";
-    document.getElementById("skillsExtracted").style.display = "block";
-    
-    document.getElementById("projectsExtracted").textContent = resumeData.projects || "";
-    if (resumeData.projects) {
-        document.getElementById("projectsExtracted").style.display = "block";
-    }
-    
-    // Set contact info if available
-    if (resumeData.name && resumeData.name !== "Extracted Resume") {
-        document.getElementById("fullName").textContent = resumeData.name;
-    }
-    
-    if (resumeData.email) {
-        document.getElementById("email").textContent = resumeData.email;
-    }
-    
-    if (resumeData.phone) {
-        document.getElementById("phone").textContent = resumeData.phone;
-    }
+const data = JSON.parse(localStorage.getItem("resumeData"));
+if (!data) {
+    alert("No resume data found");
+    window.location.href = "/resume-options.html";
 }
 
-function displayFormattedResume(resumeData) {
-    // For manually entered resumes, display formatted content
-    document.getElementById("fullName").textContent = resumeData.name || "Your Name";
-    document.getElementById("email").textContent = resumeData.email || "your.email@example.com";
-    document.getElementById("phone").textContent = resumeData.phone || "(123) 456-7890";
-    
-    // Check if data is in HTML format or plain text
-    const summaryContent = resumeData.summary || "Experienced professional with strong technical skills...";
-    document.getElementById("summary").innerHTML = isHTML(summaryContent) ? summaryContent : formatText(summaryContent);
-    
-    const educationContent = resumeData.education || "Bachelor's Degree in Computer Science...";
-    document.getElementById("education").innerHTML = isHTML(educationContent) ? educationContent : formatText(educationContent);
-    
-    const experienceContent = resumeData.experience || "Software Developer at Tech Company (2020-Present)...";
-    document.getElementById("experience").innerHTML = isHTML(experienceContent) ? experienceContent : formatText(experienceContent);
-    
-    const skillsContent = resumeData.skills || "JavaScript, React, Node.js, HTML/CSS...";
-    document.getElementById("skills").innerHTML = isHTML(skillsContent) ? skillsContent : formatText(skillsContent);
-    
-    const projectsContent = resumeData.projects || "E-commerce website, Mobile app development...";
-    document.getElementById("projects").innerHTML = isHTML(projectsContent) ? projectsContent : formatText(projectsContent);
+// hide all templates
+document.querySelectorAll(".resume").forEach(r => r.style.display = "none");
+
+// get selected template
+const selected = localStorage.getItem("selectedTemplate");
+
+// map template name → DOM id
+const templateMap = {
+    clean: "template-clean",
+    sidebar: "template-sidebar",
+    ats: "template-ats"
+};
+
+// fallback (never blank again)
+const templateId = templateMap[selected] || "template-clean";
+
+// show selected template
+document.getElementById(templateId).style.display = "block";
+
+/* ==== Populate content ==== */
+function set(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || "";
 }
 
-function isHTML(str) {
-    // Check if string contains HTML tags
-    const htmlRegex = /<[a-z][\s\S]*>/i;
-    return htmlRegex.test(str);
+set("name", data.name);
+set("contact", `${data.email} | ${data.phone}`);
+set("summary", data.summary);
+set("experience", data.experience);
+set("education", data.education);
+
+if (document.getElementById("skills")) {
+    document.getElementById("skills").innerHTML =
+        data.skills.split(",").map(s => `<li>${s.trim()}</li>`).join("");
 }
 
-function formatText(text) {
-    // Convert plain text to basic HTML formatting
-    if (!text) return "";
-    
-    // Split by newlines and create paragraphs
-    const paragraphs = text.split('\n').filter(p => p.trim() !== '');
-    
-    // Check if it's likely a list
-    if (text.includes('•') || text.includes('-') || text.includes('*')) {
-        // It's a list
-        const listItems = text.split(/[•\-\*]/).filter(item => item.trim() !== '');
-        if (listItems.length > 1) {
-            return '<ul>' + listItems.map(item => `<li>${item.trim()}</li>`).join('') + '</ul>';
-        }
-    }
-    
-    // Otherwise format as paragraphs
-    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+/* sidebar */
+set("name2", data.name);
+set("contact2", data.email);
+set("summary2", data.summary);
+set("experience2", data.experience);
+set("education2", data.education);
+
+if (document.getElementById("skills2")) {
+    document.getElementById("skills2").innerHTML =
+        data.skills.split(",").map(s => `<li>${s.trim()}</li>`).join("");
 }
 
-function applyTemplateStyles(template) {
-    // Apply different styles based on selected template
-    const resumeElement = document.getElementById('resumeContent');
-    
-    switch(template) {
-        case 'modern':
-            resumeElement.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-            break;
-        case 'classic':
-            resumeElement.style.fontFamily = "'Times New Roman', Times, serif";
-            resumeElement.querySelectorAll('.section h3').forEach(h3 => {
-                h3.style.borderBottom = '1px solid #000';
-            });
-            break;
-        case 'creative':
-            resumeElement.style.fontFamily = "'Poppins', sans-serif";
-            break;
-        default:
-            // Keep default styles
-            break;
-    }
-}
+/* ats */
+set("name3", data.name);
+set("contact3", `${data.email} | ${data.phone}`);
+set("summary3", data.summary);
+set("experience3", data.experience);
+set("education3", data.education);
+set("skills3", data.skills);
 
 function editResume() {
-    // Save current view state
-    const currentData = JSON.parse(localStorage.getItem("resumeData")) || {};
-    const resumeSource = localStorage.getItem("resumeSource") || "manual";
-    
-    // If it's an uploaded resume, we need to combine the extracted text
-    if (resumeSource === "pdf") {
-        // Collect all extracted text
-        currentData.summary = document.getElementById("summaryExtracted").textContent;
-        currentData.education = document.getElementById("educationExtracted").textContent;
-        currentData.experience = document.getElementById("experienceExtracted").textContent;
-        currentData.skills = document.getElementById("skillsExtracted").textContent;
-        currentData.projects = document.getElementById("projectsExtracted").textContent;
-        
-        // Update localStorage
-        localStorage.setItem("resumeData", JSON.stringify(currentData));
-    }
-    
-    // Redirect to edit page
     window.location.href = "/form-edit.html";
-}
-
-// Function to extract contact info from text (if needed)
-function extractContactInfo(text) {
-    // Simple email regex
-    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    const phoneRegex = /(\+\d{1,3}[-.]?)?\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}/;
-    
-    const emailMatch = text.match(emailRegex);
-    const phoneMatch = text.match(phoneRegex);
-    
-    return {
-        email: emailMatch ? emailMatch[0] : '',
-        phone: phoneMatch ? phoneMatch[0] : ''
-    };
 }
 </script>
 
