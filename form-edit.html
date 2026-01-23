@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Resume</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            padding: 40px;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: white;
+            max-width: 900px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 18px;
+        }
+        h2 {
+            font-family: "Poppins", sans-serif;
+            color: #6a0dad;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #6a0dad;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Edit Resume</h2>
+
+    <form onsubmit="saveEdit(event)">
+        <h3>Personal Information</h3>
+        <input id="fullName" placeholder="Full Name">
+        <input id="email" placeholder="Email">
+        <input id="phone" placeholder="Phone">
+          <h3>Professional Summary</h3>
+
+        <textarea id="summary" placeholder="Summary"></textarea>
+        <textarea id="education" placeholder="Education"></textarea>
+        <textarea id="experience" placeholder="Experience"></textarea>
+        <textarea id="skills" placeholder="Skills"></textarea>
+        <textarea id="projects" placeholder="Projects"></textarea>
+
+        <button type="submit">Save & Preview</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const data = JSON.parse(localStorage.getItem("resumeData"));
+    if (!data) {
+        alert("No resume data found");
+        window.location.href = "/resume-options.html";
+        return;
+    }
+
+    fullName.value = data.name || "";
+    email.value = data.email || "";
+    phone.value = data.phone || "";
+    summary.value = data.summary || "";
+    education.value = data.education || "";
+    experience.value = data.experience || "";
+    skills.value = data.skills || "";
+    projects.value = data.projects || "";
+});
+
+function saveEdit(e) {
+    e.preventDefault();
+
+    const updatedData = {
+        name: fullName.value,
+        email: email.value,
+        phone: phone.value,
+        summary: summary.value,
+        education: education.value,
+        experience: experience.value,
+        skills: skills.value,
+        projects: projects.value
+    };
+
+    localStorage.setItem("resumeData", JSON.stringify(updatedData));
+    window.location.href = "/resume-preview.html";
+}
+</script>
+
+</body>
+</html>

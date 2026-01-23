@@ -7,6 +7,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <style>
         body {
@@ -84,6 +85,10 @@
         }
     </style>
 </head>
+
+
+
+
 
 <body>
 
@@ -163,7 +168,7 @@ function goToTemplates(event) {
 
     // store resume data
     localStorage.setItem("resumeData", JSON.stringify(resumeData));
-
+    localStorage.setItem("resumeSource", "manual");
     window.location.href = "/template-selection.html";
 }
 </script>
