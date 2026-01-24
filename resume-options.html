@@ -1,119 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Create Resume</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Create Resume</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            padding: 60px;
-        }
-
-        .container {
-            background: #ffffff;
-            max-width: 900px;
-            margin: auto;
-            padding: 40px 50px;
-            border-radius: 18px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
-        }
-
-        h2 {
-            font-family: "Poppins", sans-serif;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-        .options {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .option-card {
-            background: #f8f4ff;
-            padding: 25px;
-            border-radius: 15px;
-            width: 300px;
-            text-align: center;
-        }
-
-        .primary {
-            border: 2px solid #6a0dad;
-        }
-
-        .drop-zone {
-            border: 2px dashed #6a0dad;
-            border-radius: 12px;
-            padding: 28px;
-            background-color: #f8f4ff;
-            color: #6a0dad;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 15px 0;
-        }
-
-        .drop-zone.dragover {
-            background-color: #e6dcff;
-        }
-
-        button {
-            background-color: #6a0dad;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background-color: #5a0cb0;
-        }
-    </style>
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a0dad, #9b59b6);
+    padding: 60px;
+}
+.container {
+    background: #ffffff;
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 50px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+}
+.options {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.option-card {
+    background: #f8f4ff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+}
+.primary {
+    border: 2px solid #6a0dad;
+}
+.drop-zone {
+    border: 2px dashed #6a0dad;
+    border-radius: 12px;
+    padding: 28px;
+    background-color: #f8f4ff;
+    color: #6a0dad;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 15px 0;
+}
+.drop-zone.dragover {
+    background-color: #e6dcff;
+}
+button {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
-    <h2>Create Your Resume</h2>
-    <p class="subtitle">Choose how you want to start building your resume</p>
+<h2>Create Your Resume</h2>
+<p>Choose how you want to start building your resume</p>
 
-    <div class="options">
+<div class="options">
 
-        <!-- UPLOAD -->
-        <div class="option-card">
-            <h3>Upload Existing Resume</h3>
-            <p>Drag & drop your resume (PDF only)</p>
+<!-- UPLOAD -->
+<div class="option-card">
+<h3>Upload Existing Resume</h3>
+<p>Drag & drop your resume (PDF only)</p>
 
-            <div class="drop-zone" id="dropZone">
-                <span id="dropText">Drop resume here or click to upload</span>
-                <input type="file" id="resumeFile" accept=".pdf" hidden>
-            </div>
+<div class="drop-zone" id="dropZone">
+<span id="dropText">Drop resume here or click to upload</span>
+<input type="file" id="resumeFile" accept=".pdf" hidden>
+</div>
 
-            <button onclick="continueWithPDF()">Continue</button>
-        </div>
+<button onclick="continueWithPDF()">Continue</button>
+</div>
 
-        <!-- MANUAL -->
-        <div class="option-card primary">
-            <h3>Start From Scratch</h3>
-            <p>Enter resume details manually.</p>
-            <button onclick="startManual()">Enter Details</button>
-        </div>
+<!-- MANUAL -->
+<div class="option-card primary">
+<h3>Start From Scratch</h3>
+<p>Enter resume details manually.</p>
+<button onclick="startManual()">Enter Details</button>
+</div>
 
-    </div>
+</div>
 </div>
 
 <script>
@@ -121,12 +99,8 @@ const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("resumeFile");
 const dropText = document.getElementById("dropText");
 
-let extractedText = "";
-
-// Click upload
 dropZone.onclick = () => fileInput.click();
 
-// Drag events
 dropZone.addEventListener("dragover", e => {
     e.preventDefault();
     dropZone.classList.add("dragover");
@@ -144,43 +118,97 @@ dropZone.addEventListener("drop", e => {
 
 fileInput.onchange = e => processPDF(e.target.files[0]);
 
+// ---------------- PDF PARSER ----------------
+function parsePdfResumeText(rawText) {
+    const data = {
+        name: "",
+        email: "",
+        phone: "",
+        summary: "",
+        experience: "",
+        education: "",
+        skills: ""
+    };
+
+    if (!rawText) return data;
+
+    const lines = rawText
+        .replace(/\r/g, "")
+        .split("\n")
+        .map(l => l.trim())
+        .filter(Boolean);
+
+    const joined = lines.join(" ");
+
+    // Email
+    const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+    if (emailMatch) data.email = emailMatch[0];
+
+    // Phone
+    const phoneMatch = joined.match(/(\+?\d[\d\s\-]{8,}\d)/);
+    if (phoneMatch) data.phone = phoneMatch[0];
+
+    // Name
+    data.name = lines.find(l =>
+        l.length < 35 &&
+        !l.includes("@") &&
+        !/\d/.test(l)
+    ) || "Your Name";
+
+    let current = "summary";
+
+    lines.forEach(line => {
+        const l = line.toLowerCase();
+
+        if (/summary/.test(l)) return current = "summary";
+        if (/experience|employment|work history/.test(l)) return current = "experience";
+        if (/education|qualification/.test(l)) return current = "education";
+        if (/skills|technical skills|technologies/.test(l)) return current = "skills";
+
+        data[current] += line + " ";
+    });
+
+    return data;
+}
+
+// ---------------- PDF PROCESS ----------------
 async function processPDF(file) {
     if (!file || file.type !== "application/pdf") {
-        alert("Please upload a PDF file.");
+        alert("Upload a PDF only");
         return;
     }
 
-    // CLEAR OLD RESUME
-    localStorage.removeItem("resumeData");
-    localStorage.removeItem("selectedTemplate");
-
+    localStorage.clear();
     dropText.textContent = "Extracting resume text...";
 
     const reader = new FileReader();
     reader.onload = async function () {
-        const typedArray = new Uint8Array(reader.result);
-        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+        const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
+        let extractedText = "";
 
-        extractedText = "";
-
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
+        for (let p = 1; p <= pdf.numPages; p++) {
+            const page = await pdf.getPage(p);
             const content = await page.getTextContent();
-            extractedText += content.items.map(item => item.str).join(" ") + " ";
+
+            let lastY = null;
+            let line = "";
+            let lines = [];
+
+            content.items.forEach(item => {
+                if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) {
+                    line += item.str + " ";
+                } else {
+                    lines.push(line.trim());
+                    line = item.str + " ";
+                }
+                lastY = item.transform[5];
+            });
+
+            if (line.trim()) lines.push(line.trim());
+            extractedText += lines.join("\n") + "\n";
         }
 
-        // ✅ CREATE NEW ACTIVE RESUME
-        const resumeData = {
-            name: "Extracted Resume",
-            email: "",
-            phone: "",
-            summary: extractedText.slice(0, 600),
-            education: extractedText.slice(600, 900),
-            experience: extractedText.slice(900, 1400),
-            skills: "Extracted from uploaded resume",
-            projects: ""
-        };
-
+        const resumeData = parsePdfResumeText(extractedText);
         localStorage.setItem("resumeData", JSON.stringify(resumeData));
         localStorage.setItem("resumeSource", "pdf");
 
@@ -192,14 +220,14 @@ async function processPDF(file) {
 
 function continueWithPDF() {
     if (!localStorage.getItem("resumeData")) {
-        alert("Please upload a resume first.");
+        alert("Upload a resume first");
         return;
     }
     window.location.href = "/template-selection.html";
 }
 
 function startManual() {
-    localStorage.removeItem("resumeData");
+    localStorage.clear();
     localStorage.setItem("resumeSource", "manual");
     window.location.href = "/resume-form.html";
 }

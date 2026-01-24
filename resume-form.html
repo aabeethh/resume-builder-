@@ -110,17 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("projects").value = resumeData.projects || "";
     }
 
-    // ===== PDF UPLOAD EDIT =====
-    if (resumeSource === "pdf") {
-        const pdfText = localStorage.getItem("pdfResumeText");
-        if (!pdfText) return;
-
-        // Basic auto-fill from extracted text
-        document.getElementById("fullName").value = "Extracted Resume";
-        document.getElementById("summary").value = pdfText.slice(0, 600);
-        document.getElementById("experience").value = pdfText.slice(600, 1400);
-        document.getElementById("skills").value = "Extracted from uploaded PDF";
-    }
+   
 
 });
 </script>
