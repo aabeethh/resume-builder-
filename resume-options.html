@@ -155,18 +155,40 @@ function parsePdfResumeText(rawText) {
         !/\d/.test(l)
     ) || "Your Name";
 
-    let current = "summary";
+    //summary only bug
+   let current = null;
 
-    lines.forEach(line => {
-        const l = line.toLowerCase();
+lines.forEach(line => {
+    const l = line.toLowerCase();
 
-        if (/summary/.test(l)) return current = "summary";
-        if (/experience|employment|work history/.test(l)) return current = "experience";
-        if (/education|qualification/.test(l)) return current = "education";
-        if (/skills|technical skills|technologies/.test(l)) return current = "skills";
+    // ----- SECTION HEADERS -----
+    if (/^summary|professional summary/.test(l)) {
+        current = "summary";
+        return;
+    }
 
+    if (/experience|employment|work history/.test(l)) {
+        current = "experience";
+        return;
+    }
+
+    if (/education|qualification/.test(l)) {
+        current = "education";
+        return;
+    }
+
+    if (/skills|technical skills|technologies/.test(l)) {
+        current = "skills";
+        return;
+    }
+
+    // ----- CONTENT -----
+    if (current) {
         data[current] += line + " ";
-    });
+    }
+});
+
+ 
 
     return data;
 }
