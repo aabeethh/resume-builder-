@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ATS Resume Score</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
+            padding: 40px;
+        }
+        .container {
+            background: #ffffff;
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .drop-zone {
+            border: 2px dashed #6a0dad;
+            border-radius: 12px;
+            padding: 40px;
+            background-color: #f8f4ff;
+            color: #6a0dad;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .drop-zone.dragover {
+            background-color: #e6dcff;
+        }
+        button {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .back-btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .score-display {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #6a0dad;
+        }
+        .breakdown {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .breakdown ul {
+            list-style: none;
+            padding: 0;
+        }
+        .breakdown li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="location.href='dashboard.html'">Back to Dashboard</button>
+        <h2>Upload Resume for ATS Score</h2>
+        <p>Drag & drop your resume (PDF only) to get an ATS compatibility score.</p>
+
+        <div class="drop-zone" id="dropZone">
+            <span id="dropText">Drop resume here or click to upload</span>
+            <input type="file" id="resumeFile" accept=".pdf" hidden>
+        </div>
+
+        <button onclick="calculateScore()">Calculate ATS Score</button>
+
+        <div id="scoreResult" style="display: none;">
+            <div class="score-display">
+                <h3>Your ATS Score: <span id="score"></span>/100</h3>
+            </div>
+            <div class="breakdown">
+                <h4>Score Breakdown:</h4>
+                <ul id="breakdownList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        const dropZone = document.getElementById("dropZone");
+        const fileInput = document.getElementById("resumeFile");
+        const dropText = document.getElementById("dropText");
+
+        dropZone.onclick = () => fileInput.click();
+        dropZone.addEventListener("dragover", e => {
+            e.preventDefault();
+            dropZone.classList.add("dragover");
+        });
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("dragover");
+        });
+        dropZone.addEventListener("drop", e => {
+            e.preventDefault();
+            dropZone.classList.remove("dragover");
+            processPDF(e.dataTransfer.files[0]);
+        });
+        fileInput.onchange = e => processPDF(e.target.files[0]);
+
+        let extractedText = "";
+
+        async function processPDF(file) {
+            if (!file || file.type !== "application/pdf") {
+                alert("Upload a PDF only");
+                return;
+            }
+            dropText.textContent = "Extracting text...";
+            const reader = new FileReader();
+            reader.onload = async function () {
+                const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
+                extractedText = "";
+                for (let p = 1; p <= pdf.numPages; p++) {
+                    const page = await pdf.getPage(p);
+                    const content = await page.getTextContent();
+                    let lastY = null;
+                    let line = "";
+                    content.items.forEach(item => {
+                        if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) {
+                            line += item.str + " ";
+                        } else {
+                            extractedText += line.trim() + "\n";
+                            line = item.str + " ";
+                        }
+                        lastY = item.transform[5];
+                    });
+                    if (line.trim()) extractedText += line.trim() + "\n";
+                }
+                dropText.textContent = "Resume uploaded! Click Calculate.";
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function calculateScore() {
+            if (!extractedText) {
+                alert("Upload a resume first");
+                return;
+            }
+
+            // Parse data (reuse your parsing logic)
+            const data = parseResumeText(extractedText);
+
+            // Job keywords (customize this list)
+            const jobKeywords = ["javascript", "react", "html", "css", "node.js", "python", "sql", "agile", "teamwork"];
+            const textLower = extractedText.toLowerCase();
+            const keywordMatches = jobKeywords.filter(k => textLower.includes(k)).length;
+            const keywordScore = (keywordMatches / jobKeywords.length) * 40;  // 40% weight
+
+            // Section presence (30% weight)
+            let sectionScore = 0;
+            if (data.summary) sectionScore += 10;
+            if (data.experience) sectionScore += 10;
+            if (data.education) sectionScore += 5;
+            if (data.skills) sectionScore += 5;
+
+            // Formatting/Length (30% weight)
+            const wordCount = extractedText.split(/\s+/).length;
+            const lengthScore = wordCount > 200 && wordCount < 800 ? 20 : Math.max(0, 20 - Math.abs(400 - wordCount) / 20);
+            const formatScore = extractedText.includes("\n") ? 10 : 0;  // Basic check for line breaks
+
+            const totalScore = Math.round(keywordScore + sectionScore + lengthScore + formatScore);
+
+            // Display
+            document.getElementById("score").textContent = totalScore;
+            document.getElementById("breakdownList").innerHTML = `
+                <li>Keywords Matched: ${keywordMatches}/${jobKeywords.length} (${Math.round(keywordScore)}/40)</li>
+                <li>Sections Present: ${sectionScore}/30</li>
+                <li>Formatting/Length: ${Math.round(lengthScore + formatScore)}/30</li>
+            `;
+            document.getElementById("scoreResult").style.display = "block";
+        }
+
+        // Reused parsing function (simplified)
+        function parseResumeText(rawText) {
+            const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "" };
+            const lines = rawText.split("\n").map(l => l.trim()).filter(Boolean);
+            const joined = lines.join(" ");
+            data.email = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || "";
+            data.phone = joined.match(/(\+?\d[\d\s\-]{8,}\d)/)?.[0] || "";
+            data.name = lines.find(l => l.length < 35 && !l.includes("@") && !/\d/.test(l)) || "Your Name";
+
+            let current = null;
+            lines.forEach(line => {
+                const l = line.toLowerCase();
+                if (/summary|objective/.test(l)) current = "summary";
+                else if (/experience|work/.test(l)) current = "experience";
+                else if (/education/.test(l)) current = "education";
+                else if (/skills/.test(l)) current = "skills";
+                else if (current) data[current] += line + " ";
+            });
+            Object.keys(data).forEach(key => data[key] = data[key].trim());
+            return data;
+        }
+    </script>
+</body>
+</html>

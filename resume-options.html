@@ -91,10 +91,20 @@ button {
 <button onclick="startManual()">Enter Details</button>
 </div>
 
+<!-- ATS SCORE -->
+<div class="option-card">
+<h3>Check ATS Score</h3>
+<p>Upload your resume to get an ATS compatibility score.</p>
+<button onclick="goToATSScore()">Check Score</button>
+</div>
+
 </div>
 </div>
 
 <script>
+// PDF.js worker (added for consistency, though not used here)
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("resumeFile");
 const dropText = document.getElementById("dropText");
@@ -140,55 +150,74 @@ function parsePdfResumeText(rawText) {
 
     const joined = lines.join(" ");
 
-    // Email
+    // Email (unchanged)
     const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
     if (emailMatch) data.email = emailMatch[0];
 
-    // Phone
+    // Phone (unchanged)
     const phoneMatch = joined.match(/(\+?\d[\d\s\-]{8,}\d)/);
     if (phoneMatch) data.phone = phoneMatch[0];
 
-    // Name
+    // Name (unchanged, but improved slightly for robustness)
     data.name = lines.find(l =>
         l.length < 35 &&
         !l.includes("@") &&
-        !/\d/.test(l)
+        !/\d/.test(l) &&
+        l.split(" ").length <= 4  // Limit to likely name formats
     ) || "Your Name";
 
-    //summary only bug
-   let current = null;
+    // Improved section parsing
+    let current = null;
+    let summaryFallback = "";  // Collect potential summary text if no header found
 
-lines.forEach(line => {
-    const l = line.toLowerCase();
+    lines.forEach((line, index) => {
+        const l = line.toLowerCase();
 
-    // ----- SECTION HEADERS -----
-    if (/^summary|professional summary/.test(l)) {
-        current = "summary";
-        return;
+        // Skip lines that are clearly email or phone (to avoid them in summary)
+        if (line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || line.match(/(\+?\d[\d\s\-]{8,}\d)/)) {
+            return;
+        }
+
+        // ----- SECTION HEADERS (more flexible) -----
+        if (/summary|professional summary|objective|profile/.test(l)) {
+            current = "summary";
+            return;  // Skip adding the header line itself
+        }
+        if (/experience|employment|work history|career history/.test(l)) {
+            current = "experience";
+            return;
+        }
+        if (/education|qualification|academic|degree/.test(l)) {
+            current = "education";
+            return;
+        }
+        if (/skills|technical skills|technologies|competencies/.test(l)) {
+            current = "skills";
+            return;
+        }
+
+        // ----- CONTENT -----
+        if (current) {
+            // Clean and append: remove extra spaces, handle bullets
+            const cleanedLine = line.replace(/^\s*[-•*]\s*/, "").trim();  // Strip bullet points
+            if (cleanedLine) {
+                data[current] += cleanedLine + " ";
+            }
+        } else if (!data.summary && index < 10 && line.length > 20) {
+            // Fallback: If no summary header yet, treat early long lines as potential summary
+            summaryFallback += line + " ";
+        }
+    });
+
+    // If no summary was captured via header, use the fallback
+    if (!data.summary.trim() && summaryFallback.trim()) {
+        data.summary = summaryFallback.trim();
     }
 
-    if (/experience|employment|work history/.test(l)) {
-        current = "experience";
-        return;
-    }
-
-    if (/education|qualification/.test(l)) {
-        current = "education";
-        return;
-    }
-
-    if (/skills|technical skills|technologies/.test(l)) {
-        current = "skills";
-        return;
-    }
-
-    // ----- CONTENT -----
-    if (current) {
-        data[current] += line + " ";
-    }
-});
-
- 
+    // Trim all fields to remove trailing spaces
+    Object.keys(data).forEach(key => {
+        data[key] = data[key].trim();
+    });
 
     return data;
 }
@@ -252,6 +281,11 @@ function startManual() {
     localStorage.clear();
     localStorage.setItem("resumeSource", "manual");
     window.location.href = "/resume-form.html";
+}
+
+// New function for ATS Score
+function goToATSScore() {
+    window.location.href = "/ats-score.html";  // Redirect to the ATS score page
 }
 </script>
 

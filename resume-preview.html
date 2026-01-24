@@ -197,6 +197,10 @@ if (!data) {
     window.location.href = "/resume-options.html";
 }
 
+// Debug: Check data and summary
+console.log("Resume Data:", data);
+console.log("Summary Value:", data.summary);
+
 // hide all templates
 document.querySelectorAll(".resume").forEach(r => r.style.display = "none");
 
@@ -219,7 +223,10 @@ document.getElementById(templateId).style.display = "block";
 /* ==== Populate content ==== */
 function set(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val || "";
+    if (el) {
+        const trimmed = (val || "").trim();
+        el.textContent = trimmed || "No summary available";  // Shows a message if empty
+    }
 }
 
 set("name", data.name);
@@ -282,6 +289,10 @@ function changeTemplate() {
     };
 
     document.getElementById(map[nextTemplate]).style.display = "block";
+
+    // Re-set summary for the new template
+    const summaryId = nextTemplate === "sidebar" ? "summary2" : nextTemplate === "ats" ? "summary3" : "summary";
+    set(summaryId, data.summary);
 }
 //goes to the resume creation page
 
