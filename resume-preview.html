@@ -5,311 +5,303 @@
 <title>Resume Preview</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather&family=Montserrat:wght@500&family=Roboto+Mono&display=swap" rel="stylesheet">
 
 <style>
-/* ===== PAGE ===== */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #6a0dad, #9b59b6);
-    padding: 40px;
+body{
+    margin:0;
+    background:linear-gradient(135deg,#6a0dad,#9b59b6);
+    font-family:Arial,sans-serif;
+    padding:40px;
+}
+.container{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    gap:25px;
+}
+.actions{
+    width:220px;
+    background:#fff;
+    padding:25px;
+    border-radius:14px;
+}
+.actions button{
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+}
+.download-btn{background:#6a0dad;color:#fff}
+
+.resume{
+    flex:1;
+    background:#fff;
+    padding:40px;
+    border-radius:18px;
+    display:none;
 }
 
-.container {
-    display: flex;
-    gap: 30px;
-    max-width: 1200px;
-    margin: auto;
-}
+/* ===== TEMPLATE 1 CLEAN ===== */
+.template-clean{font-family:Merriweather;}
+.template-clean h1{font-size:32px}
+.template-clean h3{border-bottom:2px solid #000}
 
-/* ===== ACTION PANEL ===== */
-.actions {
-    width: 220px;
-    background: #fff;
-    padding: 25px;
-    border-radius: 14px;
-    height: fit-content;
-}
-
-.actions h3 {
+/* ===== TEMPLATE 2 SIDEBAR ===== */
+.template-sidebar{
+    display:grid;
+    grid-template-columns:30% 70%;
     font-family:Poppins;
 }
+.template-sidebar .left{
+    background:#f2e8dc;
+    padding:25px;
+}
+.template-sidebar .right{padding:30px}
 
-.actions button {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+/* ===== TEMPLATE 3 ATS ===== */
+.template-ats{
+    font-family:Arial;
+    font-size:14px;
+}
+.template-ats h3{
+    text-transform:uppercase;
+    border-bottom:1px solid #000;
+    font-size:13px;
 }
 
-.download-btn {
-    background: #6a0dad;
-    color: #fff;
+/* ===== TEMPLATE 4 MODERN ===== */
+.template-modern{font-family:Poppins;}
+.template-modern h1{color:#3498db}
+.template-modern h3{border-bottom:2px solid #3498db}
+
+/* ===== TEMPLATE 5 EXECUTIVE ===== */
+.template-executive{font-family:Montserrat;}
+.template-executive h1{text-align:center}
+.template-executive section{
+    background:#f8f8f8;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:15px;
 }
 
-/* ===== COMMON RESUME BASE ===== */
-.resume {
-    background: #fff;
-    padding: 40px;
-    border-radius: 18px;
-    flex: 1;
-    display: none;
+/* ===== TEMPLATE 6 CREATIVE ===== */
+.template-creative{
+    display:grid;
+    grid-template-columns:28% 72%;
+    font-family:Poppins;
+}
+.template-creative .left{
+    background:#ffeaa7;
+    padding:25px;
+}
+.template-creative .right{padding:30px}
+
+/* ===== TEMPLATE 7 TECHNICAL ===== */
+.template-technical{font-family:Roboto Mono;}
+.template-technical h3{background:#eee;padding:6px}
+
+/* ===== TEMPLATE 8 ACADEMIC ===== */
+.template-academic{font-family:Merriweather;}
+.template-academic h1{font-size:28px;letter-spacing:1px}
+
+/* ===== TEMPLATE 9 STARTUP ===== */
+.template-startup{
+    display:grid;
+    grid-template-columns:32% 68%;
+    font-family:Poppins;
+}
+.template-startup .left{
+    background:#2d3436;
+    color:#fff;
+    padding:25px;
+}
+.template-startup .right{padding:30px}
+
+/* ===== TEMPLATE 10 CORPORATE ===== */
+.template-corporate{font-family:Arial;}
+.template-corporate section{
+    border-left:6px solid #6a0dad;
+    padding-left:15px;
+    margin-bottom:18px;
 }
 
-/* ================= TEMPLATE 1 ================= */
-
-.template-clean h1 {
-    font-size: 34px;
-}
-
-.template-clean h3 {
-    border-bottom: 2px solid #000;
-    margin-top: 25px;
-}
-
-.template-clean ul {
-    padding-left: 20px;
-}
-
-/* ================= TEMPLATE 2 ================= */
-
-.template-sidebar {
-    display: grid;
-    grid-template-columns: 30% 70%;
-}
-
-.sidebar {
-    background: #f2e8dc;
-    padding: 25px;
-}
-
-.main {
-    padding: 30px;
-}
-
-.sidebar h3 {
-    border-bottom: 1px solid #000;
-}
-
-/* ================= TEMPLATE 3 ================= */
-
-.template-ats h3 {
-    border-bottom: 1px solid #000;
-    text-transform: uppercase;
-    font-size: 14px;
-}
-
-@media print {
-    body { background: none; padding: 0; }
-    .actions { display: none; }
+@media print{
+    body{background:none;padding:0}
+    .actions{display:none}
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <!-- ACTIONS -->
 <div class="actions">
-    <h3>Actions</h3>
-
     <button onclick="editResume()">Edit Resume</button>
-
+    <button onclick="goToDashboard()">Go to Dashboard</button>
     <button onclick="changeTemplate()">Change Template</button>
-
-    <button onclick="goToCreate()">Create New Resume</button>
-
-    <button class="download-btn" onclick="window.print()">
-        Download / Print
-    </button>
+    <button onclick="window.print()" class="download-btn">Download / Print</button>
 </div>
 
-
-<!-- ================= TEMPLATE 1 ================= -->
-<div class="resume template-clean" id="template-clean">
-    <h1 id="name"></h1>
-    <p id="contact"></p>
-
-    <h3>Professional Summary</h3>
-    <p id="summary"></p>
-
-    <h3>Work Experience</h3>
-    <p id="experience"></p>
-
-    <h3>Education</h3>
-    <p id="education"></p>
-
-    <h3>Skills</h3>
-    <ul id="skills"></ul>
+<!-- CLEAN -->
+<div class="resume template-clean" id="t0">
+    <h1 id="n"></h1><p id="c"></p>
+    <h3>Summary</h3><p id="s"></p>
+    <h3>Experience</h3><p id="e"></p>
+    <h3>Education</h3><p id="ed"></p>
+    <h3>Skills</h3><ul id="sk"></ul>
 </div>
 
-<!-- ================= TEMPLATE 2 ================= -->
-<div class="resume template-sidebar" id="template-sidebar">
-    <div class="sidebar">
-        <h2 id="name2"></h2>
-        <p id="contact2"></p>
-
-        <h3>Skills</h3>
-        <ul id="skills2"></ul>
-    </div>
-
-    <div class="main">
-        <h3>Summary</h3>
-        <p id="summary2"></p>
-
-        <h3>Experience</h3>
-        <p id="experience2"></p>
-
-        <h3>Education</h3>
-        <p id="education2"></p>
-    </div>
+<!-- SIDEBAR -->
+<div class="resume template-sidebar" id="t1">
+<div class="left">
+    <h2 id="n1"></h2><p id="c1"></p>
+    <h3>Skills</h3><ul id="sk1"></ul>
+</div>
+<div class="right">
+    <h3>Summary</h3><p id="s1"></p>
+    <h3>Experience</h3><p id="e1"></p>
+    <h3>Education</h3><p id="ed1"></p>
+</div>
 </div>
 
-<!-- ================= TEMPLATE 3 ================= -->
-<div class="resume template-ats" id="template-ats">
-    <h1 id="name3"></h1>
-    <p id="contact3"></p>
+<!-- ATS -->
+<div class="resume template-ats" id="t2">
+<h1 id="n2"></h1><p id="c2"></p>
+<h3>Summary</h3><p id="s2"></p>
+<h3>Experience</h3><p id="e2"></p>
+<h3>Education</h3><p id="ed2"></p>
+<h3>Skills</h3><p id="sk2"></p>
+</div>
 
-    <h3>Summary</h3>
-    <p id="summary3"></p>
+<!-- MODERN -->
+<div class="resume template-modern" id="t3">
+<h1 id="n3"></h1><p id="c3"></p>
+<h3>Summary</h3><p id="s3"></p>
+<h3>Experience</h3><p id="e3"></p>
+<h3>Education</h3><p id="ed3"></p>
+<h3>Skills</h3><ul id="sk3"></ul>
+</div>
 
-    <h3>Experience</h3>
-    <p id="experience3"></p>
+<!-- EXECUTIVE -->
+<div class="resume template-executive" id="t4">
+<h1 id="n4"></h1><p id="c4"></p>
+<section><h3>Summary</h3><p id="s4"></p></section>
+<section><h3>Experience</h3><p id="e4"></p></section>
+<section><h3>Education</h3><p id="ed4"></p></section>
+<section><h3>Skills</h3><ul id="sk4"></ul></section>
+</div>
 
-    <h3>Education</h3>
-    <p id="education3"></p>
+<!-- CREATIVE -->
+<div class="resume template-creative" id="t5">
+<div class="left">
+<h2 id="n5"></h2><p id="c5"></p>
+<h3>Skills</h3><ul id="sk5"></ul>
+</div>
+<div class="right">
+<h3>Summary</h3><p id="s5"></p>
+<h3>Experience</h3><p id="e5"></p>
+<h3>Education</h3><p id="ed5"></p>
+</div>
+</div>
 
-    <h3>Skills</h3>
-    <p id="skills3"></p>
+<!-- TECHNICAL -->
+<div class="resume template-technical" id="t6">
+<h1 id="n6"></h1><p id="c6"></p>
+<h3>Summary</h3><p id="s6"></p>
+<h3>Experience</h3><p id="e6"></p>
+<h3>Education</h3><p id="ed6"></p>
+<h3>Skills</h3><ul id="sk6"></ul>
+</div>
+
+<!-- ACADEMIC -->
+<div class="resume template-academic" id="t7">
+<h1 id="n7"></h1><p id="c7"></p>
+<h3>Summary</h3><p id="s7"></p>
+<h3>Experience</h3><p id="e7"></p>
+<h3>Education</h3><p id="ed7"></p>
+<h3>Skills</h3><ul id="sk7"></ul>
+</div>
+
+<!-- STARTUP -->
+<div class="resume template-startup" id="t8">
+<div class="left">
+<h2 id="n8"></h2><p id="c8"></p>
+<h3>Skills</h3><ul id="sk8"></ul>
+</div>
+<div class="right">
+<h3>Summary</h3><p id="s8"></p>
+<h3>Experience</h3><p id="e8"></p>
+<h3>Education</h3><p id="ed8"></p>
+</div>
+</div>
+
+<!-- CORPORATE -->
+<div class="resume template-corporate" id="t9">
+<h1 id="n9"></h1><p id="c9"></p>
+<section><h3>Summary</h3><p id="s9"></p></section>
+<section><h3>Experience</h3><p id="e9"></p></section>
+<section><h3>Education</h3><p id="ed9"></p></section>
+<section><h3>Skills</h3><ul id="sk9"></ul></section>
 </div>
 
 </div>
-
 
 <script>
 const data = JSON.parse(localStorage.getItem("resumeData"));
-if (!data) {
-    alert("No resume data found");
-    window.location.href = "/resume-options.html";
-}
+if(!data){alert("No resume data found");location.href="/resume-options.html";}
 
-// Debug: Check data and summary
-console.log("Resume Data:", data);
-console.log("Summary Value:", data.summary);
+let index=0;
+const templates=document.querySelectorAll(".resume");
 
-// hide all templates
-document.querySelectorAll(".resume").forEach(r => r.style.display = "none");
+function render(i){
+    templates.forEach(t=>t.style.display="none");
+    templates[i].style.display="block";
 
-// get selected template
-const selected = localStorage.getItem("selectedTemplate");
+    for(let k=0;k<10;k++){
+        const id=k===0?"":""+k;
+        const map={
+            ["n"+id]:data.name,
+            ["c"+id]:`${data.email||""} | ${data.phone||""}`,
+            ["s"+id]:data.summary,
+            ["e"+id]:data.experience,
+            ["ed"+id]:data.education
+        };
+        Object.keys(map).forEach(x=>{
+            const el=document.getElementById(x);
+            if(el) el.textContent=map[x]||"";
+        });
 
-// map template name → DOM id
-const templateMap = {
-    clean: "template-clean",
-    sidebar: "template-sidebar",
-    ats: "template-ats"
-};
-
-// fallback (never blank again)
-const templateId = templateMap[selected] || "template-clean";
-
-// show selected template
-document.getElementById(templateId).style.display = "block";
-
-/* ==== Populate content ==== */
-function set(id, val) {
-    const el = document.getElementById(id);
-    if (el) {
-        const trimmed = (val || "").trim();
-        el.textContent = trimmed || "No summary available";  // Shows a message if empty
+        const sk=document.getElementById("sk"+id);
+        if(sk){
+            sk.innerHTML="";
+            (data.skills||"").split(/,|\n/).forEach(s=>{
+                if(s.trim()){
+                    const li=document.createElement("li");
+                    li.textContent=s.trim();
+                    sk.appendChild(li);
+                }
+            });
+        }
     }
 }
 
-set("name", data.name);
-set("contact", `${data.email} | ${data.phone}`);
-set("summary", data.summary);
-set("experience", data.experience);
-set("education", data.education);
+render(0);
 
-if (document.getElementById("skills")) {
-    document.getElementById("skills").innerHTML =
-        data.skills.split(",").map(s => `<li>${s.trim()}</li>`).join("");
+function changeTemplate(){
+    index=(index+1)%10;
+    render(index);
 }
-
-/* sidebar */
-set("name2", data.name);
-set("contact2", data.email);
-set("summary2", data.summary);
-set("experience2", data.experience);
-set("education2", data.education);
-
-if (document.getElementById("skills2")) {
-    document.getElementById("skills2").innerHTML =
-        data.skills.split(",").map(s => `<li>${s.trim()}</li>`).join("");
+function editResume(){
+    window.location.href="/form-edit.html";
 }
-
-/* ats */
-set("name3", data.name);
-set("contact3", `${data.email} | ${data.phone}`);
-set("summary3", data.summary);
-set("experience3", data.experience);
-set("education3", data.education);
-set("skills3", data.skills);
-
-function editResume() {
-    window.location.href = "/form-edit.html";
+function goToDashboard(){
+    window.location.href="/dashboard.html";
 }
-//changes the template being viewed
-const templates = ["clean", "sidebar", "ats"];
-
-function changeTemplate() {
-    let current = localStorage.getItem("selectedTemplate") || "clean";
-    let index = templates.indexOf(current);
-
-    // move to next template
-    let nextIndex = (index + 1) % templates.length;
-    let nextTemplate = templates[nextIndex];
-
-    localStorage.setItem("selectedTemplate", nextTemplate);
-
-    // hide all templates
-    document.querySelectorAll(".resume").forEach(r => {
-        r.style.display = "none";
-    });
-
-    // show new template
-    const map = {
-        clean: "template-clean",
-        sidebar: "template-sidebar",
-        ats: "template-ats"
-    };
-
-    document.getElementById(map[nextTemplate]).style.display = "block";
-
-    // Re-set summary for the new template
-    const summaryId = nextTemplate === "sidebar" ? "summary2" : nextTemplate === "ats" ? "summary3" : "summary";
-    set(summaryId, data.summary);
-}
-//goes to the resume creation page
-
-function goToCreate() {
-    // optional: clear previous resume data
-    localStorage.removeItem("resumeData");
-    localStorage.removeItem("resumeSource");
-    localStorage.removeItem("pdfResumeText");
-    localStorage.removeItem("selectedTemplate");
-
-    window.location.href = "/resume-options.html";
-}
-
-
 </script>
-
-
 
 </body>
 </html>

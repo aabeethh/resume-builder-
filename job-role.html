@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Resume – ATS Analyzer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a0dad, #9b59b6);
+    padding: 40px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+}
+
+h2 {
+    font-family: Poppins, sans-serif;
+}
+
+.drop-zone {
+    border: 2px dashed #6a0dad;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #6a0dad;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.drop-zone.ready {
+    background: #e8dcff;
+}
+
+select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #6a0dad;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5a0cb0;
+}
+
+.keyword-box {
+    background: #f5f0ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.keyword {
+    display: inline-block;
+    background: #ddd;
+    padding: 6px 10px;
+    border-radius: 15px;
+    margin: 5px;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>ATS Resume Analyzer</h2>
+<p>Upload your resume and select the job role you are applying for.</p>
+
+<!-- FILE UPLOAD -->
+<div class="drop-zone" id="dropZone">
+    <span id="dropText">Drop resume PDF here or click to upload</span>
+    <input type="file" id="fileInput" accept=".pdf" hidden>
+</div>
+
+<!-- ROLE SEARCH -->
+<input type="text" placeholder="Search job role..." onkeyup="filterRoles(this.value)">
+
+<select id="roleSelect">
+<option value="">Select Job Role</option>
+</select>
+
+<button onclick="analyzeResume()">Analyze Resume</button>
+
+<!-- RESULT -->
+<div id="result" style="display:none">
+<h3>Missing ATS Keywords</h3>
+<div class="keyword-box" id="missingKeywords"></div>
+
+<button onclick="copyKeywords()">Copy Keywords</button>
+<button onclick="continueEdit()">Continue to Edit Resume</button>
+</div>
+
+</div>
+
+<script>
+// ================== JOB ROLES ==================
+const roleKeywords = {
+ "Software Engineer": ["JavaScript","HTML","CSS","APIs","Git","Algorithms","Data Structures"],
+ "Frontend Developer": ["React","CSS","JavaScript","UI","Accessibility","Performance"],
+ "Backend Developer": ["Node.js","Databases","REST","Authentication","APIs"],
+ "Full Stack Developer": ["Frontend","Backend","React","Node.js","SQL","Git"],
+ "Data Analyst": ["Excel","SQL","Python","Data Visualization","Statistics"],
+ "Data Scientist": ["Python","Machine Learning","Pandas","NumPy","Statistics"],
+ "DevOps Engineer": ["CI/CD","Docker","Kubernetes","AWS","Linux"],
+ "Cloud Engineer": ["AWS","Azure","GCP","Cloud Security","Terraform"],
+ "Cyber Security Analyst": ["Security","Threats","Firewalls","Penetration Testing"],
+ "UI UX Designer": ["Wireframes","Prototyping","Figma","UX Research"],
+ "Mobile App Developer": ["Android","iOS","Flutter","React Native"],
+ "AI Engineer": ["Machine Learning","Deep Learning","Python","TensorFlow"],
+ "ML Engineer": ["Scikit-learn","Python","Models","Data Pipelines"],
+ "QA Engineer": ["Testing","Automation","Selenium","Bug Tracking"],
+ "Product Manager": ["Roadmap","Agile","Stakeholders","Product Strategy"],
+ "Business Analyst": ["Requirements","Stakeholders","Documentation"],
+ "HR Executive": ["Recruitment","Onboarding","Payroll","HR Policies"],
+ "Digital Marketer": ["SEO","SEM","Google Analytics","Content"],
+ "Content Writer": ["SEO Writing","Copywriting","Blogs"],
+ "Graphic Designer": ["Photoshop","Illustrator","Creativity"],
+ "Network Engineer": ["Networking","Routers","Firewalls","Protocols"],
+ "System Administrator": ["Linux","Windows","Servers","Maintenance"],
+ "Database Administrator": ["SQL","Backups","Performance","Security"],
+ "Game Developer": ["Unity","C#","Game Physics"],
+ "Blockchain Developer": ["Blockchain","Smart Contracts","Solidity"],
+ "Embedded Engineer": ["Microcontrollers","C","RTOS"],
+ "Electrical Engineer": ["Circuits","Power Systems"],
+ "Mechanical Engineer": ["CAD","Manufacturing"],
+ "Civil Engineer": ["Construction","AutoCAD"],
+ "Architect": ["Design","Planning"],
+ "Finance Analyst": ["Finance","Excel","Budgeting"],
+ "Accountant": ["Accounting","GST","Tally"],
+ "Marketing Manager": ["Campaigns","Branding"],
+ "Sales Executive": ["Sales","CRM","Leads"],
+ "Operations Manager": ["Operations","Process Improvement"],
+ "Supply Chain Manager": ["Logistics","Inventory"],
+ "Research Analyst": ["Research","Data"],
+ "Economist": ["Economics","Analysis"],
+ "Teacher": ["Teaching","Lesson Planning"],
+ "Professor": ["Lectures","Research"],
+ "Student": ["Projects","Learning"]
+};
+
+// Populate roles
+const roleSelect = document.getElementById("roleSelect");
+Object.keys(roleKeywords).forEach(role=>{
+    roleSelect.innerHTML += `<option value="${role}">${role}</option>`;
+});
+
+// ================== FILE UPLOAD ==================
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const dropText = document.getElementById("dropText");
+
+dropZone.onclick = ()=>fileInput.click();
+
+dropZone.ondragover = e => { e.preventDefault(); };
+dropZone.ondrop = e => {
+    e.preventDefault();
+    handleFile(e.dataTransfer.files[0]);
+};
+
+fileInput.onchange = e => handleFile(e.target.files[0]);
+
+let extractedText = "";
+
+async function handleFile(file){
+    if(!file || file.type !== "application/pdf"){
+        alert("Only PDF allowed");
+        return;
+    }
+
+    dropZone.classList.add("ready");
+    dropText.textContent = `✔ ${file.name} (Ready)`;
+
+    const reader = new FileReader();
+    reader.onload = async function(){
+        const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
+        extractedText="";
+        for(let i=1;i<=pdf.numPages;i++){
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            extractedText += content.items.map(it=>it.str).join(" ") + " ";
+        }
+        localStorage.setItem("pdfResumeText", extractedText);
+        localStorage.setItem("resumeSource","pdf");
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+// ================== ANALYSIS ==================
+function analyzeResume(){
+    const role = roleSelect.value;
+    if(!role || !extractedText){
+        alert("Upload resume & select role");
+        return;
+    }
+
+    const keywords = roleKeywords[role];
+    const missing = keywords.filter(k=>!extractedText.toLowerCase().includes(k.toLowerCase()));
+
+    const box = document.getElementById("missingKeywords");
+    box.innerHTML = "";
+    missing.forEach(k=>{
+        box.innerHTML += `<span class="keyword">${k}</span>`;
+    });
+
+    localStorage.setItem("missingKeywords", JSON.stringify(missing));
+    document.getElementById("result").style.display="block";
+}
+
+function copyKeywords(){
+    const kw = JSON.parse(localStorage.getItem("missingKeywords")) || [];
+    navigator.clipboard.writeText(kw.join(", "));
+    alert("Keywords copied");
+}
+
+function continueEdit(){
+    window.location.href="/form-edit.html";
+}
+
+// ================== ROLE SEARCH ==================
+function filterRoles(val){
+    const v = val.toLowerCase();
+    [...roleSelect.options].forEach(o=>{
+        o.style.display = o.text.toLowerCase().includes(v) ? "block" : "none";
+    });
+}
+</script>
+
+</body>
+</html>

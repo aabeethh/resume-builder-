@@ -91,20 +91,10 @@ button {
 <button onclick="startManual()">Enter Details</button>
 </div>
 
-<!-- ATS SCORE -->
-<div class="option-card">
-<h3>Check ATS Score</h3>
-<p>Upload your resume to get an ATS compatibility score.</p>
-<button onclick="goToATSScore()">Check Score</button>
-</div>
-
 </div>
 </div>
 
 <script>
-// PDF.js worker (added for consistency, though not used here)
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("resumeFile");
 const dropText = document.getElementById("dropText");
@@ -281,11 +271,6 @@ function startManual() {
     localStorage.clear();
     localStorage.setItem("resumeSource", "manual");
     window.location.href = "/resume-form.html";
-}
-
-// New function for ATS Score
-function goToATSScore() {
-    window.location.href = "/ats-score.html";  // Redirect to the ATS score page
 }
 </script>
 

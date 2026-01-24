@@ -20,7 +20,7 @@
 
         .container {
             background: white;
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             padding: 40px 50px;
             border-radius: 18px;
@@ -36,6 +36,8 @@
         .subtitle {
             color: #555;
             margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .section {
@@ -69,7 +71,31 @@
             min-height: 100px;
         }
 
-        .submit-btn {
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .ats-tip {
+            background: #f0f7ff;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .ats-score-note {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .submit-btn, .back-btn {
             background-color: #6a0dad;
             color: white;
             border: none;
@@ -78,9 +104,10 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 20px;
+            margin-right: 10px;
         }
 
-        .submit-btn:hover {
+        .submit-btn:hover, .back-btn:hover {
             background-color: #5a0cb0;
         }
     </style>
@@ -101,13 +128,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!resumeData) return;
 
         document.getElementById("fullName").value = resumeData.name || "";
+        document.getElementById("jobTitle").value = resumeData.jobTitle || "";
+        document.getElementById("location").value = resumeData.location || "";
         document.getElementById("email").value = resumeData.email || "";
         document.getElementById("phone").value = resumeData.phone || "";
+        document.getElementById("linkedin").value = resumeData.linkedin || "";
+        document.getElementById("github").value = resumeData.github || "";
         document.getElementById("summary").value = resumeData.summary || "";
-        document.getElementById("education").value = resumeData.education || "";
         document.getElementById("experience").value = resumeData.experience || "";
         document.getElementById("skills").value = resumeData.skills || "";
+        document.getElementById("education").value = resumeData.education || "";
         document.getElementById("projects").value = resumeData.projects || "";
+        document.getElementById("certifications").value = resumeData.certifications || "";
     }
 
    
@@ -121,8 +153,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <h2>Resume Details</h2>
     <p class="subtitle">
-        Fill in your details to generate an ATS-friendly resume.
+        Fill in all details to create a high-scoring ATS resume (90+ score). Use keywords from job descriptions, quantify achievements with numbers, and follow the examples for best results.
     </p>
+
+    <div class="ats-score-note">
+        💡 ATS Scoring Tips: This form collects data for a resume like the high-scoring example. Include metrics (e.g., "improved by 60%"), action verbs (e.g., "Led", "Architected"), and exact job keywords to maximize ATS compatibility.
+    </div>
 
    <form onsubmit="goToTemplates(event)">
 
@@ -130,40 +166,87 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="section">
         <h3>Personal Information</h3>
         <div class="field-group">
-            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="fullName" placeholder="Full Name (e.g., Alexander J. Thompson)" required>
+            <input type="text" id="jobTitle" placeholder="Professional Title (e.g., Senior Software Engineer | Full Stack Developer)" required>
+            <input type="text" id="location" placeholder="Location (e.g., San Francisco, CA 94105)" required>
             <input type="email" id="email" placeholder="Email Address" required>
-            <input type="text" id="phone" placeholder="Phone Number" required>
+            <input type="text" id="phone" placeholder="Phone Number (e.g., (415) 555-0123)" required>
+            <input type="url" id="linkedin" placeholder="LinkedIn URL (e.g., linkedin.com/in/alexthompson)">
+            <input type="url" id="github" placeholder="GitHub URL (e.g., github.com/alexthompson)">
         </div>
+        <div class="hint">Include your professional title and contact links—ATS scans these for keywords.</div>
+        <div class="ats-tip">ATS Tip: Use a professional email and include LinkedIn/GitHub to boost credibility and keyword matching.</div>
     </div>
 
     <!-- SUMMARY -->
     <div class="section">
         <h3>Professional Summary</h3>
-        <textarea id="summary" placeholder="Brief summary about yourself"></textarea>
-    </div>
-
-    <!-- EDUCATION -->
-    <div class="section">
-        <h3>Education</h3>
-        <textarea id="education" placeholder="Degree, Institution, Year"></textarea>
+        <textarea id="summary" placeholder="Results-driven Senior Software Engineer with 8+ years of experience in full-stack web development and cloud architecture. Proven track record of designing and implementing scalable applications that improved system performance by 40%. Strong expertise in JavaScript, Python, React, Node.js, and AWS cloud services. Seeking to leverage technical leadership and problem-solving skills to drive innovation at a forward-thinking technology company."></textarea>
+        <div class="hint">Write 3-5 sentences. Start with your title and experience, highlight key achievements with numbers, list core skills, and state your career goal.</div>
+        <div class="ats-tip">ATS Tip: This is the first section ATS reads—pack it with job-specific keywords (e.g., "full-stack", "cloud architecture") and metrics for a 90+ score.</div>
     </div>
 
     <!-- EXPERIENCE -->
     <div class="section">
         <h3>Work Experience</h3>
-        <textarea id="experience" placeholder="Job title, company, responsibilities"></textarea>
+        <textarea id="experience" placeholder="Job Title | Company Name, Location | Start Date – End Date
+- Led [project] that [result], improving [metric] by X% (e.g., Led development of microservices platform serving 500K+ users, improving scalability by 60%)
+- Architected [technology] using [tools], reducing [issue] by X% (e.g., Architected RESTful APIs using Node.js, reducing latency by 40%)
+- Migrated [system] to [new tech], cutting [cost/time] by X% (e.g., Migrated to serverless AWS, reducing deployment time from 4 hours to 15 minutes)
+- Mentored [team] and [activity], boosting [outcome] by X% (e.g., Mentored 5 developers, improving productivity by 25%)
+
+Add multiple jobs in reverse chronological order, with 4-6 bullets each." required></textarea>
+        <div class="hint">List 2-3 recent jobs. For each: Title | Company, Location | Dates. Then 4-6 bullet points starting with action verbs (Led, Developed, Implemented). Quantify everything with numbers.</div>
+        <div class="ats-tip">ATS Tip: ATS loves numbers—include user counts, percentages, time savings. Use exact job keywords (e.g., "microservices", "RESTful APIs"). Avoid tables or fancy formatting.</div>
     </div>
 
     <!-- SKILLS -->
     <div class="section">
-        <h3>Skills</h3>
-        <textarea id="skills" placeholder="Example: Java, HTML, CSS, JavaScript, SQL"></textarea>
+        <h3>Technical Skills</h3>
+        <textarea id="skills" placeholder="JavaScript (ES6+), Python, React.js, Node.js, TypeScript, AWS, Docker, Kubernetes, PostgreSQL, MongoDB, Redis, REST APIs, GraphQL, Git, CI/CD, Jenkins, Jest, Agile/Scrum, JIRA, Linux, Nginx, Problem Solving, Team Leadership, Project Management"></textarea>
+        <div class="hint">List skills as comma-separated tags. Include programming languages, frameworks, tools, methodologies, and soft skills. Match the job description exactly.</div>
+        <div class="ats-tip">ATS Tip: This section is scanned for keywords—include 15-25 skills. Use standard terms (e.g., "JavaScript" not "JS"). Add certifications here if short.</div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section">
+        <h3>Education</h3>
+        <textarea id="education" placeholder="Degree Name | Institution Name, Location | Graduation Year
+GPA: X.X/4.0 | Specialization/Minor
+
+Example:
+Master of Science in Computer Science | Stanford University, Stanford, CA | May 2016
+GPA: 3.8/4.0 | Specialization: Software Engineering & Cloud Computing
+
+Bachelor of Science in Computer Science | University of California, Berkeley | May 2014
+GPA: 3.7/4.0 | Minor: Mathematics" required></textarea>
+        <div class="hint">List degrees in reverse order. Include full degree name, school, year, GPA (if 3.0+), and specializations. Add relevant coursework if applicable.</div>
+        <div class="ats-tip">ATS Tip: Use full names (e.g., "Bachelor of Science" not "BS"). Include GPA and specializations to match keyword searches.</div>
     </div>
 
     <!-- PROJECTS -->
     <div class="section">
-        <h3>Projects (Optional)</h3>
-        <textarea id="projects" placeholder="Project title and description"></textarea>
+        <h3>Notable Projects</h3>
+        <textarea id="projects" placeholder="Project Title
+- Architected [description] using [technologies], achieving [result] (e.g., Architected scalable e-commerce platform using microservices (Node.js, Python), reducing costs by 40%)
+- Implemented [feature] with [tools], improving [metric] by X% (e.g., Integrated Redis caching, improving response times by 60%)
+- Built [system] for [purpose], handling [scale] (e.g., Built real-time dashboard with WebSocket, handling 10K+ users)
+
+Add 2-3 projects with 2-3 bullets each." required></textarea>
+        <div class="hint">Highlight personal, academic, or professional projects. Treat like work experience: title, then bullets with action verbs and metrics.</div>
+        <div class="ats-tip">ATS Tip: Projects show skills in action—include technologies and results. If no work experience, this can boost your score significantly.</div>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="section">
+        <h3>Certifications</h3>
+        <textarea id="certifications" placeholder="Certification Name (Year)
+Example:
+AWS Certified Solutions Architect – Associate (2023)
+Google Cloud Professional Cloud Architect (2022)
+Scrum Master Certified (2021)"></textarea>
+        <div class="hint">List relevant certifications with years. Include industry-standard ones (e.g., AWS, Google Cloud) to match job requirements.</div>
+        <div class="ats-tip">ATS Tip: Certifications are keyword gold—add them to skills too. They can push your score over 90 if they match the job.</div>
     </div>
 
     <!-- SUBMIT -->
@@ -173,6 +256,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </form>
 
+    <!-- BACK BUTTON OUTSIDE FORM -->
+    <button class="back-btn" onclick="location.href='resume-options.html'">
+        Back to Options
+    </button>
 
 </div>
 
@@ -182,13 +269,18 @@ function goToTemplates(event) {
 
     const resumeData = {
         name: document.getElementById("fullName").value,
+        jobTitle: document.getElementById("jobTitle").value,
+        location: document.getElementById("location").value,
         email: document.getElementById("email").value,
         phone: document.getElementById("phone").value,
+        linkedin: document.getElementById("linkedin").value,
+        github: document.getElementById("github").value,
         summary: document.getElementById("summary").value,
-        education: document.getElementById("education").value,
         experience: document.getElementById("experience").value,
         skills: document.getElementById("skills").value,
-        projects: document.getElementById("projects").value
+        education: document.getElementById("education").value,
+        projects: document.getElementById("projects").value,
+        certifications: document.getElementById("certifications").value
     };
 
     // store resume data
