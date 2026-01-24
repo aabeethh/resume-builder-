@@ -2,119 +2,307 @@
 <html lang="en">
 <head>
     <title>Register | Resume Builder</title>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* --- RESET & BASICS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            font-family: Arial, sans-serif;
+            background: #6a0dad;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
         }
 
+        /* --- ANIMATED BACKGROUND BLOBS --- */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #9b59b6, #6a0dad);
+            z-index: -1;
+            animation: float 15s infinite ease-in-out alternate;
+            opacity: 0.6;
+            filter: blur(60px);
+        }
+
+        body::before { top: -10%; left: -10%; }
+        body::after { bottom: -10%; right: -10%; background: linear-gradient(45deg, #00d4ff, #6a0dad); animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(100px, 50px) rotate(180deg); }
+            100% { transform: translate(-50px, 100px) rotate(360deg); }
+        }
+
+        /* --- GLASSMORPHISM CARD --- */
         .register-container {
-            background-color: white;
-            padding: 40px 35px;
-            width: 360px;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            width: 420px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: slideUpFade 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .register-container h1 {
-            margin-bottom: 25px;
-            font-size: 36px;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            color: #4b0082;
+        }
+
+        /* --- INPUT FIELDS --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        /* Icon on the left */
+        .input-group > i.main-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a0dad;
+            font-size: 18px;
+            transition: color 0.3s;
+            z-index: 2;
+        }
+
+        /* The Eye Icon on the right */
+        .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s;
+            z-index: 10; /* Ensure it stays clickable */
+        }
+
+        .toggle-password:hover {
             color: #6a0dad;
         }
 
         .register-container input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            padding: 15px 50px 15px 50px; /* Room for icons on both sides */
+            border-radius: 50px;
+            border: 2px solid #e0e0e0;
             font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.9);
         }
 
+        .register-container input:focus {
+            outline: none;
+            border-color: #6a0dad;
+            box-shadow: 0 0 20px rgba(106, 13, 173, 0.15);
+        }
+
+        /* --- VALIDATION LIST --- */
+        .validation-list {
+            text-align: left;
+            margin-bottom: 20px;
+            padding-left: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .validation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #888;
+        }
+
+        .validation-item i { margin-right: 8px; font-size: 12px; }
+        .validation-item.valid { color: #27ae60; }
+        .validation-item.invalid { color: #e74c3c; }
+
+        /* --- BUTTON --- */
         .register-container button {
-            margin-top: 20px;
-            padding: 12px;
+            padding: 15px;
             width: 100%;
-            background-color: #6a0dad;
+            background: linear-gradient(to right, #6a0dad, #9b59b6);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
         }
 
         .register-container button:hover {
-            background-color: #5a0cb0;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5);
+            background: linear-gradient(to right, #5a0cb0, #8e44ad);
         }
 
-        .register-container p {
-            margin-top: 20px;
-            font-size: 14px;
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
         }
+        .shake { animation: shake 0.4s ease-in-out; }
 
-        .register-container a {
-            color: #6a0dad;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .register-container a:hover {
-            text-decoration: underline;
-        }
+        .register-container p { margin-top: 25px; font-size: 14px; color: #666; }
+        .register-container a { color: #6a0dad; text-decoration: none; font-weight: 600; }
     </style>
 </head>
 
 <body>
 
-    <form class="register-container" onsubmit="register(event)">
-        <h1>Get Started</h1>
+    <form class="register-container" onsubmit="register(event)" autocomplete="off">
+        <h1>Start Building</h1>
 
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
+        <div class="input-group">
+            <i class="fas fa-user main-icon"></i>
+            <input type="text" id="username" placeholder="Username" required>
+        </div>
 
-        <button type="submit">Create Account</button>
+        <div class="input-group">
+            <i class="fas fa-lock main-icon"></i>
+            <input type="password" id="password" placeholder="Password" required onkeyup="validatePassword()">
+            <i class="fas fa-eye-slash toggle-password" id="togglePasswordIcon" onclick="togglePassword()"></i>
+        </div>
+
+        <div class="validation-list" id="validation-list">
+            <div class="validation-item" id="length">
+                <i class="fas fa-circle"></i> At least 8 characters
+            </div>
+            <div class="validation-item" id="number">
+                <i class="fas fa-circle"></i> Contains a number
+            </div>
+            <div class="validation-item" id="uppercase">
+                <i class="fas fa-circle"></i> Contains uppercase letter
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Create Account</button>
 
         <p>
             Already have an account?
-            <a href="login.html">Login</a>
+            <a href="login.html">Login here</a>
         </p>
     </form>
 
     <script>
-
-  
-function register(event) {
-    event.preventDefault();
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        if (data.message.includes("successfully")) {
-            window.location.href = "login.html";
+        // 1. Toggle Password Visibility
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePasswordIcon");
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            }
         }
-    });
-}
-</script>
 
+        // 2. Password Strength Logic
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const validationList = document.getElementById("validation-list");
+            
+            validationList.style.display = (password.length > 0) ? "block" : "none";
+
+            const requirements = [
+                { id: "length", valid: password.length >= 8 },
+                { id: "number", valid: /\d/.test(password) },
+                { id: "uppercase", valid: /[A-Z]/.test(password) }
+            ];
+
+            let allValid = true;
+            requirements.forEach(req => {
+                const item = document.getElementById(req.id);
+                const icon = item.querySelector("i");
+                if (req.valid) {
+                    item.classList.add("valid");
+                    item.classList.remove("invalid");
+                    icon.className = "fas fa-check-circle";
+                } else {
+                    item.classList.add("invalid");
+                    item.classList.remove("valid");
+                    icon.className = "fas fa-times-circle";
+                    allValid = false;
+                }
+            });
+            return allValid;
+        }
+
+        // 3. Submit Registration
+        function register(event) {
+            event.preventDefault();
+            const button = document.getElementById('submitBtn');
+
+            if (!validatePassword()) {
+                button.classList.add('shake');
+                setTimeout(() => button.classList.remove('shake'), 400);
+                alert("Please meet all password requirements.");
+                return;
+            }
+
+            const originalText = button.innerText;
+            button.innerText = 'Creating Account...';
+            button.style.opacity = '0.7';
+            button.disabled = true;
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            fetch("http://localhost:5000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if (data.message && data.message.toLowerCase().includes("success")) {
+                    window.location.href = "login.html";
+                }
+            })
+            .catch(err => alert("Failed to connect to server."))
+            .finally(() => {
+                button.innerText = originalText;
+                button.style.opacity = '1';
+                button.disabled = false;
+            });
+        }
+    </script>
 </body>
 </html>

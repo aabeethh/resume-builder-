@@ -2,135 +2,276 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resume Builder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder | Build Your Future</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+        /* CSS VARIABLES */
+        :root {
+            --primary: #6a0dad;
+            --primary-dark: #4b0082;
+            --accent: #00d4ff;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --bg-light: #f9f9ff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
-        /* Navbar */
+        /* GLOBAL RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* NAVBAR - Glassmorphism */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
-            background-color: #6a0dad;
-            color: white;
+            padding: 20px 8%;
+            background: rgba(106, 13, 173, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        nav a {
-            color: white;
-            margin-left: 20px;
-            text-decoration: none;
-            font-weight: bold;
+        nav h2 {
+            color: var(--white);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
-        /* Hero Section */
+        nav div a {
+            color: var(--white);
+            margin-left: 30px;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav div a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        nav div a:hover::after {
+            width: 100%;
+        }
+
+        /* HERO SECTION */
         .hero {
             text-align: center;
-            padding: 80px 20px;
-            background-color: white;
+            padding: 120px 20px 100px;
+            background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+            position: relative;
         }
 
         .hero h1 {
-            font-size: 48px;
+            font-size: 3.5rem;
             margin-bottom: 20px;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .hero p {
-            font-size: 18px;
-            max-width: 800px;
+            font-size: 1.2rem;
+            max-width: 700px;
             margin: auto;
-            color: #444;
+            color: var(--text-light);
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out;
         }
 
-        /* Buttons */
+        /* BUTTONS */
         .btn-container {
-            margin-top: 40px;
+            margin-top: 50px;
+            animation: fadeInUp 1.2s ease-out;
         }
 
         .btn {
-            padding: 12px 25px;
-            margin: 10px;
+            padding: 15px 35px;
             font-size: 16px;
+            font-weight: 600;
             border: none;
-            border-radius: 6px;
+            border-radius: 50px;
             cursor: pointer;
+            transition: var(--transition);
+            margin: 0 10px;
         }
 
         .btn-primary {
-            background-color: #6a0dad;
-            color: white;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(106, 13, 173, 0.5);
         }
 
         .btn-secondary {
-            background-color: white;
-            color: #6a0dad;
-            border: 2px solid #6a0dad;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
-        /* Features */
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-5px);
+        }
+
+        /* FEATURES SECTION */
         .features {
-            background-color: #f0e6ff;
-            padding: 60px 40px;
+            background-color: var(--white);
+            padding: 100px 8%;
+            position: relative;
         }
 
         .features h2 {
             text-align: center;
-            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 60px;
         }
 
         .feature-list {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
         }
 
         .feature {
-            width: 250px;
-            background-color: white;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 8px;
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 20px;
             text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        /* Footer */
+        .feature:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary);
+        }
+
+        .feature i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .feature:hover i {
+            transform: scale(1.2);
+            color: var(--accent);
+        }
+
+        .feature h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .feature p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
         footer {
             text-align: center;
-            padding: 20px;
-            background-color: #6a0dad;
-            color: white;
+            padding: 40px;
+            background-color: #1a1a1a;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        footer p span {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav { padding: 15px 20px; }
+            .feature-list { grid-template-columns: 1fr; }
+            .btn { width: 100%; margin: 10px 0; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
     <nav>
-        <h2>Resume Builder</h2>
+        <h2>Resume<span style="color: #00d4ff;">.io</span></h2>
         <div>
-            <a href="index.html">Home</a>
+            <a href="register.html">Register</a>
             <a href="login.html">Login</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
     <section class="hero">
-        <h1>Create Your Professional Resume</h1>
+        <h1>Build Your Dream Resume <br> in Minutes</h1>
         <p>
-            Build an ATS-friendly resume using professional templates.
-            Enter your details, choose a template, and generate a job-ready resume
-            with optional ATS score checking and job role optimization.
+            Stop worrying about formatting. Use our ATS-friendly templates to create a 
+            professional resume that stands out to recruiters and passes automated screens.
         </p>
 
         <div class="btn-container">
             <a href="register.html">
-                <button class="btn btn-primary">Create an Account</button>
+                <button class="btn btn-primary">Create Free Account <i class="fas fa-arrow-right"></i></button>
             </a>
             <a href="login.html">
                 <button class="btn btn-secondary">Login</button>
@@ -138,36 +279,38 @@
         </div>
     </section>
 
-    <!-- FEATURES SECTION -->
     <section class="features">
-        <h2>Why Use This Resume Builder?</h2>
+        <h2>Everything you need to get hired</h2>
 
         <div class="feature-list">
             <div class="feature">
+                <i class="fas fa-file-alt"></i>
                 <h3>ATS-Friendly Templates</h3>
-                <p>Single-column layouts designed to pass applicant tracking systems.</p>
+                <p>Clean, single-column layouts engineered specifically to be readable by Applicant Tracking Systems.</p>
             </div>
 
             <div class="feature">
-                <h3>Easy Resume Creation</h3>
-                <p>Fill simple forms and generate your resume instantly.</p>
+                <i class="fas fa-magic"></i>
+                <h3>Instant Generation</h3>
+                <p>Don't struggle with Word. Fill in our smart forms and download a perfectly formatted PDF instantly.</p>
             </div>
 
             <div class="feature">
-                <h3>ATS Score Checker</h3>
-                <p>Upload your resume and check its ATS compatibility.</p>
+                <i class="fas fa-chart-line"></i>
+                <h3>Score Checker</h3>
+                <p>Upload your current resume and get a detailed score based on readability, keywords, and length.</p>
             </div>
 
             <div class="feature">
-                <h3>Job Role Optimization</h3>
-                <p>Analyze how well your resume matches a specific job role.</p>
+                <i class="fas fa-briefcase"></i>
+                <h3>Role Optimization</h3>
+                <p>Paste the job description you want. We'll tell you exactly what keywords to add to match the role.</p>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer>
-        <p>© 2026 Resume Builder Project | Semester Project</p>
+        <p>© 2026 <span>Resume.io</span> | Semester Project Built with Passion</p>
     </footer>
 
 </body>

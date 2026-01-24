@@ -2,74 +2,173 @@
 <html lang="en">
 <head>
     <title>Login | Resume Builder</title>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            font-family: Arial, sans-serif;
+            background: #6a0dad;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
         }
 
+        /* --- ANIMATED BACKGROUND --- */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #9b59b6, #6a0dad);
+            z-index: -1;
+            animation: float 18s infinite ease-in-out alternate;
+            opacity: 0.5;
+            filter: blur(60px);
+        }
+
+        body::before { top: -10%; left: -10%; }
+        body::after { 
+            bottom: -10%; 
+            right: -10%; 
+            background: linear-gradient(45deg, #00d4ff, #6a0dad); 
+            animation-delay: -5s; 
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(100px, 50px) rotate(360deg); }
+        }
+
+        /* --- LOGIN CONTAINER --- */
         .login-container {
-            background-color: white;
-            padding: 40px 35px;
-            width: 350px;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 50px 40px;
+            width: 400px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: cardEntrance 0.8s ease-out;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-container h1 {
-            margin-bottom: 25px;
-            font-size: 36px;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            color: #4b0082;
+        }
+
+        /* --- INPUT GROUPS --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .input-group i.main-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a0dad;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 50px 15px 50px;
+            border-radius: 50px;
+            border: 2px solid #eee;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #6a0dad;
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.1);
+            background: #fff;
+        }
+
+        /* --- EYE SYMBOL --- */
+        .eye-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        .eye-toggle:hover {
             color: #6a0dad;
         }
 
-        .login-container input {
+        /* --- BUTTON --- */
+        button {
+            margin-top: 15px;
+            padding: 15px;
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 15px;
-        }
-
-        .login-container button {
-            margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background-color: #6a0dad;
+            background: linear-gradient(135deg, #6a0dad, #9b59b6);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
         }
 
-        .login-container button:hover {
-            background-color: #5a0cb0;
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.4);
         }
 
-        .login-container p {
-            margin-top: 20px;
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* --- LINKS --- */
+        p {
+            margin-top: 25px;
             font-size: 14px;
+            color: #666;
         }
 
-        .login-container a {
+        a {
             color: #6a0dad;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            transition: color 0.3s;
         }
 
-        .login-container a:hover {
-            text-decoration: underline;
+        a:hover {
+            color: #00d4ff;
         }
     </style>
 </head>
@@ -77,13 +176,20 @@
 <body>
 
     <form onsubmit="login(event)" class="login-container">
+        <h1>Welcome Back</h1>
 
-        <h1>Login</h1>
+        <div class="input-group">
+            <i class="fas fa-user main-icon"></i>
+            <input type="text" id="username" placeholder="Username or Email" required>
+        </div>
 
-     <input type="text" id="username" placeholder="Username or Email" required>
-<input type="password" id="password" placeholder="Password" required>
+        <div class="input-group">
+            <i class="fas fa-lock main-icon"></i>
+            <input type="password" id="password" placeholder="Password" required>
+            <i class="fas fa-eye-slash eye-toggle" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+        </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" id="loginBtn">Sign In</button>
 
         <p>
             Don’t have an account?
@@ -92,30 +198,61 @@
     </form>
 
     <script>
-function login(event) {
-    event.preventDefault();
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("Login successful");
-            window.location.href = "dashboard.html";
-        } else {
-            alert("Invalid username or password");
+        // Password visibility toggle logic
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePassword");
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+            }
         }
-    });
-}
-</script>
+
+        function login(event) {
+            event.preventDefault();
+            const loginBtn = document.getElementById("loginBtn");
+            const originalText = loginBtn.innerText;
+
+            // Simple visual loading state
+            loginBtn.innerText = "Processing...";
+            loginBtn.disabled = true;
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            fetch("http://localhost:5000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem("userId", username);
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert("Invalid username or password");
+                    resetBtn();
+                }
+            })
+            .catch(err => {
+                console.error("Login error:", err);
+                alert("Login failed. Please check your connection.");
+                resetBtn();
+            });
+
+            function resetBtn() {
+                loginBtn.innerText = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+    </script>
 
 </body>
 </html>
