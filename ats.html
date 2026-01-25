@@ -2,131 +2,244 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ATS Resume Score</title>
+    <title>ATS Resume Score | AI Analyzer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #9b59b6;
+            --accent: #00d4ff;
+            --bg-dark: #0f0c29;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            padding: 40px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-dark);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
         }
+
+        /* --- Animated Background Blobs --- */
+        .blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.4;
+            animation: move 20s infinite alternate;
+        }
+        .blob.blue { background: var(--accent); top: -10%; right: -10%; animation-delay: -5s; }
+        .blob.purple { bottom: -10%; left: -10%; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 100px) scale(1.2); }
+        }
+
+        /* --- Glassmorphism Container --- */
         .container {
-            background: #ffffff;
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 800px;
-            margin: auto;
-            padding: 40px;
-            border-radius: 18px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+            width: 95%;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
+            animation: fadeInUp 1s ease-out;
         }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
+        p { color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; }
+
+        /* --- Styled Drop Zone --- */
         .drop-zone {
-            border: 2px dashed #6a0dad;
-            border-radius: 12px;
-            padding: 40px;
-            background-color: #f8f4ff;
-            color: #6a0dad;
-            font-weight: bold;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 60px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.03);
             cursor: pointer;
             margin: 20px 0;
         }
         .drop-zone.dragover {
-            background-color: #e6dcff;
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
         }
+        .drop-zone span { font-size: 1.1rem; transition: 0.3s; }
+
+        /* --- Button Effects --- */
+        .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
         button {
-            background-color: #6a0dad;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            margin: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
         }
-        .back-btn {
-            background-color: #6a0dad;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 10px;
+        button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5); }
+        button:active { transform: scale(0.98); }
+        .back-btn { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* --- Animated Score Radial --- */
+        .score-display-wrapper {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .score-display {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #6a0dad;
+
+        .progress-ring {
+            position: relative;
+            width: 160px;
+            height: 160px;
         }
-        .breakdown {
-            text-align: left;
-            margin-top: 20px;
+        .progress-ring svg { transform: rotate(-90deg); }
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
         }
-        .breakdown ul {
-            list-style: none;
-            padding: 0;
+        .bg-circle { stroke: rgba(255, 255, 255, 0.1); }
+        .fg-circle {
+            stroke: var(--accent);
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440; /* Starts empty */
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .breakdown li {
-            margin: 5px 0;
+
+        .score-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        /* --- Breakdown Staggered Animation --- */
+        .breakdown { text-align: left; width: 100%; margin-top: 30px; }
+        .breakdown-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .show-items .breakdown-item {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
+
+    <div class="blob blue"></div>
+    <div class="blob purple"></div>
+
     <div class="container">
-        <h2>Upload Resume for ATS Score</h2>
-        <p>Drag & drop your resume (PDF only) to get an ATS compatibility score.</p>
+        <h2>ATS Intelligence</h2>
+        <p>Upload your resume to check how AI filters your profile.</p>
 
         <div class="drop-zone" id="dropZone">
-            <span id="dropText">Drop resume here or click to upload</span>
+            <span id="dropText">Drag & drop PDF here or click to browse</span>
             <input type="file" id="resumeFile" accept=".pdf" hidden>
         </div>
 
-        <div>
-            <button onclick="calculateScore()">Calculate ATS Score</button>
-            <button class="back-btn" onclick="location.href='dashboard.html'">Back to Dashboard</button>
+        <div class="button-group">
+            <button onclick="calculateScore()">Analyze Resume</button>
+            <button class="back-btn" onclick="location.href='dashboard.html'">Back</button>
         </div>
 
         <div id="scoreResult" style="display: none;">
-            <div class="score-display">
-                <h3>Your ATS Score: <span id="score"></span>/100</h3>
-            </div>
-            <div class="breakdown">
-                <h4>Score Breakdown:</h4>
-                <ul id="breakdownList"></ul>
+            <div class="score-display-wrapper">
+                <div class="progress-ring">
+                    <svg width="160" height="160">
+                        <circle class="bg-circle" cx="80" cy="80" r="70"></circle>
+                        <circle id="scoreRing" class="fg-circle" cx="80" cy="80" r="70"></circle>
+                    </svg>
+                    <div class="score-text"><span id="score">0</span>%</div>
+                </div>
+                
+                <div class="breakdown" id="breakdownList">
+                    </div>
             </div>
         </div>
     </div>
 
     <script>
-        // PDF.js worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
         const dropZone = document.getElementById("dropZone");
         const fileInput = document.getElementById("resumeFile");
         const dropText = document.getElementById("dropText");
+        let extractedText = "";
 
         dropZone.onclick = () => fileInput.click();
-        dropZone.addEventListener("dragover", e => {
-            e.preventDefault();
-            dropZone.classList.add("dragover");
+        
+        // Drag events
+        ["dragover", "dragenter"].forEach(type => {
+            dropZone.addEventListener(type, (e) => {
+                e.preventDefault();
+                dropZone.classList.add("dragover");
+            });
         });
-        dropZone.addEventListener("dragleave", () => {
-            dropZone.classList.remove("dragover");
+
+        ["dragleave", "drop"].forEach(type => {
+            dropZone.addEventListener(type, () => {
+                dropZone.classList.remove("dragover");
+            });
         });
+
         dropZone.addEventListener("drop", e => {
             e.preventDefault();
-            dropZone.classList.remove("dragover");
             processPDF(e.dataTransfer.files[0]);
         });
-        fileInput.onchange = e => processPDF(e.target.files[0]);
 
-        let extractedText = "";
+        fileInput.onchange = e => processPDF(e.target.files[0]);
 
         async function processPDF(file) {
             if (!file || file.type !== "application/pdf") {
-                alert("Upload a PDF only");
+                alert("Please upload a PDF file.");
                 return;
             }
-            dropText.textContent = "Extracting text...";
+            dropText.textContent = "⚙️ Extracting Intelligence...";
+            
             const reader = new FileReader();
             reader.onload = async function () {
                 const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
@@ -134,20 +247,9 @@
                 for (let p = 1; p <= pdf.numPages; p++) {
                     const page = await pdf.getPage(p);
                     const content = await page.getTextContent();
-                    let lastY = null;
-                    let line = "";
-                    content.items.forEach(item => {
-                        if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) {
-                            line += item.str + " ";
-                        } else {
-                            extractedText += line.trim() + "\n";
-                            line = item.str + " ";
-                        }
-                        lastY = item.transform[5];
-                    });
-                    if (line.trim()) extractedText += line.trim() + "\n";
+                    extractedText += content.items.map(i => i.str).join(" ") + "\n";
                 }
-                dropText.textContent = "Resume uploaded! Click Calculate.";
+                dropText.innerHTML = "✅ Resume Synced! Ready to Analyze.";
             };
             reader.readAsArrayBuffer(file);
         }
@@ -158,58 +260,61 @@
                 return;
             }
 
-            // Parse data (reuse your parsing logic)
             const data = parseResumeText(extractedText);
-
-            // Job keywords (customize this list)
-            const jobKeywords = ["javascript", "react", "html", "css", "node.js", "python", "sql", "agile", "teamwork"];
+            const jobKeywords = ["javascript", "react", "html", "css", "node.js", "python", "sql", "agile", "aws"];
             const textLower = extractedText.toLowerCase();
             const keywordMatches = jobKeywords.filter(k => textLower.includes(k)).length;
-            const keywordScore = (keywordMatches / jobKeywords.length) * 40;  // 40% weight
-
-            // Section presence (30% weight)
+            
+            // Logic
+            const keywordScore = (keywordMatches / jobKeywords.length) * 40;
             let sectionScore = 0;
             if (data.summary) sectionScore += 10;
             if (data.experience) sectionScore += 10;
             if (data.education) sectionScore += 5;
             if (data.skills) sectionScore += 5;
 
-            // Formatting/Length (30% weight)
             const wordCount = extractedText.split(/\s+/).length;
-            const lengthScore = wordCount > 200 && wordCount < 800 ? 20 : Math.max(0, 20 - Math.abs(400 - wordCount) / 20);
-            const formatScore = extractedText.includes("\n") ? 10 : 0;  // Basic check for line breaks
+            const lengthScore = wordCount > 300 && wordCount < 1000 ? 30 : 15;
+            
+            const totalScore = Math.round(keywordScore + sectionScore + lengthScore);
 
-            const totalScore = Math.round(keywordScore + sectionScore + lengthScore + formatScore);
+            // --- ANIMATION TRIGGER ---
+            const resultDiv = document.getElementById("scoreResult");
+            resultDiv.style.display = "block";
+            
+            // 1. Animate Circle
+            const ring = document.getElementById("scoreRing");
+            const circumference = 440; // 2 * pi * r(70)
+            const offset = circumference - (totalScore / 100) * circumference;
+            setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
 
-            // Display
-            document.getElementById("score").textContent = totalScore;
-            document.getElementById("breakdownList").innerHTML = `
-                <li>Keywords Matched: ${keywordMatches}/${jobKeywords.length} (${Math.round(keywordScore)}/40)</li>
-                <li>Sections Present: ${sectionScore}/30</li>
-                <li>Formatting/Length: ${Math.round(lengthScore + formatScore)}/30</li>
+            // 2. Count up Number
+            let start = 0;
+            const duration = 1500;
+            const counter = setInterval(() => {
+                start++;
+                document.getElementById("score").textContent = start;
+                if (start >= totalScore) clearInterval(counter);
+            }, duration / totalScore);
+
+            // 3. Staggered Breakdown
+            const breakdownList = document.getElementById("breakdownList");
+            breakdownList.classList.remove("show-items");
+            breakdownList.innerHTML = `
+                <div class="breakdown-item" style="animation-delay: 0.1s"><span>Keywords Matched</span> <span>${keywordMatches}/${jobKeywords.length}</span></div>
+                <div class="breakdown-item" style="animation-delay: 0.2s"><span>Section Integrity</span> <span>${sectionScore}/30</span></div>
+                <div class="breakdown-item" style="animation-delay: 0.3s"><span>Readability Index</span> <span>${lengthScore}/30</span></div>
             `;
-            document.getElementById("scoreResult").style.display = "block";
+            setTimeout(() => { breakdownList.classList.add("show-items"); }, 100);
         }
 
-        // Reused parsing function (simplified)
         function parseResumeText(rawText) {
-            const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "" };
-            const lines = rawText.split("\n").map(l => l.trim()).filter(Boolean);
-            const joined = lines.join(" ");
-            data.email = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || "";
-            data.phone = joined.match(/(\+?\d[\d\s\-]{8,}\d)/)?.[0] || "";
-            data.name = lines.find(l => l.length < 35 && !l.includes("@") && !/\d/.test(l)) || "Your Name";
-
-            let current = null;
-            lines.forEach(line => {
-                const l = line.toLowerCase();
-                if (/summary|objective/.test(l)) current = "summary";
-                else if (/experience|work/.test(l)) current = "experience";
-                else if (/education/.test(l)) current = "education";
-                else if (/skills/.test(l)) current = "skills";
-                else if (current) data[current] += line + " ";
-            });
-            Object.keys(data).forEach(key => data[key] = data[key].trim());
+            const data = { summary: false, experience: false, education: false, skills: false };
+            const l = rawText.toLowerCase();
+            if (/summary|objective/.test(l)) data.summary = true;
+            if (/experience|work/.test(l)) data.experience = true;
+            if (/education/.test(l)) data.education = true;
+            if (/skills/.test(l)) data.skills = true;
             return data;
         }
     </script>
