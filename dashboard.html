@@ -1,324 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Dashboard | Resume Builder</title>
+    <title>Dashboard | ResumeElite</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --primary: #6a0dad;
             --secondary: #9b59b6;
-            --bg: #f8f9fd;
-            --glass: rgba(255, 255, 255, 0.85);
-            --danger: #e74c3c;
+            --accent: #00d4ff;
+            --bg: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.05);
+            --danger: #ff4757;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--bg);
-            color: #333;
+            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+            color: white;
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* ===== HEADER ===== */
+        /* --- Animated Background Elements --- */
+        .blob {
+            position: fixed;
+            width: 600px; height: 600px;
+            background: var(--primary);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: -1;
+            animation: float 25s infinite alternate;
+        }
+        .blob-2 { background: var(--accent); top: -200px; right: -200px; animation-delay: -5s; }
+        .blob-3 { background: var(--secondary); bottom: -200px; left: -10%; animation-delay: -10s; }
+
+        @keyframes float {
+            from { transform: translate(0, 0) rotate(0deg) scale(1); }
+            to { transform: translate(150px, 200px) rotate(360deg) scale(1.2); }
+        }
+
+        /* --- Header --- */
         .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 900;
+            position: sticky; top: 0; z-index: 900;
         }
 
-        .header h1 {
-            font-size: 20px;
-            letter-spacing: 1px;
+        .header h1 { 
+            font-size: 24px; font-weight: 800; 
+            background: linear-gradient(to right, #fff, var(--secondary)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
         }
 
-        /* ===== PROFILE BUTTON (NAV) ===== */
         .profile-nav-btn {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
+            display: flex; align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 20px;
             border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s ease;
+            transition: 0.4s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .profile-nav-btn:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(106, 13, 173, 0.4); }
+        .profile-nav-btn img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
+        .profile-nav-btn span { margin-left: 10px; font-weight: 600; font-size: 14px; }
 
-        .profile-nav-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
+        /* --- Main Content --- */
+        .container { padding: 60px; max-width: 1400px; margin: 0 auto; }
+        
+        .welcome-text h2 { font-size: 3rem; margin-bottom: 10px; animation: slideDown 0.8s ease; font-weight: 800; }
+        .welcome-text p { color: rgba(255,255,255,0.6); font-size: 1.1rem; margin-bottom: 50px; animation: slideDown 1s ease; }
 
-        .profile-nav-btn img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .profile-nav-btn span {
-            margin-left: 10px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        /* ===== MAIN CONTAINER ===== */
-        .container {
-            padding: 50px 60px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .welcome-text {
-            margin-bottom: 40px;
-            animation: fadeIn 1s ease;
-        }
-
-        /* ===== DASHBOARD CARDS ===== */
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
+        /* --- Grid Cards --- */
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
 
         .card {
-            background: white;
-            padding: 35px 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 45px 30px;
+            border-radius: 30px;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid #f0f0f0;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: cardPop 0.8s forwards;
         }
+
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+        .card:nth-child(3) { animation-delay: 0.6s; }
+        .card:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes cardPop { to { opacity: 1; transform: translateY(0); } }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(106, 13, 173, 0.15);
-            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--accent);
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
         }
 
-        .card i {
-            font-size: 40px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
+        .card i { font-size: 50px; color: var(--accent); margin-bottom: 25px; transition: 0.6s; display: inline-block; }
+        .card:hover i { transform: rotateY(360deg); color: #fff; }
 
-        .card h3 { margin: 10px 0; font-size: 18px; }
-        .card p { color: #777; font-size: 14px; margin-bottom: 20px; }
+        .card h3 { font-size: 22px; margin-bottom: 15px; }
+        .card p { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 30px; line-height: 1.6; }
 
         .card button {
-            padding: 12px 25px;
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 14px; width: 100%;
+            border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
+        .card button:hover { letter-spacing: 1px; transform: scale(1.02); filter: brightness(1.2); }
 
-        .card button:hover {
-            background: var(--secondary);
-            letter-spacing: 1px;
-        }
-
-        /* ===== OVERLAY ===== */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(5px);
-            display: none;
-            z-index: 998;
-        }
-
-        .overlay.active { display: block; }
-
-        /* ===== GLASS PROFILE PANEL (SCROLLABLE) ===== */
+        /* --- Profile Side Panel --- */
         .profile-panel {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 450px;
-            height: 100%;
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            padding: 40px;
-            box-shadow: -15px 0 45px rgba(0,0,0,0.15);
-            transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid rgba(255,255,255,0.4);
-            overflow-y: auto; /* Allows scrolling if buttons are hidden */
+            position: fixed; top: 0; right: -100%; width: 450px; height: 100%;
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(40px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding: 40px; z-index: 1000;
+            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            overflow-y: auto;
         }
-
         .profile-panel.active { right: 0; }
+        
+        .close-panel { cursor: pointer; font-size: 24px; color: var(--accent); text-align: right; margin-bottom: 20px; }
 
-        /* Custom Scrollbar */
-        .profile-panel::-webkit-scrollbar { width: 6px; }
-        .profile-panel::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-        .close-panel {
-            align-self: flex-end;
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .large-profile-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
+        .large-profile-img { 
+            width: 140px; height: 140px; border-radius: 50%; 
+            border: 4px solid var(--accent); margin: 0 auto 20px; 
+            display: block; box-shadow: 0 0 40px rgba(0, 212, 255, 0.4); 
             object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
         }
 
-        .profile-panel label {
-            font-weight: 600;
-            font-size: 13px;
-            margin-top: 20px;
-            color: var(--primary);
-            display: block;
-        }
+        .profile-panel label { font-weight: 600; font-size: 13px; color: var(--accent); margin-top: 20px; display: block; }
 
         .profile-panel input, .profile-panel textarea {
-            background: rgba(255,255,255,0.6);
-            border: 2px solid #eee;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 8px;
-            width: 100%;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: white; border-radius: 12px; padding: 14px; width: 100%; margin: 10px 0;
             font-family: inherit;
-            transition: 0.3s;
         }
+        .profile-panel input:focus { border-color: var(--accent); outline: none; background: rgba(255,255,255,0.1); }
 
-        .profile-panel input:focus {
-            border-color: var(--primary);
-            outline: none;
-            background: white;
-        }
+        .action-btns { margin-top: 30px; }
+        .save-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; margin-bottom: 15px; transition: 0.3s; }
+        .save-btn:hover { background: var(--secondary); transform: translateY(-2px); }
+        .logout-btn { background: transparent; color: var(--danger); border: 2px solid var(--danger); width: 100%; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: var(--danger); color: white; }
 
-        /* ACTION BUTTONS */
-        .action-btns {
-            margin-top: 40px;
-            padding-bottom: 20px; /* Space at the bottom */
-        }
-
-        .save-btn {
-            background: var(--primary);
-            color: white;
-            padding: 16px;
-            width: 100%;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .save-btn:hover {
-            background: var(--secondary);
-            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.3);
-        }
-
-        .logout-btn {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--danger);
-            border: 2px solid var(--danger);
-            padding: 14px;
-            width: 100%;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .logout-btn:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-        }
-
-        /* ANIMATIONS */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none; z-index: 998; }
+        .overlay.active { display: block; }
     </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1> Resume builder</h1>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
 
+<div class="header">
+    <h1><i class="fas fa-rocket" style="margin-right: 10px;"></i> Resume Builder</h1>
     <div class="profile-nav-btn" onclick="openProfile()">
         <img id="navProfileImg" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-        <span id="navProfileName">My Profile</span>
+        <span id="navProfileName">My Account</span>
     </div>
 </div>
 
 <div class="container">
     <div class="welcome-text">
-        <h2>Welcome Back, <span id="welcomeName">User</span>!</h2>
-        <p>Manage your professional identity and resumes here.</p>
+        <h2>Hi, <span id="welcomeName" style="color: var(--accent);">User</span>!</h2>
+        <p>Ready to build your professional future today?</p>
     </div>
 
     <div class="card-container">
         <div class="card">
-            <i class="fas fa-plus-circle"></i>
+            <i class="fas fa-pen-nib"></i>
             <h3>Create Resume</h3>
-            <p>Design a professional resume from scratch.</p>
-            <button onclick="location.href='resume-options.html'">Create</button>
+            <p>Design an AI-ready resume using our premium designer tools.</p>
+            <button onclick="location.href='resume-options.html'">Build Now</button>
         </div>
 
         <div class="card">
             <i class="fas fa-shield-virus"></i>
-            <h3>ATS Check</h3>
-            <p>Optimize for Applicant Tracking Systems.</p>
-            <button onclick="location.href='ats.html'">Check Now</button>
+            <h3>ATS Scanner</h3>
+            <p>Don't get blocked by bots. Check your compatibility score instantly.</p>
+            <button onclick="location.href='ats.html'">Analyze</button>
         </div>
 
         <div class="card">
-            <i class="fas fa-magic"></i>
-            <h3>Role Optimizer</h3>
-            <p>Tailor your resume for specific jobs.</p>
+            <i class="fas fa-bullseye"></i>
+            <h3>Job Matcher</h3>
+            <p>Optimize your bullet points for specific job descriptions.</p>
             <button onclick="location.href='job-role.html'">Optimize</button>
         </div>
 
         <div class="card">
-            <i class="fas fa-folder-open"></i>
-            <h3>My Resumes</h3>
-            <p>Access your saved resume history.</p>
+            <i class="fas fa-vault"></i>
+            <h3>My Vault</h3>
+            <p>Securely access and download your saved resume versions.</p>
             <button onclick="location.href='saved-resume.html'">View History</button>
         </div>
     </div>
@@ -327,34 +224,24 @@
 <div class="overlay" id="overlay" onclick="closeProfile()"></div>
 
 <div class="profile-panel" id="profilePanel">
-    <div class="close-panel" onclick="closeProfile()">
-        <i class="fas fa-times"></i>
-    </div>
-    
-    <div class="profile-header">
+    <div class="close-panel" onclick="closeProfile()"><i class="fas fa-times"></i></div>
+    <div style="text-align: center;">
         <img id="largeProfileImg" class="large-profile-img" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-        <h2 style="color: var(--primary);">Edit Profile</h2>
+        <h2 style="margin-bottom: 20px;">Edit Identity</h2>
     </div>
 
     <label>Full Name</label>
     <input type="text" id="nameInput" placeholder="John Doe">
 
-    <label>Email Address</label>
-    <input type="email" id="emailInput" placeholder="john@example.com">
+    <label>Professional Bio</label>
+    <textarea id="bioInput" rows="4" placeholder="Briefly describe your expertise..."></textarea>
 
-    <label>Short Bio</label>
-    <textarea id="bioInput" rows="3" placeholder="Briefly describe your career..."></textarea>
-
-    <label>Profile Picture</label>
+    <label>Profile Image</label>
     <input type="file" id="photoInput" accept="image/*">
 
     <div class="action-btns">
-        <button class="save-btn" onclick="saveProfile()">
-            <i class="fas fa-check-circle"></i> Save Changes
-        </button>
-        <button class="logout-btn" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-        </button>
+        <button class="save-btn" onclick="saveProfile()">Update Profile</button>
+        <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
 </div>
 
@@ -365,29 +252,18 @@
     const largeProfileImg = document.getElementById("largeProfileImg");
     const welcomeName = document.getElementById("welcomeName");
 
-    // Auth Check
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-        window.location.href = "login.html";
-    }
-
-    // Load Profile Data
+    // Initialize Identity
+    let userId = localStorage.getItem("userId") || "guest_user";
     let profiles = JSON.parse(localStorage.getItem("userProfiles")) || {};
     let profile = profiles[userId];
 
-    if (profile) {
-        updateUI(profile);
-    } else {
-        // Auto-open if first time setup
-        setTimeout(openProfile, 500);
-    }
+    if (profile) updateUI(profile);
 
     function openProfile() {
         panel.classList.add("active");
         overlay.classList.add("active");
         if (profile) {
             document.getElementById("nameInput").value = profile.name || "";
-            document.getElementById("emailInput").value = profile.email || "";
             document.getElementById("bioInput").value = profile.bio || "";
         }
     }
@@ -398,22 +274,21 @@
     }
 
     function saveProfile() {
-        const name = document.getElementById("nameInput").value || userId;
-        const email = document.getElementById("emailInput").value || "";
+        const name = document.getElementById("nameInput").value || "User";
         const bio = document.getElementById("bioInput").value || "";
         const photoInput = document.getElementById("photoInput");
 
         if (photoInput.files && photoInput.files[0]) {
             const reader = new FileReader();
-            reader.onload = (e) => finalizeSave(name, email, bio, e.target.result);
+            reader.onload = (e) => finalizeSave(name, bio, e.target.result);
             reader.readAsDataURL(photoInput.files[0]);
         } else {
-            finalizeSave(name, email, bio, largeProfileImg.src);
+            finalizeSave(name, bio, largeProfileImg.src);
         }
     }
 
-    function finalizeSave(name, email, bio, photo) {
-        profile = { name, email, bio, photo };
+    function finalizeSave(name, bio, photo) {
+        profile = { name, bio, photo };
         profiles[userId] = profile;
         localStorage.setItem("userProfiles", JSON.stringify(profiles));
         updateUI(profile);
@@ -428,7 +303,7 @@
 
     function logout() {
         localStorage.removeItem("userId");
-        window.location.href = "homepage.html";
+        window.location.href = "login.html";
     }
 </script>
 
