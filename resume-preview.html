@@ -49,9 +49,7 @@ body{
 .template-clean h1{font-size:32px}
 .template-clean h3{border-bottom:2px solid #000}
 
-.template-sidebar{display:grid;grid-template-columns:30% 70%;font-family:Poppins}
-.template-sidebar .left{background:#f2e8dc;padding:25px}
-.template-sidebar .right{padding:30px}
+
 
 .template-ats{font-family:Arial;font-size:14px}
 .template-ats h3{text-transform:uppercase;border-bottom:1px solid #000;font-size:13px}
@@ -64,9 +62,7 @@ body{
 .template-executive h1{text-align:center}
 .template-executive section{background:#f8f8f8;padding:15px;border-radius:8px;margin-bottom:15px}
 
-.template-creative{display:grid;grid-template-columns:28% 72%;font-family:Poppins}
-.template-creative .left{background:#ffeaa7;padding:25px}
-.template-creative .right{padding:30px}
+
 
 .template-technical{font-family:Roboto Mono}
 .template-technical h3{background:#eee;padding:6px}
@@ -74,9 +70,6 @@ body{
 .template-academic{font-family:Merriweather}
 .template-academic h1{font-size:28px;letter-spacing:1px}
 
-.template-startup{display:grid;grid-template-columns:32% 68%;font-family:Poppins}
-.template-startup .left{background:#2d3436;color:#fff;padding:25px}
-.template-startup .right{padding:30px}
 
 .template-corporate{font-family:Arial}
 .template-corporate section{border-left:6px solid #6a0dad;padding-left:15px;margin-bottom:18px}
@@ -113,17 +106,7 @@ body{
     <h3>Skills</h3><ul id="sk"></ul>
 </div>
 
-<div class="resume template-sidebar" id="t1">
-<div class="left">
-    <h2 id="n1"></h2><p id="c1"></p>
-    <h3>Skills</h3><ul id="sk1"></ul>
-</div>
-<div class="right">
-    <h3>Summary</h3><p id="s1"></p>
-    <h3>Experience</h3><p id="e1"></p>
-    <h3>Education</h3><p id="ed1"></p>
-</div>
-</div>
+
 
 <div class="resume template-ats" id="t2">
 <h1 id="n2"></h1><p id="c2"></p>
@@ -141,25 +124,7 @@ body{
 <h3>Skills</h3><ul id="sk3"></ul>
 </div>
 
-<div class="resume template-executive" id="t4">
-<h1 id="n4"></h1><p id="c4"></p>
-<section><h3>Summary</h3><p id="s4"></p></section>
-<section><h3>Experience</h3><p id="e4"></p></section>
-<section><h3>Education</h3><p id="ed4"></p></section>
-<section><h3>Skills</h3><ul id="sk4"></ul></section>
-</div>
 
-<div class="resume template-creative" id="t5">
-<div class="left">
-<h2 id="n5"></h2><p id="c5"></p>
-<h3>Skills</h3><ul id="sk5"></ul>
-</div>
-<div class="right">
-<h3>Summary</h3><p id="s5"></p>
-<h3>Experience</h3><p id="e5"></p>
-<h3>Education</h3><p id="ed5"></p>
-</div>
-</div>
 
 <div class="resume template-technical" id="t6">
 <h1 id="n6"></h1><p id="c6"></p>
@@ -177,17 +142,6 @@ body{
 <h3>Skills</h3><ul id="sk7"></ul>
 </div>
 
-<div class="resume template-startup" id="t8">
-<div class="left">
-<h2 id="n8"></h2><p id="c8"></p>
-<h3>Skills</h3><ul id="sk8"></ul>
-</div>
-<div class="right">
-<h3>Summary</h3><p id="s8"></p>
-<h3>Experience</h3><p id="e8"></p>
-<h3>Education</h3><p id="ed8"></p>
-</div>
-</div>
 
 <div class="resume template-corporate" id="t9">
 <h1 id="n9"></h1><p id="c9"></p>
@@ -216,6 +170,15 @@ const user = JSON.parse(localStorage.getItem("loggedUser"));
 const historyId = localStorage.getItem("historyResumeId");
 let data = null;
 
+const TEMPLATE_INDEX_MAP = {
+    clean: 0,
+    ats: 1,
+    modern: 2,
+    technical: 3,
+    academic: 4,
+    corporate: 5
+};
+
 async function loadResume() {
     if (historyId) {
         const res = await fetch(`${API}/resume/${historyId}`);
@@ -232,7 +195,11 @@ async function loadResume() {
         return;
     }
 
-    render(0);
+    const selectedTemplate = localStorage.getItem("selectedTemplate") || "clean";
+
+    index = TEMPLATE_INDEX_MAP[selectedTemplate] ?? 0;
+
+    render(index);
 }
 
 /* ================= TEMPLATE RENDER ================= */
