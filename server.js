@@ -116,24 +116,14 @@ app.post("/profile", (req, res) => {
 
 /* ================= SAVE PRINTED RESUME ================= */
 app.post("/resume/save", (req, res) => {
-    const { userId, resumeName, resumeData, pdfBase64 } = req.body;
-
-    if (!userId || !pdfBase64) {
-        return res.json({ success: false });
-    }
+    const { userId, resumeName, resumeData, pdfBase64, template } = req.body;
 
     db.query(
         `INSERT INTO resume_history 
-         (user_id, resume_name, resume_data, pdf_base64) 
-         VALUES (?, ?, ?, ?)`,
-        [userId, resumeName, JSON.stringify(resumeData), pdfBase64],
-        (err) => {
-            if (err) {
-                console.error("Resume save error:", err);
-                return res.json({ success: false });
-            }
-            res.json({ success: true });
-        }
+         (user_id, resume_name, resume_data, pdf_base64, template_name)
+         VALUES (?, ?, ?, ?, ?)`,
+        [userId, resumeName, JSON.stringify(resumeData), pdfBase64, template],
+        () => res.json({ success: true })
     );
 });
 
@@ -170,7 +160,15 @@ app.get("/resume/:id", (req, res) => {
         }
     );
 });
+app.get("/resume/:id", (req, res) => {
+    db.query(
+        "SELECT resume_data, template_name FROM resume_history WHERE id=?",
+        [req.params.id],
+        (err, r) => res.json(r[0])
+    );
+});
+
 
 app.listen(5000, () =>
-    console.log("✅ Server running on port 5000")
+    console.log(" Server running on port 5000")
 );
