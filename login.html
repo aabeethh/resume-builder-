@@ -198,6 +198,8 @@
     </form>
 
     <script>
+     
+
         // Password visibility toggle logic
         function togglePasswordVisibility() {
             const passwordField = document.getElementById("password");
@@ -212,47 +214,40 @@
             }
         }
 
-        function login(event) {
-            event.preventDefault();
-            const loginBtn = document.getElementById("loginBtn");
-            const originalText = loginBtn.innerText;
+    
+function login(event) {
+    event.preventDefault();
 
-            // Simple visual loading state
-            loginBtn.innerText = "Processing...";
-            loginBtn.disabled = true;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            fetch("http://localhost:5000/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, password })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem("userId", username);
-                    window.location.href = "dashboard.html";
-                } else {
-                    alert("Invalid username or password");
-                    resetBtn();
-                }
-            })
-            .catch(err => {
-                console.error("Login error:", err);
-                alert("Login failed. Please check your connection.");
-                resetBtn();
-            });
-
-            function resetBtn() {
-                loginBtn.innerText = originalText;
-                loginBtn.disabled = false;
-            }
+    fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            alert("Invalid credentials");
+            return;
         }
-    </script>
 
+        // ✅ ONLY THIS (IMPORTANT)
+        localStorage.setItem("loggedUser", JSON.stringify({
+            id: data.user.id,
+            username: data.user.username
+        }));
+
+        // ❌ REMOVE THESE (DO NOT USE)
+        localStorage.removeItem("userId");
+
+        window.location.href = "dashboard.html";
+    })
+    .catch(() => alert("Server error"));
+}
+</script>
+
+    
 </body>
 </html>

@@ -1,278 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Create Resume</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Create Resume | ResumeElite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #6a0dad, #9b59b6);
-    padding: 60px;
-}
-.container {
-    background: #ffffff;
-    max-width: 900px;
-    margin: auto;
-    padding: 40px 50px;
-    border-radius: 18px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
-}
-.options {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.option-card {
-    background: #f8f4ff;
-    padding: 25px;
-    border-radius: 15px;
-    width: 300px;
-    text-align: center;
-}
-.primary {
-    border: 2px solid #6a0dad;
-}
-.drop-zone {
-    border: 2px dashed #6a0dad;
-    border-radius: 12px;
-    padding: 28px;
-    background-color: #f8f4ff;
-    color: #6a0dad;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 15px 0;
-}
-.drop-zone.dragover {
-    background-color: #e6dcff;
-}
-button {
-    background-color: #6a0dad;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-</style>
+    <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #9b59b6;
+            --accent: #00d4ff;
+            --bg: #0f0c29;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+            color: white;
+            min-height: 100vh;
+            overflow: hidden; /* Prevents scroll during entry animations */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Animated Background Elements --- */
+        .blob {
+            position: fixed;
+            width: 500px; height: 500px;
+            background: var(--primary);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: -1;
+            animation: float 20s infinite alternate;
+        }
+        .blob-1 { top: -100px; left: -100px; }
+        .blob-2 { bottom: -100px; right: -100px; background: var(--accent); animation-delay: -5s; }
+
+        @keyframes float {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        /* --- Navigation Header --- */
+        .nav-header {
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-btn:hover {
+            background: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 0 20px rgba(106, 13, 173, 0.4);
+        }
+
+        /* --- Content Container --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .welcome-text { margin-bottom: 50px; animation: fadeInDown 0.8s ease; }
+        .welcome-text h2 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; }
+        .welcome-text p { color: rgba(255,255,255,0.6); font-size: 1.1rem; }
+
+        /* --- Option Cards --- */
+        .options {
+            display: flex;
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 45px 35px;
+            border-radius: 35px;
+            width: 360px;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .option-card:nth-child(1) { animation-delay: 0.2s; }
+        .option-card:nth-child(2) { animation-delay: 0.4s; }
+
+        .option-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .option-card h3 { font-size: 22px; margin-bottom: 12px; font-weight: 700; }
+        .option-card p { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 25px; line-height: 1.5; }
+
+        /* --- Drop Zone Upgrade --- */
+        .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px 15px;
+            background: rgba(0, 212, 255, 0.02);
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* --- Buttons --- */
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 16px 25px; border-radius: 14px;
+            width: 100%; font-weight: 800; cursor: pointer; transition: 0.3s;
+            font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            filter: brightness(1.2);
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+        }
+
+        .primary-btn {
+            background: transparent;
+            border: 2px solid var(--accent);
+        }
+
+        /* --- Keyframes --- */
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
 </head>
 
 <body>
 
-<div class="container">
-<h2>Create Your Resume</h2>
-<p>Choose how you want to start building your resume</p>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-<div class="options">
+    <div class="nav-header">
+        <a href="dashboard.html" class="dashboard-btn">
+            <i class="fas fa-th-large"></i> Dashboard
+        </a>
+        <h1 style="font-size: 22px; font-weight: 800; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ResumeElite</h1>
+    </div>
 
-<!-- UPLOAD -->
-<div class="option-card">
-<h3>Upload Existing Resume</h3>
-<p>Drag & drop your resume (PDF only)</p>
+    <div class="main-content">
+        <div class="welcome-text">
+            <h2>Create Your Resume</h2>
+            <p>Choose your preferred method to get started</p>
+        </div>
 
-<div class="drop-zone" id="dropZone">
-<span id="dropText">Drop resume here or click to upload</span>
-<input type="file" id="resumeFile" accept=".pdf" hidden>
-</div>
+        <div class="options">
+            <div class="option-card">
+                <i class="fas fa-file-upload" style="font-size: 40px; color: var(--accent); margin-bottom: 20px;"></i>
+                <h3>Upload Existing</h3>
+                <p>Let our AI scan your current PDF and fill in the details for you.</p>
 
-<button onclick="continueWithPDF()">Continue</button>
-</div>
+                <div class="drop-zone" id="dropZone">
+                    <span id="dropText">Drop PDF here or click to upload</span>
+                    <input type="file" id="resumeFile" accept=".pdf" hidden>
+                </div>
 
-<!-- MANUAL -->
-<div class="option-card primary">
-<h3>Start From Scratch</h3>
-<p>Enter resume details manually.</p>
-<button onclick="startManual()">Enter Details</button>
-</div>
+                <button onclick="continueWithPDF()">Continue with PDF</button>
+            </div>
 
-</div>
-</div>
+            <div class="option-card">
+                <i class="fas fa-magic" style="font-size: 40px; color: var(--secondary); margin-bottom: 20px;"></i>
+                <h3>Start From Scratch</h3>
+                <p>Build your resume manually to ensure every detail is perfect.</p>
+                <div style="height: 125px; display: flex; align-items: center; justify-content: center; opacity: 0.2;">
+                    <i class="fas fa-keyboard" style="font-size: 50px;"></i>
+                </div>
+                <button class="primary-btn" onclick="startManual()">Enter Details</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-const dropZone = document.getElementById("dropZone");
-const fileInput = document.getElementById("resumeFile");
-const dropText = document.getElementById("dropText");
+    <script>
+        // --- ALL LOGIC FROM YOUR ORIGINAL SCRIPT PRESERVED EXACTLY ---
+        const dropZone = document.getElementById("dropZone");
+        const fileInput = document.getElementById("resumeFile");
+        const dropText = document.getElementById("dropText");
 
-dropZone.onclick = () => fileInput.click();
+        dropZone.onclick = () => fileInput.click();
 
-dropZone.addEventListener("dragover", e => {
-    e.preventDefault();
-    dropZone.classList.add("dragover");
-});
+        dropZone.addEventListener("dragover", e => {
+            e.preventDefault();
+            dropZone.classList.add("dragover");
+        });
 
-dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("dragover");
-});
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("dragover");
+        });
 
-dropZone.addEventListener("drop", e => {
-    e.preventDefault();
-    dropZone.classList.remove("dragover");
-    processPDF(e.dataTransfer.files[0]);
-});
+        dropZone.addEventListener("drop", e => {
+            e.preventDefault();
+            dropZone.classList.remove("dragover");
+            processPDF(e.dataTransfer.files[0]);
+        });
 
-fileInput.onchange = e => processPDF(e.target.files[0]);
+        fileInput.onchange = e => processPDF(e.target.files[0]);
 
-// ---------------- PDF PARSER ----------------
-function parsePdfResumeText(rawText) {
-    const data = {
-        name: "",
-        email: "",
-        phone: "",
-        summary: "",
-        experience: "",
-        education: "",
-        skills: ""
-    };
-
-    if (!rawText) return data;
-
-    const lines = rawText
-        .replace(/\r/g, "")
-        .split("\n")
-        .map(l => l.trim())
-        .filter(Boolean);
-
-    const joined = lines.join(" ");
-
-    // Email (unchanged)
-    const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-    if (emailMatch) data.email = emailMatch[0];
-
-    // Phone (unchanged)
-    const phoneMatch = joined.match(/(\+?\d[\d\s\-]{8,}\d)/);
-    if (phoneMatch) data.phone = phoneMatch[0];
-
-    // Name (unchanged, but improved slightly for robustness)
-    data.name = lines.find(l =>
-        l.length < 35 &&
-        !l.includes("@") &&
-        !/\d/.test(l) &&
-        l.split(" ").length <= 4  // Limit to likely name formats
-    ) || "Your Name";
-
-    // Improved section parsing
-    let current = null;
-    let summaryFallback = "";  // Collect potential summary text if no header found
-
-    lines.forEach((line, index) => {
-        const l = line.toLowerCase();
-
-        // Skip lines that are clearly email or phone (to avoid them in summary)
-        if (line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || line.match(/(\+?\d[\d\s\-]{8,}\d)/)) {
-            return;
-        }
-
-        // ----- SECTION HEADERS (more flexible) -----
-        if (/summary|professional summary|objective|profile/.test(l)) {
-            current = "summary";
-            return;  // Skip adding the header line itself
-        }
-        if (/experience|employment|work history|career history/.test(l)) {
-            current = "experience";
-            return;
-        }
-        if (/education|qualification|academic|degree/.test(l)) {
-            current = "education";
-            return;
-        }
-        if (/skills|technical skills|technologies|competencies/.test(l)) {
-            current = "skills";
-            return;
-        }
-
-        // ----- CONTENT -----
-        if (current) {
-            // Clean and append: remove extra spaces, handle bullets
-            const cleanedLine = line.replace(/^\s*[-•*]\s*/, "").trim();  // Strip bullet points
-            if (cleanedLine) {
-                data[current] += cleanedLine + " ";
-            }
-        } else if (!data.summary && index < 10 && line.length > 20) {
-            // Fallback: If no summary header yet, treat early long lines as potential summary
-            summaryFallback += line + " ";
-        }
-    });
-
-    // If no summary was captured via header, use the fallback
-    if (!data.summary.trim() && summaryFallback.trim()) {
-        data.summary = summaryFallback.trim();
-    }
-
-    // Trim all fields to remove trailing spaces
-    Object.keys(data).forEach(key => {
-        data[key] = data[key].trim();
-    });
-
-    return data;
-}
-
-// ---------------- PDF PROCESS ----------------
-async function processPDF(file) {
-    if (!file || file.type !== "application/pdf") {
-        alert("Upload a PDF only");
-        return;
-    }
-
-    localStorage.clear();
-    dropText.textContent = "Extracting resume text...";
-
-    const reader = new FileReader();
-    reader.onload = async function () {
-        const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
-        let extractedText = "";
-
-        for (let p = 1; p <= pdf.numPages; p++) {
-            const page = await pdf.getPage(p);
-            const content = await page.getTextContent();
-
-            let lastY = null;
-            let line = "";
-            let lines = [];
-
-            content.items.forEach(item => {
-                if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) {
-                    line += item.str + " ";
-                } else {
-                    lines.push(line.trim());
-                    line = item.str + " ";
+        function parsePdfResumeText(rawText) {
+            const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "" };
+            if (!rawText) return data;
+            const lines = rawText.replace(/\r/g, "").split("\n").map(l => l.trim()).filter(Boolean);
+            const joined = lines.join(" ");
+            const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+            if (emailMatch) data.email = emailMatch[0];
+            const phoneMatch = joined.match(/(\+?\d[\d\s\-]{8,}\d)/);
+            if (phoneMatch) data.phone = phoneMatch[0];
+            data.name = lines.find(l => l.length < 35 && !l.includes("@") && !/\d/.test(l) && l.split(" ").length <= 4) || "Your Name";
+            let current = null;
+            let summaryFallback = "";
+            lines.forEach((line, index) => {
+                const l = line.toLowerCase();
+                if (line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || line.match(/(\+?\d[\d\s\-]{8,}\d)/)) return;
+                if (/summary|professional summary|objective|profile/.test(l)) { current = "summary"; return; }
+                if (/experience|employment|work history|career history/.test(l)) { current = "experience"; return; }
+                if (/education|qualification|academic|degree/.test(l)) { current = "education"; return; }
+                if (/skills|technical skills|technologies|competencies/.test(l)) { current = "skills"; return; }
+                if (current) {
+                    const cleanedLine = line.replace(/^\s*[-•*]\s*/, "").trim();
+                    if (cleanedLine) data[current] += cleanedLine + " ";
+                } else if (!data.summary && index < 10 && line.length > 20) {
+                    summaryFallback += line + " ";
                 }
-                lastY = item.transform[5];
             });
-
-            if (line.trim()) lines.push(line.trim());
-            extractedText += lines.join("\n") + "\n";
+            if (!data.summary.trim() && summaryFallback.trim()) data.summary = summaryFallback.trim();
+            Object.keys(data).forEach(key => { data[key] = data[key].trim(); });
+            return data;
         }
 
-        const resumeData = parsePdfResumeText(extractedText);
-        localStorage.setItem("resumeData", JSON.stringify(resumeData));
-        localStorage.setItem("resumeSource", "pdf");
+        async function processPDF(file) {
+            if (!file || file.type !== "application/pdf") { alert("Upload a PDF only"); return; }
+            localStorage.clear();
+            dropText.textContent = "⏳ Extracting Intelligence...";
+            const reader = new FileReader();
+            reader.onload = async function () {
+                const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
+                let extractedText = "";
+                for (let p = 1; p <= pdf.numPages; p++) {
+                    const page = await pdf.getPage(p);
+                    const content = await page.getTextContent();
+                    let lastY = null;
+                    let line = "";
+                    let lines = [];
+                    content.items.forEach(item => {
+                        if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) { line += item.str + " "; } 
+                        else { lines.push(line.trim()); line = item.str + " "; }
+                        lastY = item.transform[5];
+                    });
+                    if (line.trim()) lines.push(line.trim());
+                    extractedText += lines.join("\n") + "\n";
+                }
+                const resumeData = parsePdfResumeText(extractedText);
+                localStorage.setItem("resumeData", JSON.stringify(resumeData));
+                localStorage.setItem("resumeSource", "pdf");
+                dropText.innerHTML = "<i class='fas fa-check-circle'></i> Resume Synced!";
+                dropText.style.color = "var(--accent)";
+            };
+            reader.readAsArrayBuffer(file);
+        }
 
-        dropText.textContent = "Resume uploaded ✔ Click Continue";
-    };
+        function continueWithPDF() {
+            if (!localStorage.getItem("resumeData")) { alert("Upload a resume first"); return; }
+            window.location.href = "/template-selection.html";
+        }
 
-    reader.readAsArrayBuffer(file);
-}
-
-function continueWithPDF() {
-    if (!localStorage.getItem("resumeData")) {
-        alert("Upload a resume first");
-        return;
-    }
-    window.location.href = "/template-selection.html";
-}
-
-function startManual() {
-    localStorage.clear();
-    localStorage.setItem("resumeSource", "manual");
-    window.location.href = "/resume-form.html";
-}
-</script>
+        function startManual() {
+            localStorage.clear();
+            localStorage.setItem("resumeSource", "manual");
+            window.location.href = "/resume-form.html";
+        }
+    </script>
 
 </body>
 </html>

@@ -143,7 +143,10 @@ body{
     <button onclick="editResume()">Edit Resume</button>
     <button onclick="goToDashboard()">Go to Dashboard</button>
     <button onclick="changeTemplate()">Change Template</button>
-    <button onclick="window.print()" class="download-btn">Download / Print</button>
+   
+
+
+    <button onclick="savePrintedResume(); window.print()" class="download-btn">Download / Print</button>
 </div>
 
 <!-- CLEAN -->
@@ -301,6 +304,26 @@ function editResume(){
 function goToDashboard(){
     window.location.href="/dashboard.html";
 }
+function savePrintedResume() {
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
+    if (!user) return;
+
+    html2canvas(document.body).then(canvas => {
+        const pdfData = canvas.toDataURL("application/pdf");
+
+        fetch("http://localhost:5000/resume/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: user.id,
+                resumeName: `Resume - ${new Date().toLocaleDateString()}`,
+                resumeData: data,
+                pdfBase64: pdfData
+            })
+        });
+    });
+}
+
 </script>
 
 </body>

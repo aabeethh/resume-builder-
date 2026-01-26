@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Resume History</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:30px}
+.card{
+    background:#fff;
+    padding:20px;
+    margin-bottom:15px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+button{padding:8px 15px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<h2>Your Resume History</h2>
+<div id="list"></div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+if (!user) location.href="login.html";
+
+fetch(`http://localhost:5000/resume/history/${user.id}`)
+.then(r => r.json())
+.then(data => {
+    const list = document.getElementById("list");
+
+    if (!data.length) {
+        list.innerHTML = "<p>No resumes created yet.</p>";
+        return;
+    }
+
+    data.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+            <div>
+                <strong>${r.resume_name}</strong><br>
+                <small>${new Date(r.created_at).toLocaleString()}</small>
+            </div>
+            <button onclick="openResume(${r.id})">View</button>
+        `;
+        list.appendChild(div);
+    });
+});
+
+function openResume(id) {
+    localStorage.setItem("historyResumeId", id);
+    location.href = "resume-preview.html";
+}
+</script>
+
+</body>
+</html>

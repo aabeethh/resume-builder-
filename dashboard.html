@@ -216,7 +216,7 @@
             <i class="fas fa-vault"></i>
             <h3>My Vault</h3>
             <p>Securely access and download your saved resume versions.</p>
-            <button onclick="location.href='saved-resume.html'">View History</button>
+            <button onclick="location.href='resume-history.html'">View History</button>
         </div>
     </div>
 </div>
@@ -245,67 +245,117 @@
     </div>
 </div>
 
+
+
 <script>
-    const panel = document.getElementById("profilePanel");
-    const overlay = document.getElementById("overlay");
-    const navProfileImg = document.getElementById("navProfileImg");
-    const largeProfileImg = document.getElementById("largeProfileImg");
-    const welcomeName = document.getElementById("welcomeName");
+const API = "http://localhost:5000";
 
-    // Initialize Identity
-    let userId = localStorage.getItem("userId") || "guest_user";
-    let profiles = JSON.parse(localStorage.getItem("userProfiles")) || {};
-    let profile = profiles[userId];
+/* ================= AUTH GUARD ================= */
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+if (!user || !user.id) {
+    console.warn("User not logged in");
+    window.location.href = "login.html";
+}
+const userId = user.id;
 
-    if (profile) updateUI(profile);
+/* ================= ELEMENTS ================= */
+const navProfileImg = document.getElementById("navProfileImg");
+const largeProfileImg = document.getElementById("largeProfileImg");
+const welcomeName = document.getElementById("welcomeName");
+const nameInput = document.getElementById("nameInput");
+const bioInput = document.getElementById("bioInput");
 
-    function openProfile() {
-        panel.classList.add("active");
-        overlay.classList.add("active");
-        if (profile) {
-            document.getElementById("nameInput").value = profile.name || "";
-            document.getElementById("bioInput").value = profile.bio || "";
-        }
-    }
+/* ================= LOAD PROFILE + HISTORY ================= */
+async function loadUserData() {
+    try {
+        const [profileRes, historyRes] = await Promise.all([
+            fetch(`${API}/profile/${userId}`),
+            fetch(`${API}/resume/history/${userId}`)
+        ]);
 
-    function closeProfile() {
-        panel.classList.remove("active");
-        overlay.classList.remove("active");
-    }
+        const profileData = await profileRes.json();
+        const historyData = await historyRes.json();
 
-    function saveProfile() {
-        const name = document.getElementById("nameInput").value || "User";
-        const bio = document.getElementById("bioInput").value || "";
-        const photoInput = document.getElementById("photoInput");
-
-        if (photoInput.files && photoInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => finalizeSave(name, bio, e.target.result);
-            reader.readAsDataURL(photoInput.files[0]);
+        if (profileData.exists) {
+            updateProfileUI(profileData.profile);
         } else {
-            finalizeSave(name, bio, largeProfileImg.src);
+            openProfile(); // new user
         }
-    }
 
-    function finalizeSave(name, bio, photo) {
-        profile = { name, bio, photo };
-        profiles[userId] = profile;
-        localStorage.setItem("userProfiles", JSON.stringify(profiles));
-        updateUI(profile);
-        closeProfile();
-    }
+        console.log("Resume history:", historyData); // used in history page
 
-    function updateUI(p) {
-        navProfileImg.src = p.photo;
-        largeProfileImg.src = p.photo;
-        welcomeName.textContent = p.name;
+    } catch (err) {
+        console.error("Failed to load user data", err);
     }
+}
 
-    function logout() {
-        localStorage.removeItem("userId");
-        window.location.href = "login.html";
+loadUserData();
+
+/* ================= PROFILE UI ================= */
+function updateProfileUI(p) {
+    welcomeName.textContent = p.full_name || "User";
+    navProfileImg.src = p.profile_photo || defaultImg();
+    largeProfileImg.src = p.profile_photo || defaultImg();
+    nameInput.value = p.full_name || "";
+    bioInput.value = p.bio || "";
+}
+
+function defaultImg() {
+    return "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+}
+
+/* ================= SAVE PROFILE ================= */
+function saveProfile() {
+    const name = nameInput.value.trim();
+    const bio = bioInput.value.trim();
+    const file = document.getElementById("photoInput").files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => submitProfile(reader.result);
+        reader.readAsDataURL(file);
+    } else {
+        submitProfile(largeProfileImg.src);
     }
+}
+
+function submitProfile(photo) {
+    fetch(`${API}/profile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, name: nameInput.value, bio: bioInput.value, photo })
+    })
+    .then(res => res.json())
+    .then(resp => {
+        if (resp.success) {
+            updateProfileUI({
+                full_name: nameInput.value,
+                bio: bioInput.value,
+                profile_photo: photo
+            });
+            closeProfile();
+        }
+    });
+}
+
+/* ================= LOGOUT ================= */
+function logout() {
+    localStorage.removeItem("loggedUser");
+    window.location.href = "homepage.html";
+}
+
+/* ================= PANEL CONTROLS ================= */
+function openProfile() {
+    document.getElementById("profilePanel").classList.add("active");
+    document.getElementById("overlay").classList.add("active");
+}
+function closeProfile() {
+    document.getElementById("profilePanel").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+}
 </script>
+
+
 
 </body>
 </html>
