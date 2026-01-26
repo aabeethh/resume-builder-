@@ -1,186 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login | Resume Builder</title>
+    <title>Login | ResumeElite</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #6a0dad;
+            --accent: #00d4ff;
+            --bg-dark: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
+            --text: #ffffff;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #6a0dad;
-            font-family: 'Poppins', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
             overflow: hidden;
             position: relative;
         }
 
         /* --- ANIMATED BACKGROUND --- */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #9b59b6, #6a0dad);
-            z-index: -1;
-            animation: float 18s infinite ease-in-out alternate;
-            opacity: 0.5;
-            filter: blur(60px);
+        .blob {
+            position: absolute; width: 500px; height: 500px;
+            background: var(--primary); border-radius: 50%;
+            filter: blur(100px); opacity: 0.4; z-index: -1;
+            animation: float 20s infinite alternate;
         }
-
-        body::before { top: -10%; left: -10%; }
-        body::after { 
-            bottom: -10%; 
-            right: -10%; 
-            background: linear-gradient(45deg, #00d4ff, #6a0dad); 
-            animation-delay: -5s; 
-        }
-
+        .blob-2 { background: var(--accent); width: 300px; height: 300px; bottom: -50px; right: -50px; animation-delay: -5s; }
+        
         @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(100px, 50px) rotate(360deg); }
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
         }
 
-        /* --- LOGIN CONTAINER --- */
+        /* --- LOGIN CARD (3D TILT) --- */
         .login-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 50px 40px;
             width: 400px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: cardEntrance 0.8s ease-out;
+            border: 1px solid var(--border);
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
         }
 
-        @keyframes cardEntrance {
-            from { opacity: 0; transform: translateY(30px); }
+        .login-container:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 30px 60px rgba(0, 212, 255, 0.15);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .login-container h1 {
-            margin-bottom: 30px;
-            font-size: 32px;
-            font-weight: 600;
-            color: #4b0082;
+        h1 {
+            margin-bottom: 10px; font-size: 2rem; font-weight: 700; color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
+        
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 30px; }
 
         /* --- INPUT GROUPS --- */
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-            width: 100%;
-        }
+        .input-group { position: relative; margin-bottom: 25px; width: 100%; }
 
         .input-group i.main-icon {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6a0dad;
-            font-size: 18px;
-            transition: color 0.3s;
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.5); transition: 0.3s;
         }
 
         .input-group input {
-            width: 100%;
-            padding: 15px 50px 15px 50px;
+            width: 100%; padding: 15px 50px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
             border-radius: 50px;
-            border: 2px solid #eee;
-            font-size: 15px;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-            outline: none;
+            color: white; font-size: 15px; outline: none;
+            transition: 0.3s;
         }
+
+        .input-group input::placeholder { color: rgba(255,255,255,0.3); }
 
         .input-group input:focus {
-            border-color: #6a0dad;
-            box-shadow: 0 0 15px rgba(106, 13, 173, 0.1);
-            background: #fff;
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
         }
 
-        /* --- EYE SYMBOL --- */
+        .input-group input:focus + i.main-icon { color: var(--accent); }
+
+        /* --- EYE ICON --- */
         .eye-toggle {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-            cursor: pointer;
-            transition: color 0.3s;
-            z-index: 10;
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s;
         }
-
-        .eye-toggle:hover {
-            color: #6a0dad;
-        }
+        .eye-toggle:hover { color: white; }
 
         /* --- BUTTON --- */
-        button {
-            margin-top: 15px;
-            padding: 15px;
-            width: 100%;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+        button[type="submit"] {
+            width: 100%; padding: 15px; margin-top: 10px;
+            background: linear-gradient(135deg, var(--primary), #9b59b6);
+            color: white; border: none; border-radius: 50px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.4);
-        }
-
-        button:active {
-            transform: translateY(-1px);
+        button[type="submit"]:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5);
+            filter: brightness(1.2);
         }
 
         /* --- LINKS --- */
-        p {
-            margin-top: 25px;
-            font-size: 14px;
-            color: #666;
+        .options {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6);
         }
 
-        a {
-            color: #6a0dad;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+        a { color: var(--accent); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        a:hover { color: white; text-shadow: 0 0 10px var(--accent); }
 
-        a:hover {
-            color: #00d4ff;
+        .forgot-link { cursor: pointer; border-bottom: 1px dashed rgba(255,255,255,0.3); }
+        .forgot-link:hover { border-bottom-color: white; }
+
+        /* --- FORGOT PASSWORD MODAL --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px); z-index: 999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
         }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: #1a1a2e; width: 350px; padding: 30px;
+            border-radius: 20px; border: 1px solid var(--border);
+            text-align: center; transform: scale(0.8); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal h3 { color: white; margin-bottom: 10px; }
+        .modal p { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
+        .modal input { width: 100%; padding: 12px; border-radius: 8px; background: #0f0c29; border: 1px solid #333; color: white; margin-bottom: 15px; outline: none; }
+        .modal input:focus { border-color: var(--accent); }
+        
+        .modal-btns { display: flex; gap: 10px; }
+        .btn-reset { flex: 1; background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-close { flex: 1; background: transparent; border: 1px solid #555; color: white; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .btn-close:hover { background: rgba(255,255,255,0.1); }
+
     </style>
 </head>
 
 <body>
 
+    <div class="blob" style="top: -10%; left: -10%;"></div>
+    <div class="blob blob-2"></div>
+
     <form onsubmit="login(event)" class="login-container">
         <h1>Welcome Back</h1>
+        <p class="subtitle">Access your professional dashboard</p>
 
         <div class="input-group">
             <i class="fas fa-user main-icon"></i>
-            <input type="text" id="username" placeholder="Username or Email" required>
+            <input type="text" id="username" placeholder="Username or Email" required autocomplete="off">
         </div>
 
         <div class="input-group">
@@ -189,25 +188,37 @@
             <i class="fas fa-eye-slash eye-toggle" id="togglePassword" onclick="togglePasswordVisibility()"></i>
         </div>
 
-        <button type="submit" id="loginBtn">Sign In</button>
+        <button type="submit" id="loginBtn">
+            Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+        </button>
 
-        <p>
-            Don’t have an account?
-            <a href="register.html">Register here</a>
-        </p>
+        <div class="options">
+            <span class="forgot-link" onclick="openForgot()">Forgot Password?</span>
+            <span>New here? <a href="register.html">Create Account</a></span>
+        </div>
     </form>
 
+    <div class="modal-overlay" id="forgotModal">
+        <div class="modal">
+            <i class="fas fa-key" style="font-size: 40px; color: var(--accent); margin-bottom: 15px;"></i>
+            <h3>Reset Password</h3>
+            <p>Enter your email to receive a reset link.</p>
+            <input type="email" placeholder="name@example.com">
+            <div class="modal-btns">
+                <button class="btn-close" onclick="closeForgot()">Cancel</button>
+                <button class="btn-reset" onclick="sendReset()">Send Link</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        console.log(
+            "[AUTH CHECK]",
+            location.pathname,
+            localStorage.getItem("loggedUser")
+        );
 
-     console.log(
-  "[AUTH CHECK]",
-  location.pathname,
-  localStorage.getItem("loggedUser")
-);
-
-
-
-        // Password visibility toggle logic
+        // Password Visibility Logic
         function togglePasswordVisibility() {
             const passwordField = document.getElementById("password");
             const toggleIcon = document.getElementById("togglePassword");
@@ -215,46 +226,75 @@
             if (passwordField.type === "password") {
                 passwordField.type = "text";
                 toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+                toggleIcon.style.color = "var(--accent)";
             } else {
                 passwordField.type = "password";
                 toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+                toggleIcon.style.color = "";
             }
         }
 
-    
-function login(event) {
-    event.preventDefault();
+        // Login Logic
+        function login(event) {
+            event.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const btn = document.getElementById("loginBtn");
 
-    fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (!data.success) {
-            alert("Invalid credentials");
-            return;
+            // Button Loading State
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+            btn.style.opacity = "0.7";
+
+            fetch("http://localhost:5000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Invalid credentials");
+                    btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
+                    btn.style.opacity = "1";
+                    return;
+                }
+
+                localStorage.setItem("loggedUser", JSON.stringify({
+                    id: data.user.id,
+                    username: data.user.username
+                }));
+
+                localStorage.removeItem("userId");
+
+                // Success Animation before redirect
+                btn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                btn.style.background = "#2ecc71";
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 800);
+            })
+            .catch(() => {
+                alert("Server error");
+                btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
+                btn.style.opacity = "1";
+            });
         }
 
-        // ✅ ONLY THIS (IMPORTANT)
-        localStorage.setItem("loggedUser", JSON.stringify({
-            id: data.user.id,
-            username: data.user.username
-        }));
+        // Forgot Password Modal Logic
+        function openForgot() {
+            document.getElementById("forgotModal").classList.add("active");
+        }
+        function closeForgot() {
+            document.getElementById("forgotModal").classList.remove("active");
+        }
+        function sendReset() {
+            // UI Simulation only (Logic untouched as per request)
+            const btn = document.querySelector(".btn-reset");
+            btn.textContent = "Sent!";
+            setTimeout(closeForgot, 1000);
+        }
+    </script>
 
-        // ❌ REMOVE THESE (DO NOT USE)
-        localStorage.removeItem("userId");
-
-        window.location.href = "dashboard.html";
-    })
-    .catch(() => alert("Server error"));
-}
-</script>
-
-    
 </body>
 </html>

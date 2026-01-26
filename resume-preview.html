@@ -1,301 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Resume Preview</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Resume Preview | ResumeElite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather&family=Montserrat:wght@500&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Merriweather:wght@300;700&family=Montserrat:wght@600&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-body{
-    margin:0;
-    background:linear-gradient(135deg,#6a0dad,#9b59b6);
-    font-family:Arial,sans-serif;
-    padding:40px;
-}
-.container{
-    max-width:1200px;
-    margin:auto;
-    display:flex;
-    gap:25px;
-}
-.actions{
-    width:220px;
-    background:#fff;
-    padding:25px;
-    border-radius:14px;
-}
-.actions button{
-    width:100%;
-    padding:12px;
-    margin-bottom:12px;
-    border-radius:8px;
-    border:none;
-    cursor:pointer;
-}
-.download-btn{background:#6a0dad;color:#fff}
+    <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #9b59b6;
+            --accent: #00d4ff;
+            --bg-dark: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
 
-.resume{
-    flex:1;
-    background:#fff;
-    padding:40px;
-    border-radius:18px;
-    display:none;
-}
+        body {
+            margin: 0;
+            background: var(--bg-dark);
+            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            color: #333; /* Default text inside resume */
+        }
 
-/* ===== TEMPLATES ===== */
-.template-clean{font-family:Merriweather;}
-.template-clean h1{font-size:32px}
-.template-clean h3{border-bottom:2px solid #000}
+        /* --- BACKGROUND ANIMATION --- */
+        .blob {
+            position: fixed; width: 600px; height: 600px;
+            background: var(--primary); border-radius: 50%;
+            filter: blur(120px); opacity: 0.15; z-index: -1;
+            animation: float 25s infinite alternate;
+        }
+        .blob-2 { background: var(--accent); bottom: -100px; right: -100px; width: 400px; height: 400px; animation-delay: -5s; }
+        
+        @keyframes float {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, 50px) scale(1.1); }
+        }
 
+        /* --- FLOATING TOOLBAR --- */
+        .actions {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: sticky; top: 20px; z-index: 100;
+            animation: slideDown 0.8s ease;
+        }
 
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-.template-ats{font-family:Arial;font-size:14px}
-.template-ats h3{text-transform:uppercase;border-bottom:1px solid #000;font-size:13px}
+        .actions button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
 
-.template-modern{font-family:Poppins}
-.template-modern h1{color:#3498db}
-.template-modern h3{border-bottom:2px solid #3498db}
+        .actions button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.4);
+        }
 
-.template-executive{font-family:Montserrat}
-.template-executive h1{text-align:center}
-.template-executive section{background:#f8f8f8;padding:15px;border-radius:8px;margin-bottom:15px}
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+            border: none !important;
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.3);
+        }
 
+        /* --- RESUME PAPER --- */
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
 
+        .resume {
+            background: white;
+            width: 210mm; /* A4 Width */
+            min-height: 297mm; /* A4 Height */
+            padding: 50px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+            display: none; /* Hidden by JS logic */
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+        }
 
-.template-technical{font-family:Roboto Mono}
-.template-technical h3{background:#eee;padding:6px}
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-.template-academic{font-family:Merriweather}
-.template-academic h1{font-size:28px;letter-spacing:1px}
+        /* --- TEMPLATE STYLES --- */
+        /* CLEAN */
+        .template-clean { font-family: 'Merriweather', serif; color: #333; }
+        .template-clean h1 { font-size: 36px; border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .template-clean h3 { text-transform: uppercase; border-bottom: 1px solid #ccc; margin-top: 30px; font-size: 16px; letter-spacing: 1px; color: #555; }
+        
+        /* ATS */
+        .template-ats { font-family: Arial, sans-serif; line-height: 1.4; }
+        .template-ats h1 { text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        .template-ats h3 { border-bottom: 1px solid black; font-size: 14px; margin-top: 20px; }
 
+        /* MODERN */
+        .template-modern { font-family: 'Poppins', sans-serif; }
+        .template-modern h1 { color: #3498db; font-size: 40px; margin-bottom: 5px; }
+        .template-modern h3 { color: #2980b9; background: #f0f8ff; padding: 5px 10px; border-left: 5px solid #3498db; margin-top: 25px; }
 
-.template-corporate{font-family:Arial}
-.template-corporate section{border-left:6px solid #6a0dad;padding-left:15px;margin-bottom:18px}
+        /* EXECUTIVE */
+        .template-executive { font-family: 'Montserrat', sans-serif; }
+        .template-executive h1 { text-align: center; letter-spacing: 2px; text-transform: uppercase; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; }
+        .template-executive section { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
 
-@media print{
-    body{background:none;padding:0}
-    .actions{display:none}
-}
-</style>
+        /* TECHNICAL */
+        .template-technical { font-family: 'Roboto Mono', monospace; color: #444; }
+        .template-technical h1 { border-left: 10px solid #333; padding-left: 20px; }
+        .template-technical h3 { background: #eee; padding: 8px; font-weight: bold; margin-top: 20px; }
+
+        /* CORPORATE */
+        .template-corporate { font-family: Arial, sans-serif; border-top: 10px solid #6a0dad; }
+        .template-corporate h1 { color: #6a0dad; }
+        .template-corporate section { border-left: 4px solid #6a0dad; padding-left: 20px; margin-bottom: 25px; }
+
+        /* PRINT MODE */
+        @media print {
+            body { background: white; padding: 0; display: block; }
+            .blob, .actions { display: none !important; }
+            .resume { box-shadow: none; margin: 0; width: 100%; min-height: auto; page-break-after: always; }
+            .container { display: block; }
+        }
+
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="blob"></div>
+    <div class="blob blob-2"></div>
 
-<!-- ACTIONS -->
-<div class="actions">
-    <button onclick="editResume()">Edit Resume</button>
-    <button onclick="goToDashboard()">Go to Dashboard</button>
-    <button onclick="changeTemplate()">Change Template</button>
-<button onclick="printResume()" class="download-btn">
-    Download / Print
-</button>
+    <div class="actions">
+        <button onclick="goToDashboard()"><i class="fas fa-th-large"></i> Dashboard</button>
+        <button onclick="editResume()"><i class="fas fa-pen"></i> Edit Info</button>
+        <button onclick="changeTemplate()"><i class="fas fa-layer-group"></i> Change Template</button>
+        <button onclick="printResume()" class="download-btn"><i class="fas fa-file-download"></i> Download PDF</button>
+    </div>
 
+    <div class="container">
 
-</div>
+        <div class="resume template-clean" id="t0">
+            <h1 id="n"></h1><p id="c" style="font-style: italic; color: #666;"></p>
+            <h3>Professional Summary</h3><p id="s"></p>
+            <h3>Experience</h3><p id="e" style="white-space: pre-wrap;"></p>
+            <h3>Education</h3><p id="ed"></p>
+            <h3>Skills</h3><ul id="sk"></ul>
+        </div>
 
-<!-- ===== TEMPLATES (UNCHANGED) ===== -->
-<div class="resume template-clean" id="t0">
-    <h1 id="n"></h1><p id="c"></p>
-    <h3>Summary</h3><p id="s"></p>
-    <h3>Experience</h3><p id="e"></p>
-    <h3>Education</h3><p id="ed"></p>
-    <h3>Skills</h3><ul id="sk"></ul>
-</div>
+        <div class="resume template-ats" id="t2">
+            <h1 id="n2"></h1><p id="c2" style="text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px;"></p>
+            <h3>Summary</h3><p id="s2"></p>
+            <h3>Experience</h3><p id="e2" style="white-space: pre-wrap;"></p>
+            <h3>Education</h3><p id="ed2"></p>
+            <h3>Skills</h3><p id="sk2"></p>
+        </div>
 
+        <div class="resume template-modern" id="t3">
+            <h1 id="n3"></h1><p id="c3" style="color: #7f8c8d; font-weight: 500;"></p>
+            <h3>Profile</h3><p id="s3"></p>
+            <h3>Experience</h3><p id="e3" style="white-space: pre-wrap;"></p>
+            <h3>Education</h3><p id="ed3"></p>
+            <h3>Expertise</h3><ul id="sk3"></ul>
+        </div>
 
+        <div class="resume template-technical" id="t6">
+            <h1 id="n6"></h1><p id="c6"></p>
+            <h3>Summary</h3><p id="s6"></p>
+            <h3>Work History</h3><p id="e6" style="white-space: pre-wrap;"></p>
+            <h3>Education</h3><p id="ed6"></p>
+            <h3>Tech Stack</h3><ul id="sk6"></ul>
+        </div>
 
-<div class="resume template-ats" id="t2">
-<h1 id="n2"></h1><p id="c2"></p>
-<h3>Summary</h3><p id="s2"></p>
-<h3>Experience</h3><p id="e2"></p>
-<h3>Education</h3><p id="ed2"></p>
-<h3>Skills</h3><p id="sk2"></p>
-</div>
+        <div class="resume template-academic" id="t7">
+            <h1 id="n7"></h1><p id="c7" style="text-align: center; font-style: italic;"></p>
+            <h3>Abstract</h3><p id="s7"></p>
+            <h3>Research Experience</h3><p id="e7" style="white-space: pre-wrap;"></p>
+            <h3>Education</h3><p id="ed7"></p>
+            <h3>Skills</h3><ul id="sk7"></ul>
+        </div>
 
-<div class="resume template-modern" id="t3">
-<h1 id="n3"></h1><p id="c3"></p>
-<h3>Summary</h3><p id="s3"></p>
-<h3>Experience</h3><p id="e3"></p>
-<h3>Education</h3><p id="ed3"></p>
-<h3>Skills</h3><ul id="sk3"></ul>
-</div>
+        <div class="resume template-corporate" id="t9">
+            <h1 id="n9"></h1><p id="c9"></p>
+            <section><h3>Summary</h3><p id="s9"></p></section>
+            <section><h3>Experience</h3><p id="e9" style="white-space: pre-wrap;"></p></section>
+            <section><h3>Education</h3><p id="ed9"></p></section>
+            <section><h3>Skills</h3><ul id="sk9"></ul></section>
+        </div>
 
+    </div>
 
+    <script>
+        console.log("[AUTH CHECK]", location.pathname, localStorage.getItem("loggedUser"));
 
-<div class="resume template-technical" id="t6">
-<h1 id="n6"></h1><p id="c6"></p>
-<h3>Summary</h3><p id="s6"></p>
-<h3>Experience</h3><p id="e6"></p>
-<h3>Education</h3><p id="ed6"></p>
-<h3>Skills</h3><ul id="sk6"></ul>
-</div>
-
-<div class="resume template-academic" id="t7">
-<h1 id="n7"></h1><p id="c7"></p>
-<h3>Summary</h3><p id="s7"></p>
-<h3>Experience</h3><p id="e7"></p>
-<h3>Education</h3><p id="ed7"></p>
-<h3>Skills</h3><ul id="sk7"></ul>
-</div>
-
-
-<div class="resume template-corporate" id="t9">
-<h1 id="n9"></h1><p id="c9"></p>
-<section><h3>Summary</h3><p id="s9"></p></section>
-<section><h3>Experience</h3><p id="e9"></p></section>
-<section><h3>Education</h3><p id="ed9"></p></section>
-<section><h3>Skills</h3><ul id="sk9"></ul></section>
-</div>
-
-</div>
-
-
-<script>
-console.log(
-  "[AUTH CHECK]",
-  location.pathname,
-  localStorage.getItem("loggedUser")
-);
-
-const API = "http://localhost:5000";
-const user = JSON.parse(localStorage.getItem("loggedUser"));
-if (!user || !user.id) {
-    alert("User not logged in");
-    location.href = "login.html";
-}
-
-/* ================= GLOBAL STATE ================= */
-const historyId = localStorage.getItem("historyResumeId");
-let data = null;
-let index = 0;
-
-/* TEMPLATE → FIELD ID SUFFIX */
-const TEMPLATE_CONFIG = {
-    clean:      { index: 0, suffix: "" },
-    ats:        { index: 1, suffix: "2" },
-    modern:     { index: 2, suffix: "3" },
-    technical:  { index: 3, suffix: "6" },
-    academic:   { index: 4, suffix: "7" },
-    corporate:  { index: 5, suffix: "9" }
-};
-
-const templates = document.querySelectorAll(".resume");
-
-/* ================= LOAD RESUME ================= */
-async function loadResume() {
-    try {
-        let selectedTemplate = "clean";
-
-        if (historyId) {
-            const res = await fetch(`${API}/resume/${historyId}`);
-            const r = await res.json();
-
-            data = JSON.parse(r.resume_data);
-            selectedTemplate = r.template_name || "clean";
-
-            localStorage.removeItem("historyResumeId");
-        } else {
-            data = JSON.parse(localStorage.getItem("resumeData"));
-            selectedTemplate = localStorage.getItem("selectedTemplate") || "clean";
+        const API = "http://localhost:5000";
+        const user = JSON.parse(localStorage.getItem("loggedUser"));
+        
+        if (!user || !user.id) {
+            alert("User not logged in");
+            window.location.href = "login.html";
         }
 
-        if (!data) {
-            alert("No resume found");
-            location.href = "dashboard.html";
-            return;
-        }
+        /* ================= GLOBAL STATE ================= */
+        const historyId = localStorage.getItem("historyResumeId");
+        let data = null;
+        let index = 0;
 
-        renderTemplate(selectedTemplate);
-    } catch (err) {
-        console.error("Resume load error:", err);
-        alert("Failed to load resume");
-        location.href = "dashboard.html";
-    }
-}
+        /* TEMPLATE → FIELD ID SUFFIX */
+        const TEMPLATE_CONFIG = {
+            clean:      { index: 0, suffix: "" },
+            ats:        { index: 1, suffix: "2" },
+            modern:     { index: 2, suffix: "3" },
+            technical:  { index: 3, suffix: "6" },
+            academic:   { index: 4, suffix: "7" },
+            corporate:  { index: 5, suffix: "9" }
+        };
 
-/* ================= RENDER ================= */
-function renderTemplate(templateKey) {
-    const cfg = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.clean;
-    const s = cfg.suffix;
+        const templates = document.querySelectorAll(".resume");
 
-    templates.forEach(t => t.style.display = "none");
-    templates[cfg.index].style.display = "block";
+        /* ================= LOAD RESUME ================= */
+        async function loadResume() {
+            try {
+                let selectedTemplate = "clean";
 
-    setText("n" + s, data.name);
-    setText("c" + s, `${data.email || ""} | ${data.phone || ""}`);
-    setText("s" + s, data.summary);
-    setText("e" + s, data.experience);
-    setText("ed" + s, data.education);
+                if (historyId) {
+                    const res = await fetch(`${API}/resume/${historyId}`);
+                    const r = await res.json();
 
-    const sk = document.getElementById("sk" + s);
-    if (sk) {
-        sk.innerHTML = "";
-        (data.skills || "").split(/,|\n/).forEach(skill => {
-            if (skill.trim()) {
-                const li = document.createElement("li");
-                li.textContent = skill.trim();
-                sk.appendChild(li);
+                    data = JSON.parse(r.resume_data);
+                    selectedTemplate = r.template_name || "clean";
+
+                    localStorage.removeItem("historyResumeId");
+                } else {
+                    data = JSON.parse(localStorage.getItem("resumeData"));
+                    selectedTemplate = localStorage.getItem("selectedTemplate") || "clean";
+                }
+
+                if (!data) {
+                    alert("No resume found");
+                    window.location.href = "dashboard.html";
+                    return;
+                }
+
+                renderTemplate(selectedTemplate);
+            } catch (err) {
+                console.error("Resume load error:", err);
+                alert("Failed to load resume");
+                window.location.href = "dashboard.html";
             }
-        });
-    }
+        }
 
-    index = cfg.index;
-}
+        /* ================= RENDER ================= */
+        function renderTemplate(templateKey) {
+            const cfg = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.clean;
+            const s = cfg.suffix;
 
-function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value || "";
-}
+            templates.forEach(t => t.style.display = "none");
+            templates[cfg.index].style.display = "block";
 
-/* ================= ACTIONS ================= */
-function changeTemplate() {
-    const keys = Object.keys(TEMPLATE_CONFIG);
-    const currentKey = keys.find(k => TEMPLATE_CONFIG[k].index === index) || "clean";
-    const nextKey = keys[(keys.indexOf(currentKey) + 1) % keys.length];
+            setText("n" + s, data.name);
+            setText("c" + s, `${data.email || ""} | ${data.phone || ""}`);
+            setText("s" + s, data.summary);
+            setText("e" + s, data.experience);
+            setText("ed" + s, data.education);
 
-    localStorage.setItem("selectedTemplate", nextKey);
-    renderTemplate(nextKey);
-}
+            const sk = document.getElementById("sk" + s);
+            if (sk) {
+                sk.innerHTML = "";
+                (data.skills || "").split(/,|\n/).forEach(skill => {
+                    if (skill.trim()) {
+                        const li = document.createElement("li");
+                        li.textContent = skill.trim();
+                        sk.appendChild(li);
+                    }
+                });
+            }
 
-function editResume() {
-    location.href = "form-edit.html";
-}
+            index = cfg.index;
+        }
 
-function goToDashboard() {
-    location.href = "dashboard.html";
-}
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value || "";
+        }
 
-/* ================= PRINT & SAVE ================= */
-async function printResume() {
-    const templateKey =
-        Object.keys(TEMPLATE_CONFIG).find(
-            k => TEMPLATE_CONFIG[k].index === index
-        ) || "clean";
+        /* ================= ACTIONS ================= */
+        function changeTemplate() {
+            const keys = Object.keys(TEMPLATE_CONFIG);
+            const currentKey = keys.find(k => TEMPLATE_CONFIG[k].index === index) || "clean";
+            const nextKey = keys[(keys.indexOf(currentKey) + 1) % keys.length];
 
-    await fetch(`${API}/resume/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            userId: user.id,
-            resumeName: `Resume - ${new Date().toLocaleString()}`,
-            resumeData: data,
-            pdf_base64: "PRINTED",
-            template_name: templateKey
-        })
-    });
+            localStorage.setItem("selectedTemplate", nextKey);
+            renderTemplate(nextKey);
+        }
 
-    window.print();
-}
+        function editResume() {
+            // Updated to redirect to your form page
+            window.location.href = "form-edit.html?edit=true";
+        }
 
-/* ================= START ================= */
-loadResume();
-</script>
+        function goToDashboard() {
+            window.location.href = "dashboard.html";
+        }
 
+        /* ================= PRINT & SAVE ================= */
+        async function printResume() {
+            const templateKey = Object.keys(TEMPLATE_CONFIG).find(k => TEMPLATE_CONFIG[k].index === index) || "clean";
 
+            await fetch(`${API}/resume/save`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user.id,
+                    resumeName: `Resume - ${new Date().toLocaleString()}`,
+                    resumeData: JSON.stringify(data), // Fixed: stringify data object
+                    pdf_base64: "PRINTED",
+                    template_name: templateKey
+                })
+            });
+
+            window.print();
+        }
+
+        /* ================= START ================= */
+        loadResume();
+    </script>
 
 </body>
 </html>

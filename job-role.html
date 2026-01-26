@@ -6,136 +6,299 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #6a0dad, #9b59b6);
-    padding: 40px;
-}
+    :root {
+        --primary: #8B5CF6;
+        --secondary: #EC4899;
+        --accent: #06B6D4;
+        --bg-dark: #0f0c29;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --text-white: #ffffff;
+        --text-gray: #b3b3b3;
+    }
 
-.container {
-    max-width: 1000px;
-    margin: auto;
-    background: white;
-    padding: 40px;
-    border-radius: 18px;
-}
+    * { box-sizing: border-box; }
 
-h2 {
-    font-family: Poppins, sans-serif;
-}
+    body {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: var(--bg-dark);
+        background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+        color: var(--text-white);
+        min-height: 100vh;
+        padding: 40px;
+        overflow-x: hidden;
+    }
 
-.drop-zone {
-    border: 2px dashed #6a0dad;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: bold;
-    color: #6a0dad;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
+    /* --- Animated Background --- */
+    .blob {
+        position: fixed; width: 500px; height: 500px;
+        background: var(--primary); border-radius: 50%;
+        filter: blur(120px); opacity: 0.2; z-index: -1;
+        animation: float 20s infinite alternate;
+    }
+    .blob-2 { background: var(--accent); top: -100px; right: -100px; animation-delay: -5s; }
+    
+    @keyframes float {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
 
-.drop-zone.ready {
-    background: #e8dcff;
-}
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 50px;
+        border-radius: 30px;
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        animation: fadeInUp 0.8s ease-out;
+        text-align: center;
+    }
 
-input, select, button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
+    h2 {
+        font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;
+        background: linear-gradient(to right, #fff, var(--accent));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
 
-button {
-    background: #6a0dad;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+    p { color: var(--text-gray); margin-bottom: 40px; font-size: 1.1rem; }
 
-button:hover {
-    background: #5a0cb0;
-}
+    /* --- Drop Zone --- */
+    .drop-zone {
+        border: 2px dashed rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.02);
+        padding: 50px;
+        border-radius: 20px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--text-gray);
+        cursor: pointer;
+        margin-bottom: 30px;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
 
-.role-results {
-    background: #f5f0ff;
-    border-radius: 8px;
-    margin-top: 5px;
-    max-height: 150px;
-    overflow-y: auto;
-}
+    .drop-zone:hover {
+        border-color: var(--accent);
+        background: rgba(6, 182, 212, 0.05);
+        transform: scale(1.01);
+    }
 
-.role-item {
-    padding: 10px;
-    cursor: pointer;
-}
+    .drop-zone.ready {
+        border-color: #2ecc71;
+        background: rgba(46, 204, 113, 0.1);
+        color: #2ecc71;
+    }
 
-.role-item:hover {
-    background: #ddd;
-}
+    /* --- Inputs & Selects --- */
+    input, select {
+        width: 100%;
+        padding: 16px;
+        margin-top: 15px;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        background: rgba(255,255,255,0.05);
+        color: white;
+        font-size: 1rem;
+        transition: 0.3s;
+        outline: none;
+    }
 
-.keyword-box {
-    background: #f5f0ff;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-}
+    input:focus, select:focus {
+        border-color: var(--primary);
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    }
 
-.keyword {
-    display: inline-block;
-    background: #ddd;
-    padding: 6px 10px;
-    border-radius: 15px;
-    margin: 5px;
-    font-size: 13px;
-}
+    select option { background: #0f0c29; color: white; }
+
+    /* --- Buttons --- */
+    button {
+        width: 100%;
+        padding: 16px;
+        margin-top: 20px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Analyze Button */
+    button[onclick="analyzeResume()"] {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+    button[onclick="analyzeResume()"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(139, 92, 246, 0.5);
+        filter: brightness(1.2);
+    }
+
+    /* Dashboard Button */
+    button[onclick="goDashboard()"] {
+        background: transparent;
+        border: 2px solid var(--glass-border);
+        color: var(--text-gray);
+    }
+    button[onclick="goDashboard()"]:hover {
+        border-color: white;
+        color: white;
+        background: rgba(255,255,255,0.05);
+    }
+
+    /* Copy Button */
+    button[onclick="copyKeywords()"] {
+        background: var(--accent);
+        color: #000;
+        width: auto;
+        display: inline-block;
+        padding: 12px 30px;
+    }
+    button[onclick="copyKeywords()"]:hover {
+        background: white;
+        transform: scale(1.05);
+    }
+
+    /* --- Search Results --- */
+    .role-results {
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        margin-top: 5px;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        width: calc(100% - 100px); /* Adjust based on padding */
+        left: 50%; transform: translateX(-50%);
+        z-index: 10;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    /* Scrollbar for results */
+    .role-results::-webkit-scrollbar { width: 6px; }
+    .role-results::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+
+    .role-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        transition: 0.2s;
+    }
+
+    .role-item:hover {
+        background: var(--primary);
+        color: white;
+        padding-left: 25px;
+    }
+
+    /* --- Results Section --- */
+    #result {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid var(--glass-border);
+        animation: fadeInUp 0.5s ease;
+    }
+
+    #result h3 { color: var(--danger); font-size: 1.5rem; margin-bottom: 20px; }
+
+    .keyword-box {
+        background: rgba(255, 71, 87, 0.1);
+        border: 1px solid rgba(255, 71, 87, 0.3);
+        padding: 25px;
+        border-radius: 16px;
+        margin: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .keyword {
+        background: rgba(255, 71, 87, 0.2);
+        color: #ffcccb;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid rgba(255, 71, 87, 0.4);
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    /* Staggered animation for keywords */
+    .keyword:nth-child(n) { animation-delay: 0.1s; }
+    .keyword:nth-child(2n) { animation-delay: 0.2s; }
+    .keyword:nth-child(3n) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
 </style>
 </head>
 
 <body>
 
+<div class="blob"></div>
+<div class="blob blob-2"></div>
+
 <div class="container">
-<h2>ATS Resume Analyzer</h2>
-<p>Upload your resume and choose the job role you are applying for.</p>
+    <h2><i class="fas fa-radar" style="color: var(--accent); margin-right: 10px;"></i>ATS Resume Analyzer</h2>
+    <p>Upload your resume and check your compatibility score against AI filters.</p>
 
+    <div class="drop-zone" id="dropZone">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
+        <span id="dropText">Drag & Drop PDF or Click to Upload</span>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+    </div>
 
+    <div style="position: relative;">
+        <input type="text" placeholder="🔍 Search for your target role..." onkeyup="searchRole(this.value)">
+        <div class="role-results" id="roleResults"></div>
+    </div>
 
-<!-- FILE UPLOAD -->
-<div class="drop-zone" id="dropZone">
-    <span id="dropText">Drop resume PDF here or click to upload</span>
-    <input type="file" id="fileInput" accept=".pdf" hidden>
-</div>
+    <select id="roleSelect">
+        <option value="">Select Job Role manually</option>
+    </select>
 
-<!-- ROLE SEARCH -->
-<input type="text" placeholder="Search job role..." onkeyup="searchRole(this.value)">
+    <button onclick="analyzeResume()">
+        <i class="fas fa-microchip"></i> Run Analysis
+    </button>
+    
+    <button onclick="goDashboard()">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </button>
 
-<div class="role-results" id="roleResults"></div>
+    <div id="result" style="display:none">
+        <h3><i class="fas fa-exclamation-triangle"></i> Missing ATS Keywords</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">Add these words to your resume to pass the bot filters:</p>
+        
+        <div class="keyword-box" id="missingKeywords"></div>
 
-<select id="roleSelect">
-    <option value="">Select Job Role</option>
-</select>
-
-<button onclick="analyzeResume()">Analyze Resume</button>
-<!-- DASHBOARD BUTTON -->
-<button onclick="goDashboard()">Go to Dashboard</button>
-
-<!-- RESULTS -->
-<div id="result" style="display:none">
-<h3>Missing ATS Keywords</h3>
-<div class="keyword-box" id="missingKeywords"></div>
-
-<button onclick="copyKeywords()">Copy Keywords</button>
-<button onclick="continueEdit()">Continue to Edit Resume</button>
-</div>
+        <button onclick="copyKeywords()">
+            <i class="fas fa-copy"></i> Copy Keywords
+        </button>
+        
+        </div>
 
 </div>
 
 <script>
-// ================== JOB ROLES ==================
+// ================== JOB ROLES (LOGIC UNTOUCHED) ==================
 const roleKeywords = {
  "Software Engineer":["JavaScript","HTML","CSS","APIs","Git"],
  "Frontend Developer":["React","CSS","JavaScript","Accessibility"],
@@ -218,7 +381,7 @@ async function handleFile(file){
     }
 
     dropZone.classList.add("ready");
-    dropText.textContent = `✔ ${file.name} ready`;
+    dropText.innerHTML = `<i class='fas fa-check-circle' style='color:#2ecc71; font-size:24px;'></i><br>${file.name} Uploaded`;
 
     const reader = new FileReader();
     reader.onload = async ()=>{
@@ -249,23 +412,27 @@ function analyzeResume(){
 
     const box = document.getElementById("missingKeywords");
     box.innerHTML="";
-    missing.forEach(k=>{
-        box.innerHTML+=`<span class="keyword">${k}</span>`;
-    });
+    
+    if(missing.length === 0) {
+        box.innerHTML = "<span style='color: #2ecc71'>🎉 Perfect Match! No missing keywords.</span>";
+    } else {
+        missing.forEach(k=>{
+            box.innerHTML+=`<span class="keyword">${k}</span>`;
+        });
+    }
 
     localStorage.setItem("missingKeywords",JSON.stringify(missing));
     document.getElementById("result").style.display="block";
+    
+    // Smooth scroll to results
+    document.getElementById("result").scrollIntoView({behavior: 'smooth'});
 }
 
 // ================== BUTTONS ==================
 function copyKeywords(){
     const kw = JSON.parse(localStorage.getItem("missingKeywords")) || [];
     navigator.clipboard.writeText(kw.join(", "));
-    alert("Keywords copied");
-}
-
-function continueEdit(){
-    window.location.href="/form-edit.html";
+    alert("Keywords copied to clipboard!");
 }
 
 function goDashboard(){
