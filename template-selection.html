@@ -5,228 +5,264 @@
     <title>Select Template | Resume Builder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #9b59b6;
+            --accent: #00d4ff;
+            --bg: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            padding: 40px;
+            padding: 40px 20px;
+            color: white;
+            overflow-x: hidden;
         }
 
+        /* --- Animated Background --- */
+        .blob {
+            position: fixed;
+            width: 600px; height: 600px;
+            background: var(--primary);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: -1;
+            animation: float 25s infinite alternate;
+        }
+        .blob-2 { background: var(--accent); bottom: -100px; right: -100px; animation-delay: -5s; }
+
+        @keyframes float {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        /* --- Main Container --- */
         .container {
-            background: #ffffff;
-            max-width: 1100px;
-            margin: auto;
-            padding: 45px;
-            border-radius: 20px;
-            box-shadow: 0 20px 45px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            font-family: "Poppins", sans-serif;
-            color: #6a0dad;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            color: #555;
-            margin-bottom: 35px;
-        }
-
-        /* TEMPLATE GRID */
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        /* TEMPLATE CARD */
-        .template-card {
-            border-radius: 16px;
-            overflow: hidden;
-            background: #faf7ff;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            max-width: 1200px;
+            margin: 0 auto;
             text-align: center;
         }
 
-        .template-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 14px 35px rgba(0,0,0,0.18);
+        h2 {
+            font-size: 3rem; font-weight: 800; margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
         }
 
-        /* PREVIEW MOCK */
+        .subtitle {
+            color: rgba(255,255,255,0.6); margin-bottom: 50px; font-size: 1.1rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        /* --- Grid Layout --- */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding-bottom: 50px;
+        }
+
+        /* --- Glass Card --- */
+        .template-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: cardEntrance 0.8s forwards;
+            position: relative;
+        }
+
+        /* Staggered Animation for Cards */
+        .template-card:nth-child(1) { animation-delay: 0.1s; }
+        .template-card:nth-child(2) { animation-delay: 0.2s; }
+        .template-card:nth-child(3) { animation-delay: 0.3s; }
+        .template-card:nth-child(4) { animation-delay: 0.4s; }
+        .template-card:nth-child(5) { animation-delay: 0.5s; }
+        .template-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes cardEntrance { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .template-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        /* --- Template Preview Area --- */
         .template-preview {
-            height: 190px;
-            background: #e9dcff;
-            padding: 15px;
+            height: 220px;
+            background: #eef2f5;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            transition: 0.3s;
         }
 
-        .line {
-            height: 10px;
-            background: #c9b3ff;
-            border-radius: 6px;
-            margin-bottom: 6px;
-        }
+        /* Visual "Skeleton" Lines */
+        .line { height: 8px; background: #cbd5e1; border-radius: 4px; margin-bottom: 8px; }
+        .line.medium { width: 70%; }
+        .line.short { width: 40%; }
+        .split { display: flex; gap: 10px; height: 100%; }
+        .column { flex: 1; display: flex; flex-direction: column; gap: 8px; }
 
-        .line.short { width: 60%; }
-        .line.medium { width: 80%; }
-
-        .split {
-            display: flex;
-            gap: 8px;
-        }
-
-        .column {
-            flex: 1;
-        }
-
-        /* CARD CONTENT */
+        /* Card Content */
         .template-card h3 {
-            margin: 18px 0 5px;
-            font-family: "Poppins", sans-serif;
-            color: #333;
+            margin: 25px 0 10px;
+            font-size: 1.25rem;
+            color: white;
+            font-weight: 700;
         }
 
         .template-card p {
-            font-size: 14px;
-            color: #666;
-            padding: 0 15px;
-            margin-bottom: 18px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            padding: 0 20px;
+            margin-bottom: 25px;
+            line-height: 1.5;
         }
 
-        /* BUTTON */
+        /* --- Button --- */
         .template-card button {
-            background-color: #6a0dad;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 12px 22px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            cursor: pointer;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
             font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
         }
 
         .template-card button:hover {
-            background-color: #5a0cb0;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5);
+            filter: brightness(1.2);
         }
+
     </style>
 </head>
 
 <body>
 
+<div class="blob"></div>
+<div class="blob blob-2"></div>
+
 <div class="container">
 
     <h2>Select a Resume Template</h2>
-    <p class="subtitle">Choose an ATS-friendly template for your resume</p>
+    <p class="subtitle">Choose an AI-optimized design to showcase your potential.</p>
 
     <div class="template-grid">
 
-        <!-- CLEAN SINGLE COLUMN -->
         <div class="template-card">
             <div class="template-preview">
-                <div class="line medium"></div>
+                <div class="line medium" style="background: #475569;"></div>
                 <div class="line"></div>
                 <div class="line short"></div>
+                <br>
                 <div class="line"></div>
                 <div class="line"></div>
             </div>
             <h3>Clean Professional</h3>
             <p>Single-column layout similar to classic ATS resumes.</p>
-            <button onclick="selectTemplate('clean')">Use Template</button>
+            <button onclick="selectTemplate('clean')">Select Template</button>
         </div>
 
-   
-        <!-- ATS STRICT -->
         <div class="template-card">
             <div class="template-preview">
                 <div class="line medium"></div>
-                <div class="line"></div>
+                <div class="line" style="border-bottom: 2px solid #94a3b8;"></div>
                 <div class="line"></div>
                 <div class="line"></div>
             </div>
             <h3>ATS Optimized</h3>
             <p>Plain structure designed for maximum ATS parsing.</p>
-            <button onclick="selectTemplate('ats')">Use Template</button>
+            <button onclick="selectTemplate('ats')">Select Template</button>
         </div>
 
-        <!-- MODERN MINIMALIST -->
         <div class="template-card">
             <div class="template-preview">
-                <div class="line short"></div>
+                <div class="line short" style="background: var(--primary);"></div>
                 <div class="line medium"></div>
                 <div class="line"></div>
                 <div class="line short"></div>
-                <div class="line"></div>
             </div>
             <h3>Modern Minimalist</h3>
             <p>Clean, contemporary design with subtle accents.</p>
-            <button onclick="selectTemplate('modern')">Use Template</button>
+            <button onclick="selectTemplate('modern')">Select Template</button>
         </div>
 
-        <!-- EXECUTIVE STYLE -->
         <div class="template-card">
             <div class="template-preview">
-                <div class="line medium"></div>
-                <div class="line short"></div>
-                <div class="line"></div>
+                <div class="line medium" style="align-self: center;"></div>
+                <div class="line short" style="align-self: center;"></div>
+                <br>
                 <div class="line"></div>
                 <div class="line medium"></div>
             </div>
             <h3>Executive Style</h3>
             <p>Professional layout ideal for senior-level positions.</p>
-            <button onclick="selectTemplate('executive')">Use Template</button>
+            <button onclick="selectTemplate('executive')">Select Template</button>
         </div>
 
-       
-
-        <!-- TECHNICAL FOCUS -->
         <div class="template-card">
             <div class="template-preview">
-                <div class="line"></div>
+                <div class="line" style="background: #334155;"></div>
                 <div class="line medium"></div>
                 <div class="line"></div>
                 <div class="line short"></div>
             </div>
             <h3>Technical Focus</h3>
             <p>Emphasizes technical skills and certifications.</p>
-            <button onclick="selectTemplate('technical')">Use Template</button>
+            <button onclick="selectTemplate('technical')">Select Template</button>
         </div>
 
-        <!-- ACADEMIC CV -->
         <div class="template-card">
             <div class="template-preview">
                 <div class="line medium"></div>
                 <div class="line"></div>
                 <div class="line"></div>
                 <div class="line short"></div>
-                <div class="line"></div>
             </div>
             <h3>Academic CV</h3>
             <p>Structured for academic and research positions.</p>
-            <button onclick="selectTemplate('academic')">Use Template</button>
+            <button onclick="selectTemplate('academic')">Select Template</button>
         </div>
 
-      
-
-        <!-- CORPORATE STANDARD -->
         <div class="template-card">
             <div class="template-preview">
-                <div class="line medium"></div>
+                <div class="line medium" style="border-left: 4px solid var(--primary);"></div>
                 <div class="line"></div>
                 <div class="line short"></div>
                 <div class="line"></div>
             </div>
             <h3>Corporate Standard</h3>
             <p>Traditional corporate resume format.</p>
-            <button onclick="selectTemplate('corporate')">Use Template</button>
+            <button onclick="selectTemplate('corporate')">Select Template</button>
         </div>
 
     </div>
@@ -235,21 +271,21 @@
 
 <script>
     console.log(
-  "[AUTH CHECK]",
-  location.pathname,
-  localStorage.getItem("loggedUser")
-);
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+      "[AUTH CHECK]",
+      location.pathname,
+      localStorage.getItem("loggedUser")
+    );
+    const user = JSON.parse(localStorage.getItem("loggedUser"));
 
-if (!user || !user.id) {
-    console.warn("Not logged in at template selection");
-    window.location.href = "login.html";
-}
+    if (!user || !user.id) {
+        console.warn("Not logged in at template selection");
+        window.location.href = "login.html";
+    }
 
-function selectTemplate(templateName) {
-    localStorage.setItem("selectedTemplate", templateName);
-    window.location.href = "/resume-preview.html";
-}
+    function selectTemplate(templateName) {
+        localStorage.setItem("selectedTemplate", templateName);
+        window.location.href = "resume-preview.html";
+    }
 </script>
 
 </body>

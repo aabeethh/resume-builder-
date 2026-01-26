@@ -153,8 +153,9 @@ body{
 
 </div>
 
+
 <script>
-    console.log(
+console.log(
   "[AUTH CHECK]",
   location.pathname,
   localStorage.getItem("loggedUser")
@@ -162,135 +163,133 @@ body{
 
 const API = "http://localhost:5000";
 const user = JSON.parse(localStorage.getItem("loggedUser"));
+if (!user || !user.id) {
+    alert("User not logged in");
+    location.href = "login.html";
+}
 
-
-
-
-/* ================= LOAD RESUME DATA ================= */
+/* ================= GLOBAL STATE ================= */
 const historyId = localStorage.getItem("historyResumeId");
 let data = null;
+let index = 0;
 
-const TEMPLATE_INDEX_MAP = {
-    clean: 0,
-    ats: 1,
-    modern: 2,
-    technical: 3,
-    academic: 4,
-    corporate: 5
+/* TEMPLATE → FIELD ID SUFFIX */
+const TEMPLATE_CONFIG = {
+    clean:      { index: 0, suffix: "" },
+    ats:        { index: 1, suffix: "2" },
+    modern:     { index: 2, suffix: "3" },
+    technical:  { index: 3, suffix: "6" },
+    academic:   { index: 4, suffix: "7" },
+    corporate:  { index: 5, suffix: "9" }
 };
 
-async function loadResume() {
-    if (historyId) {
-        const res = await fetch(`${API}/resume/${historyId}`);
-        const r = await res.json();
-        data = JSON.parse(r.resume_data);
-        localStorage.removeItem("historyResumeId");
-    } else {
-        data = JSON.parse(localStorage.getItem("resumeData"));
-    }
-
-    if (!data) {
-        alert("No resume found");
-        window.location.href = "dashboard.html";
-        return;
-    }
-
-    const selectedTemplate = localStorage.getItem("selectedTemplate") || "clean";
-
-    index = TEMPLATE_INDEX_MAP[selectedTemplate] ?? 0;
-
-    render(index);
-}
-
-/* ================= TEMPLATE RENDER ================= */
-let index = 0;
 const templates = document.querySelectorAll(".resume");
 
-function render(i) {
-    templates.forEach(t => t.style.display = "none");
-    templates[i].style.display = "block";
-
-    for (let k = 0; k < 10; k++) {
-        const id = k === 0 ? "" : k;
-        const map = {
-            ["n" + id]: data.name,
-            ["c" + id]: `${data.email || ""} | ${data.phone || ""}`,
-            ["s" + id]: data.summary,
-            ["e" + id]: data.experience,
-            ["ed" + id]: data.education
-        };
-
-        Object.keys(map).forEach(key => {
-            const el = document.getElementById(key);
-            if (el) el.textContent = map[key] || "";
-        });
-
-        const sk = document.getElementById("sk" + id);
-        if (sk) {
-            sk.innerHTML = "";
-            (data.skills || "").split(/,|\n/).forEach(s => {
-                if (s.trim()) {
-                    const li = document.createElement("li");
-                    li.textContent = s.trim();
-                    sk.appendChild(li);
-                }
-            });
-        }
-    }
-}
-async function savePrintedResume() {
-    if (!user || !user.id) {
-        alert("User not logged in");
-        return;
-    }
-
+/* ================= LOAD RESUME ================= */
+async function loadResume() {
     try {
-        const res = await fetch(`${API}/resume/save`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userId: user.id,
-                resumeName: `Resume - ${new Date().toLocaleString()}`,
-                resumeData: data,
-                pdfBase64: "PRINTED" // placeholder
-            })
-        });
+        let selectedTemplate = "clean";
 
-        const result = await res.json();
-        if (!result.success) {
-            alert("Failed to save resume");
+        if (historyId) {
+            const res = await fetch(`${API}/resume/${historyId}`);
+            const r = await res.json();
+
+            data = JSON.parse(r.resume_data);
+            selectedTemplate = r.template_name || "clean";
+
+            localStorage.removeItem("historyResumeId");
+        } else {
+            data = JSON.parse(localStorage.getItem("resumeData"));
+            selectedTemplate = localStorage.getItem("selectedTemplate") || "clean";
+        }
+
+        if (!data) {
+            alert("No resume found");
+            location.href = "dashboard.html";
             return;
         }
 
-        // ✅ print AFTER save completes
-        setTimeout(() => window.print(), 300);
-
+        renderTemplate(selectedTemplate);
     } catch (err) {
-        console.error("Save resume failed:", err);
-        alert("Error saving resume");
+        console.error("Resume load error:", err);
+        alert("Failed to load resume");
+        location.href = "dashboard.html";
     }
 }
 
+/* ================= RENDER ================= */
+function renderTemplate(templateKey) {
+    const cfg = TEMPLATE_CONFIG[templateKey] || TEMPLATE_CONFIG.clean;
+    const s = cfg.suffix;
+
+    templates.forEach(t => t.style.display = "none");
+    templates[cfg.index].style.display = "block";
+
+    setText("n" + s, data.name);
+    setText("c" + s, `${data.email || ""} | ${data.phone || ""}`);
+    setText("s" + s, data.summary);
+    setText("e" + s, data.experience);
+    setText("ed" + s, data.education);
+
+    const sk = document.getElementById("sk" + s);
+    if (sk) {
+        sk.innerHTML = "";
+        (data.skills || "").split(/,|\n/).forEach(skill => {
+            if (skill.trim()) {
+                const li = document.createElement("li");
+                li.textContent = skill.trim();
+                sk.appendChild(li);
+            }
+        });
+    }
+
+    index = cfg.index;
+}
+
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value || "";
+}
 
 /* ================= ACTIONS ================= */
 function changeTemplate() {
-    index = (index + 1) % templates.length;
-    render(index);
+    const keys = Object.keys(TEMPLATE_CONFIG);
+    const currentKey = keys.find(k => TEMPLATE_CONFIG[k].index === index) || "clean";
+    const nextKey = keys[(keys.indexOf(currentKey) + 1) % keys.length];
+
+    localStorage.setItem("selectedTemplate", nextKey);
+    renderTemplate(nextKey);
 }
 
 function editResume() {
-    window.location.href = "form-edit.html";
+    location.href = "form-edit.html";
 }
 
 function goToDashboard() {
-    window.location.href = "dashboard.html";
+    location.href = "dashboard.html";
 }
 
-/* ================= SAVE PRINTED RESUME ================= */
-function printResume() {
-    savePrintedResume();
-}
+/* ================= PRINT & SAVE ================= */
+async function printResume() {
+    const templateKey =
+        Object.keys(TEMPLATE_CONFIG).find(
+            k => TEMPLATE_CONFIG[k].index === index
+        ) || "clean";
 
+    await fetch(`${API}/resume/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userId: user.id,
+            resumeName: `Resume - ${new Date().toLocaleString()}`,
+            resumeData: data,
+            pdf_base64: "PRINTED",
+            template_name: templateKey
+        })
+    });
+
+    window.print();
+}
 
 /* ================= START ================= */
 loadResume();
