@@ -44,89 +44,42 @@ body{
     display:none;
 }
 
-/* ===== TEMPLATE 1 CLEAN ===== */
+/* ===== TEMPLATES ===== */
 .template-clean{font-family:Merriweather;}
 .template-clean h1{font-size:32px}
 .template-clean h3{border-bottom:2px solid #000}
 
-/* ===== TEMPLATE 2 SIDEBAR ===== */
-.template-sidebar{
-    display:grid;
-    grid-template-columns:30% 70%;
-    font-family:Poppins;
-}
-.template-sidebar .left{
-    background:#f2e8dc;
-    padding:25px;
-}
+.template-sidebar{display:grid;grid-template-columns:30% 70%;font-family:Poppins}
+.template-sidebar .left{background:#f2e8dc;padding:25px}
 .template-sidebar .right{padding:30px}
 
-/* ===== TEMPLATE 3 ATS ===== */
-.template-ats{
-    font-family:Arial;
-    font-size:14px;
-}
-.template-ats h3{
-    text-transform:uppercase;
-    border-bottom:1px solid #000;
-    font-size:13px;
-}
+.template-ats{font-family:Arial;font-size:14px}
+.template-ats h3{text-transform:uppercase;border-bottom:1px solid #000;font-size:13px}
 
-/* ===== TEMPLATE 4 MODERN ===== */
-.template-modern{font-family:Poppins;}
+.template-modern{font-family:Poppins}
 .template-modern h1{color:#3498db}
 .template-modern h3{border-bottom:2px solid #3498db}
 
-/* ===== TEMPLATE 5 EXECUTIVE ===== */
-.template-executive{font-family:Montserrat;}
+.template-executive{font-family:Montserrat}
 .template-executive h1{text-align:center}
-.template-executive section{
-    background:#f8f8f8;
-    padding:15px;
-    border-radius:8px;
-    margin-bottom:15px;
-}
+.template-executive section{background:#f8f8f8;padding:15px;border-radius:8px;margin-bottom:15px}
 
-/* ===== TEMPLATE 6 CREATIVE ===== */
-.template-creative{
-    display:grid;
-    grid-template-columns:28% 72%;
-    font-family:Poppins;
-}
-.template-creative .left{
-    background:#ffeaa7;
-    padding:25px;
-}
+.template-creative{display:grid;grid-template-columns:28% 72%;font-family:Poppins}
+.template-creative .left{background:#ffeaa7;padding:25px}
 .template-creative .right{padding:30px}
 
-/* ===== TEMPLATE 7 TECHNICAL ===== */
-.template-technical{font-family:Roboto Mono;}
+.template-technical{font-family:Roboto Mono}
 .template-technical h3{background:#eee;padding:6px}
 
-/* ===== TEMPLATE 8 ACADEMIC ===== */
-.template-academic{font-family:Merriweather;}
+.template-academic{font-family:Merriweather}
 .template-academic h1{font-size:28px;letter-spacing:1px}
 
-/* ===== TEMPLATE 9 STARTUP ===== */
-.template-startup{
-    display:grid;
-    grid-template-columns:32% 68%;
-    font-family:Poppins;
-}
-.template-startup .left{
-    background:#2d3436;
-    color:#fff;
-    padding:25px;
-}
+.template-startup{display:grid;grid-template-columns:32% 68%;font-family:Poppins}
+.template-startup .left{background:#2d3436;color:#fff;padding:25px}
 .template-startup .right{padding:30px}
 
-/* ===== TEMPLATE 10 CORPORATE ===== */
-.template-corporate{font-family:Arial;}
-.template-corporate section{
-    border-left:6px solid #6a0dad;
-    padding-left:15px;
-    margin-bottom:18px;
-}
+.template-corporate{font-family:Arial}
+.template-corporate section{border-left:6px solid #6a0dad;padding-left:15px;margin-bottom:18px}
 
 @media print{
     body{background:none;padding:0}
@@ -136,6 +89,7 @@ body{
 </head>
 
 <body>
+
 <div class="container">
 
 <!-- ACTIONS -->
@@ -143,13 +97,14 @@ body{
     <button onclick="editResume()">Edit Resume</button>
     <button onclick="goToDashboard()">Go to Dashboard</button>
     <button onclick="changeTemplate()">Change Template</button>
-   
+<button onclick="printResume()" class="download-btn">
+    Download / Print
+</button>
 
 
-    <button onclick="savePrintedResume(); window.print()" class="download-btn">Download / Print</button>
 </div>
 
-<!-- CLEAN -->
+<!-- ===== TEMPLATES (UNCHANGED) ===== -->
 <div class="resume template-clean" id="t0">
     <h1 id="n"></h1><p id="c"></p>
     <h3>Summary</h3><p id="s"></p>
@@ -158,7 +113,6 @@ body{
     <h3>Skills</h3><ul id="sk"></ul>
 </div>
 
-<!-- SIDEBAR -->
 <div class="resume template-sidebar" id="t1">
 <div class="left">
     <h2 id="n1"></h2><p id="c1"></p>
@@ -171,7 +125,6 @@ body{
 </div>
 </div>
 
-<!-- ATS -->
 <div class="resume template-ats" id="t2">
 <h1 id="n2"></h1><p id="c2"></p>
 <h3>Summary</h3><p id="s2"></p>
@@ -180,7 +133,6 @@ body{
 <h3>Skills</h3><p id="sk2"></p>
 </div>
 
-<!-- MODERN -->
 <div class="resume template-modern" id="t3">
 <h1 id="n3"></h1><p id="c3"></p>
 <h3>Summary</h3><p id="s3"></p>
@@ -189,7 +141,6 @@ body{
 <h3>Skills</h3><ul id="sk3"></ul>
 </div>
 
-<!-- EXECUTIVE -->
 <div class="resume template-executive" id="t4">
 <h1 id="n4"></h1><p id="c4"></p>
 <section><h3>Summary</h3><p id="s4"></p></section>
@@ -198,7 +149,6 @@ body{
 <section><h3>Skills</h3><ul id="sk4"></ul></section>
 </div>
 
-<!-- CREATIVE -->
 <div class="resume template-creative" id="t5">
 <div class="left">
 <h2 id="n5"></h2><p id="c5"></p>
@@ -211,7 +161,6 @@ body{
 </div>
 </div>
 
-<!-- TECHNICAL -->
 <div class="resume template-technical" id="t6">
 <h1 id="n6"></h1><p id="c6"></p>
 <h3>Summary</h3><p id="s6"></p>
@@ -220,7 +169,6 @@ body{
 <h3>Skills</h3><ul id="sk6"></ul>
 </div>
 
-<!-- ACADEMIC -->
 <div class="resume template-academic" id="t7">
 <h1 id="n7"></h1><p id="c7"></p>
 <h3>Summary</h3><p id="s7"></p>
@@ -229,7 +177,6 @@ body{
 <h3>Skills</h3><ul id="sk7"></ul>
 </div>
 
-<!-- STARTUP -->
 <div class="resume template-startup" id="t8">
 <div class="left">
 <h2 id="n8"></h2><p id="c8"></p>
@@ -242,7 +189,6 @@ body{
 </div>
 </div>
 
-<!-- CORPORATE -->
 <div class="resume template-corporate" id="t9">
 <h1 id="n9"></h1><p id="c9"></p>
 <section><h3>Summary</h3><p id="s9"></p></section>
@@ -254,77 +200,130 @@ body{
 </div>
 
 <script>
-const data = JSON.parse(localStorage.getItem("resumeData"));
-if(!data){alert("No resume data found");location.href="/resume-options.html";}
+const API = "http://localhost:5000";
+const user = JSON.parse(localStorage.getItem("loggedUser"));
 
-let index=0;
-const templates=document.querySelectorAll(".resume");
 
-function render(i){
-    templates.forEach(t=>t.style.display="none");
-    templates[i].style.display="block";
 
-    for(let k=0;k<10;k++){
-        const id=k===0?"":""+k;
-        const map={
-            ["n"+id]:data.name,
-            ["c"+id]:`${data.email||""} | ${data.phone||""}`,
-            ["s"+id]:data.summary,
-            ["e"+id]:data.experience,
-            ["ed"+id]:data.education
+
+/* ================= LOAD RESUME DATA ================= */
+const historyId = localStorage.getItem("historyResumeId");
+let data = null;
+
+async function loadResume() {
+    if (historyId) {
+        const res = await fetch(`${API}/resume/${historyId}`);
+        const r = await res.json();
+        data = JSON.parse(r.resume_data);
+        localStorage.removeItem("historyResumeId");
+    } else {
+        data = JSON.parse(localStorage.getItem("resumeData"));
+    }
+
+    if (!data) {
+        alert("No resume found");
+        window.location.href = "dashboard.html";
+        return;
+    }
+
+    render(0);
+}
+
+/* ================= TEMPLATE RENDER ================= */
+let index = 0;
+const templates = document.querySelectorAll(".resume");
+
+function render(i) {
+    templates.forEach(t => t.style.display = "none");
+    templates[i].style.display = "block";
+
+    for (let k = 0; k < 10; k++) {
+        const id = k === 0 ? "" : k;
+        const map = {
+            ["n" + id]: data.name,
+            ["c" + id]: `${data.email || ""} | ${data.phone || ""}`,
+            ["s" + id]: data.summary,
+            ["e" + id]: data.experience,
+            ["ed" + id]: data.education
         };
-        Object.keys(map).forEach(x=>{
-            const el=document.getElementById(x);
-            if(el) el.textContent=map[x]||"";
+
+        Object.keys(map).forEach(key => {
+            const el = document.getElementById(key);
+            if (el) el.textContent = map[key] || "";
         });
 
-        const sk=document.getElementById("sk"+id);
-        if(sk){
-            sk.innerHTML="";
-            (data.skills||"").split(/,|\n/).forEach(s=>{
-                if(s.trim()){
-                    const li=document.createElement("li");
-                    li.textContent=s.trim();
+        const sk = document.getElementById("sk" + id);
+        if (sk) {
+            sk.innerHTML = "";
+            (data.skills || "").split(/,|\n/).forEach(s => {
+                if (s.trim()) {
+                    const li = document.createElement("li");
+                    li.textContent = s.trim();
                     sk.appendChild(li);
                 }
             });
         }
     }
 }
+async function savePrintedResume() {
+    if (!user || !user.id) {
+        alert("User not logged in");
+        return;
+    }
 
-render(0);
-
-function changeTemplate(){
-    index=(index+1)%10;
-    render(index);
-}
-function editResume(){
-    window.location.href="/form-edit.html";
-}
-function goToDashboard(){
-    window.location.href="/dashboard.html";
-}
-function savePrintedResume() {
-    const user = JSON.parse(localStorage.getItem("loggedUser"));
-    if (!user) return;
-
-    html2canvas(document.body).then(canvas => {
-        const pdfData = canvas.toDataURL("application/pdf");
-
-        fetch("http://localhost:5000/resume/save", {
+    try {
+        const res = await fetch(`${API}/resume/save`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 userId: user.id,
-                resumeName: `Resume - ${new Date().toLocaleDateString()}`,
+                resumeName: `Resume - ${new Date().toLocaleString()}`,
                 resumeData: data,
-                pdfBase64: pdfData
+                pdfBase64: "PRINTED" // placeholder
             })
         });
-    });
+
+        const result = await res.json();
+        if (!result.success) {
+            alert("Failed to save resume");
+            return;
+        }
+
+        // ✅ print AFTER save completes
+        setTimeout(() => window.print(), 300);
+
+    } catch (err) {
+        console.error("Save resume failed:", err);
+        alert("Error saving resume");
+    }
 }
 
+
+/* ================= ACTIONS ================= */
+function changeTemplate() {
+    index = (index + 1) % templates.length;
+    render(index);
+}
+
+function editResume() {
+    window.location.href = "form-edit.html";
+}
+
+function goToDashboard() {
+    window.location.href = "dashboard.html";
+}
+
+/* ================= SAVE PRINTED RESUME ================= */
+function printResume() {
+    savePrintedResume();
+}
+
+
+/* ================= START ================= */
+loadResume();
 </script>
+
+
 
 </body>
 </html>
