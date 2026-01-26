@@ -200,6 +200,12 @@ body{
 </div>
 
 <script>
+    console.log(
+  "[AUTH CHECK]",
+  location.pathname,
+  localStorage.getItem("loggedUser")
+);
+
 const API = "http://localhost:5000";
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 

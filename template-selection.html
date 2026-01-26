@@ -283,6 +283,18 @@
 </div>
 
 <script>
+    console.log(
+  "[AUTH CHECK]",
+  location.pathname,
+  localStorage.getItem("loggedUser")
+);
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+if (!user || !user.id) {
+    console.warn("Not logged in at template selection");
+    window.location.href = "login.html";
+}
+
 function selectTemplate(templateName) {
     localStorage.setItem("selectedTemplate", templateName);
     window.location.href = "/resume-preview.html";

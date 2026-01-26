@@ -277,46 +277,71 @@
         }
 
         async function processPDF(file) {
-            if (!file || file.type !== "application/pdf") { alert("Upload a PDF only"); return; }
-            localStorage.clear();
-            dropText.textContent = "⏳ Extracting Intelligence...";
-            const reader = new FileReader();
-            reader.onload = async function () {
-                const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
-                let extractedText = "";
-                for (let p = 1; p <= pdf.numPages; p++) {
-                    const page = await pdf.getPage(p);
-                    const content = await page.getTextContent();
-                    let lastY = null;
-                    let line = "";
-                    let lines = [];
-                    content.items.forEach(item => {
-                        if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) { line += item.str + " "; } 
-                        else { lines.push(line.trim()); line = item.str + " "; }
-                        lastY = item.transform[5];
-                    });
-                    if (line.trim()) lines.push(line.trim());
-                    extractedText += lines.join("\n") + "\n";
+    if (!file || file.type !== "application/pdf") {
+        alert("Upload a PDF only");
+        return;
+    }
+
+    // ✅ DO NOT TOUCH loggedUser
+    localStorage.removeItem("resumeData");
+    localStorage.removeItem("resumeSource");
+    localStorage.removeItem("selectedTemplate");
+    localStorage.removeItem("historyResumeId");
+
+    dropText.textContent = "⏳ Extracting Intelligence...";
+
+    const reader = new FileReader();
+    reader.onload = async function () {
+        const pdf = await pdfjsLib.getDocument(new Uint8Array(reader.result)).promise;
+        let extractedText = "";
+
+        for (let p = 1; p <= pdf.numPages; p++) {
+            const page = await pdf.getPage(p);
+            const content = await page.getTextContent();
+            let lastY = null, line = "", lines = [];
+
+            content.items.forEach(item => {
+                if (lastY === null || Math.abs(item.transform[5] - lastY) < 2) {
+                    line += item.str + " ";
+                } else {
+                    lines.push(line.trim());
+                    line = item.str + " ";
                 }
-                const resumeData = parsePdfResumeText(extractedText);
-                localStorage.setItem("resumeData", JSON.stringify(resumeData));
-                localStorage.setItem("resumeSource", "pdf");
-                dropText.innerHTML = "<i class='fas fa-check-circle'></i> Resume Synced!";
-                dropText.style.color = "var(--accent)";
-            };
-            reader.readAsArrayBuffer(file);
+                lastY = item.transform[5];
+            });
+
+            if (line.trim()) lines.push(line.trim());
+            extractedText += lines.join("\n") + "\n";
         }
+
+        const resumeData = parsePdfResumeText(extractedText);
+
+        localStorage.setItem("resumeData", JSON.stringify(resumeData));
+        localStorage.setItem("resumeSource", "pdf");
+
+        dropText.innerHTML = "<i class='fas fa-check-circle'></i> Resume Synced!";
+        dropText.style.color = "var(--accent)";
+    };
+
+    reader.readAsArrayBuffer(file);
+}
 
         function continueWithPDF() {
             if (!localStorage.getItem("resumeData")) { alert("Upload a resume first"); return; }
             window.location.href = "/template-selection.html";
         }
 
-        function startManual() {
-            localStorage.clear();
-            localStorage.setItem("resumeSource", "manual");
-            window.location.href = "/resume-form.html";
-        }
+      function startManual() {
+    //  Only reset resume-related data
+    localStorage.removeItem("resumeData");
+    localStorage.removeItem("resumeSource");
+    localStorage.removeItem("selectedTemplate");
+    localStorage.removeItem("historyResumeId");
+
+    localStorage.setItem("resumeSource", "manual");
+    window.location.href = "/resume-form.html";
+}
+
     </script>
 
 </body>

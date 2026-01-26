@@ -198,7 +198,13 @@
     </form>
 
     <script>
-     console.log("Saving loggedUser", data.user);
+
+     console.log(
+  "[AUTH CHECK]",
+  location.pathname,
+  localStorage.getItem("loggedUser")
+);
+
 
 
         // Password visibility toggle logic
