@@ -9,24 +9,43 @@ app.use(express.json({ limit: "50mb" }));
 
 /* ================= REGISTER ================= */
 app.post("/register", (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
+
+  
 
     if (!username || !password) {
         return res.json({ success: false, message: "Missing fields" });
     }
 
     db.query(
-        "INSERT INTO users (username, password) VALUES (?, ?)",
-        [username, password],
-        (err) => {
-            if (err) {
-                console.error("Register error:", err);
-                return res.json({ success: false, message: "User exists" });
+        "SELECT id FROM users WHERE username = ?",
+        [username],
+        (checkErr, rows) => {
+            if (checkErr) {
+                console.error("Check error:", checkErr);
+                return res.json({ success: false });
             }
-            res.json({ success: true });
+
+            if (rows.length > 0) {
+                return res.json({ success: false, message: "User already exists" });
+            }
+
+            db.query(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                [username, password],
+                (insertErr) => {
+                    if (insertErr) {
+                        console.error("Register error:", insertErr);
+                        return res.json({ success: false });
+                    }
+
+                    res.json({ success: true });
+                }
+            );
         }
     );
 });
+
 
 /* ================= LOGIN ================= */
 app.post("/login", (req, res) => {

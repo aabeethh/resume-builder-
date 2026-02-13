@@ -274,24 +274,27 @@
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            fetch("http://localhost:5000/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if (data.message && data.message.toLowerCase().includes("success")) {
-                    window.location.href = "login.html";
-                }
-            })
-            .catch(err => alert("Failed to connect to server."))
-            .finally(() => {
-                button.innerHTML = originalText;
-                button.style.opacity = '1';
-                button.disabled = false;
-            });
+           fetch("http://localhost:5000/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+})
+.then(res => res.json())  
+.then(data => {
+    if (data.success) {
+        alert("Registration successful!");
+        window.location.href = "login.html";
+    } else {
+        alert(data.message || "Registration failed");
+    }
+})
+.catch(() => alert("Failed to connect to server."))
+.finally(() => {
+    button.innerHTML = originalText;
+    button.style.opacity = '1';
+    button.disabled = false;
+});
+
         }
     </script>
 </body>
