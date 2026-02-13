@@ -20,7 +20,7 @@
             --border: #e2e8f0;
             --danger: #ef4444;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --transition: all 0.2s ease;
+            --transition: all 0.3s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -75,7 +75,7 @@
         .welcome-text h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .welcome-text p { color: var(--text-light); font-size: 1rem; max-width: 600px; }
 
-        /* --- CARDS (Minimalist) --- */
+        /* --- CARDS (Minimalist & Animated) --- */
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -91,12 +91,25 @@
             transition: var(--transition);
             text-align: left;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            /* Staggered Entrance Animation */
+            opacity: 0;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             border-color: var(--primary);
-            box-shadow: var(--shadow);
+            box-shadow: 0 12px 24px -8px rgba(37, 99, 235, 0.2);
         }
 
         /* Icon Circle */
@@ -107,13 +120,21 @@
             font-size: 22px; color: var(--primary);
             transition: var(--transition);
         }
+
+        .icon-box i {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         
         .card:hover .icon-box {
             background: var(--primary);
             color: white;
         }
 
-        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .card:hover .icon-box i {
+            transform: scale(1.2);
+        }
+
+        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .card p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5; min-height: 40px; }
 
         .card button {
@@ -240,22 +261,22 @@
             </div>
 
             <div class="card">
-                <div class="icon-box"><i class="fas fa-radar"></i></div>
+                <div class="icon-box"><i class="fas fa-clipboard-check"></i></div>
                 <h3>ATS Scanner</h3>
                 <p>Run a deep scan on your resume to ensure it passes automated Applicant Tracking Systems.</p>
                 <button onclick="location.href='ats.html'">Run Scan</button>
             </div>
 
             <div class="card">
-                <div class="icon-box"><i class="fas fa-crosshairs"></i></div>
+                <div class="icon-box"><i class="fas fa-bullseye"></i></div>
                 <h3>Role Matcher</h3>
                 <p>Target a specific job description and optimize your keywords for maximum relevance.</p>
                 <button onclick="location.href='job-role.html'">Optimize</button>
             </div>
 
             <div class="card">
-                <div class="icon-box"><i class="fas fa-box-archive"></i></div>
-                <h3>Resume Vault</h3>
+                <div class="icon-box"><i class="fas fa-folder-open"></i></div>
+                <h3>Resume history</h3>
                 <p>Access your complete history of saved resumes, edits, and PDF downloads.</p>
                 <button onclick="location.href='resume-history.html'">Open Vault</button>
             </div>
