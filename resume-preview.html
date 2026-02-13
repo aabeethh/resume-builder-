@@ -2,89 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resume Preview | ResumeElite</title>
+    <title>Resume Preview | Resume Builder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Merriweather:wght@300;700&family=Montserrat:wght@600&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Merriweather:wght@300;700&family=Montserrat:wght@600&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- MINIMAL THEME VARIABLES --- */
         :root {
-            --primary: #6a0dad;
-            --secondary: #9b59b6;
-            --accent: #00d4ff;
-            --bg-dark: #0f0c29;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary: #2563eb;       /* Royal Blue */
+            --primary-dark: #1e40af;
+            --text-main: #0f172a;     /* Dark Slate */
+            --text-light: #64748b;    /* Light Slate */
+            --bg-body: #f8fafc;       /* Light Gray Background */
+            --bg-card: #ffffff;       /* White Card Background */
+            --border: #e2e8f0;
+            --transition: all 0.2s ease;
         }
 
         body {
             margin: 0;
-            background: var(--bg-dark);
-            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+            background-color: var(--bg-body);
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 30px;
-            color: #333; /* Default text inside resume */
+            color: var(--text-main); 
         }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .blob {
-            position: fixed; width: 600px; height: 600px;
-            background: var(--primary); border-radius: 50%;
-            filter: blur(120px); opacity: 0.15; z-index: -1;
-            animation: float 25s infinite alternate;
-        }
-        .blob-2 { background: var(--accent); bottom: -100px; right: -100px; width: 400px; height: 400px; animation-delay: -5s; }
-        
-        @keyframes float {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(50px, 50px) scale(1.1); }
-        }
+        /* --- REMOVED BLOBS FOR MINIMAL LOOK --- */
+        .blob { display: none; }
 
-        /* --- FLOATING TOOLBAR --- */
+        /* --- FLOATING TOOLBAR (MINIMALIST) --- */
         .actions {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 50px;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: sticky; top: 20px; z-index: 100;
-            animation: slideDown 0.8s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            position: sticky; 
+            top: 20px; 
+            z-index: 100;
+            animation: slideDown 0.5s ease;
         }
 
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         .actions button {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: white;
+            color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 8px;
+            transition: var(--transition);
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            font-family: inherit;
         }
 
         .actions button:hover {
-            background: var(--primary);
+            background: var(--bg-body);
+            border-color: var(--text-light);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.4);
         }
 
         .download-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
-            border: none !important;
-            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.3);
+            background: var(--primary) !important;
+            color: white !important;
+            border-color: var(--primary) !important;
+        }
+        
+        .download-btn:hover {
+            background: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         /* --- RESUME PAPER --- */
@@ -99,52 +103,69 @@
             width: 210mm; /* A4 Width */
             min-height: 297mm; /* A4 Height */
             padding: 50px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
             margin-bottom: 50px;
             display: none; /* Hidden by JS logic */
-            animation: fadeInUp 0.8s ease;
+            animation: fadeIn 0.5s ease forwards;
             position: relative;
         }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         /* --- TEMPLATE STYLES --- */
         /* CLEAN */
         .template-clean { font-family: 'Merriweather', serif; color: #333; }
-        .template-clean h1 { font-size: 36px; border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .template-clean h1 { font-size: 36px; border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 20px; color: #111; }
         .template-clean h3 { text-transform: uppercase; border-bottom: 1px solid #ccc; margin-top: 30px; font-size: 16px; letter-spacing: 1px; color: #555; }
+        .template-clean p, .template-clean li { line-height: 1.6; }
         
         /* ATS */
-        .template-ats { font-family: Arial, sans-serif; line-height: 1.4; }
+        .template-ats { font-family: Arial, sans-serif; line-height: 1.5; color: #000; }
         .template-ats h1 { text-align: center; text-transform: uppercase; letter-spacing: 1px; }
-        .template-ats h3 { border-bottom: 1px solid black; font-size: 14px; margin-top: 20px; }
+        .template-ats h3 { border-bottom: 1px solid black; font-size: 14px; margin-top: 20px; padding-bottom: 5px; text-transform: uppercase; }
 
         /* MODERN */
-        .template-modern { font-family: 'Poppins', sans-serif; }
-        .template-modern h1 { color: #3498db; font-size: 40px; margin-bottom: 5px; }
-        .template-modern h3 { color: #2980b9; background: #f0f8ff; padding: 5px 10px; border-left: 5px solid #3498db; margin-top: 25px; }
+        .template-modern { font-family: 'Plus Jakarta Sans', sans-serif; color: #334155; }
+        .template-modern h1 { color: #2563eb; font-size: 40px; margin-bottom: 5px; font-weight: 800; letter-spacing: -1px; }
+        .template-modern h3 { color: #1e40af; background: #eff6ff; padding: 8px 12px; border-left: 4px solid #2563eb; margin-top: 25px; border-radius: 0 4px 4px 0; }
+        .template-modern p, .template-modern li { line-height: 1.6; }
 
         /* EXECUTIVE */
-        .template-executive { font-family: 'Montserrat', sans-serif; }
-        .template-executive h1 { text-align: center; letter-spacing: 2px; text-transform: uppercase; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; }
-        .template-executive section { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .template-executive { font-family: 'Montserrat', sans-serif; color: #1f2937; }
+        .template-executive h1 { text-align: center; letter-spacing: 2px; text-transform: uppercase; color: #111827; border-bottom: 2px solid #111827; padding-bottom: 15px; }
+        .template-executive section { padding: 0 0 20px 0; margin-top: 20px; }
+        .template-executive h3 { text-transform: uppercase; letter-spacing: 1px; color: #374151; margin-bottom: 10px; font-size: 1.1rem; }
+        .template-executive p, .template-executive li { line-height: 1.6; }
 
         /* TECHNICAL */
-        .template-technical { font-family: 'Roboto Mono', monospace; color: #444; }
-        .template-technical h1 { border-left: 10px solid #333; padding-left: 20px; }
-        .template-technical h3 { background: #eee; padding: 8px; font-weight: bold; margin-top: 20px; }
+        .template-technical { font-family: 'Roboto Mono', monospace; color: #333; }
+        .template-technical h1 { border-left: 10px solid #111; padding-left: 20px; margin-bottom: 15px; }
+        .template-technical h3 { background: #f1f5f9; padding: 8px 12px; font-weight: bold; margin-top: 20px; border: 1px solid #e2e8f0; }
+        .template-technical p, .template-technical li { line-height: 1.6; }
 
         /* CORPORATE */
-        .template-corporate { font-family: Arial, sans-serif; border-top: 10px solid #6a0dad; }
-        .template-corporate h1 { color: #6a0dad; }
-        .template-corporate section { border-left: 4px solid #6a0dad; padding-left: 20px; margin-bottom: 25px; }
+        .template-corporate { font-family: Arial, sans-serif; border-top: 10px solid #2563eb; color: #333; }
+        .template-corporate h1 { color: #2563eb; margin-top: 20px; }
+        .template-corporate section { border-left: 3px solid #2563eb; padding-left: 20px; margin-top: 25px; }
+        .template-corporate h3 { color: #1e40af; margin-bottom: 10px; }
+        .template-corporate p, .template-corporate li { line-height: 1.5; }
 
         /* PRINT MODE */
         @media print {
             body { background: white; padding: 0; display: block; }
             .blob, .actions { display: none !important; }
-            .resume { box-shadow: none; margin: 0; width: 100%; min-height: auto; page-break-after: always; }
+            .resume { box-shadow: none; border: none; margin: 0; width: 100%; min-height: auto; page-break-after: always; padding: 20mm; }
             .container { display: block; }
+        }
+
+        /* Mobile */
+        @media (max-width: 800px) {
+            .actions { flex-wrap: wrap; justify-content: center; border-radius: 12px; padding: 15px; }
+            .resume { width: 100%; padding: 20px; }
         }
 
     </style>
@@ -156,7 +177,7 @@
     <div class="blob blob-2"></div>
 
     <div class="actions">
-        <button onclick="goToDashboard()"><i class="fas fa-th-large"></i> Dashboard</button>
+        <button onclick="goToDashboard()"><i class="fas fa-arrow-left"></i> Dashboard</button>
         <button onclick="editResume()"><i class="fas fa-pen"></i> Edit Info</button>
         <button onclick="changeTemplate()"><i class="fas fa-layer-group"></i> Change Template</button>
         <button onclick="printResume()" class="download-btn"><i class="fas fa-file-download"></i> Download PDF</button>
@@ -181,7 +202,7 @@
         </div>
 
         <div class="resume template-modern" id="t3">
-            <h1 id="n3"></h1><p id="c3" style="color: #7f8c8d; font-weight: 500;"></p>
+            <h1 id="n3"></h1><p id="c3" style="color: #64748b; font-weight: 500;"></p>
             <h3>Profile</h3><p id="s3"></p>
             <h3>Experience</h3><p id="e3" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed3"></p>
@@ -320,7 +341,7 @@
 
         function editResume() {
             // Updated to redirect to your form page
-            window.location.href = "form-edit.html?edit=true";
+            window.location.href = "resume-form.html";
         }
 
         function goToDashboard() {
