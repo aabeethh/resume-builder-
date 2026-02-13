@@ -2,42 +2,181 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Resume</title>
+    <title>Edit Resume | Resume Builder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- MINIMAL THEME VARIABLES --- */
+        :root {
+            --primary: #2563eb;       /* Royal Blue */
+            --primary-dark: #1e40af;
+            --text-main: #0f172a;     /* Dark Slate */
+            --text-light: #64748b;    /* Light Slate */
+            --bg-body: #f8fafc;       /* Light Gray Background */
+            --bg-card: #ffffff;       /* White Card Background */
+            --border: #e2e8f0;
+            --transition: all 0.2s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background: linear-gradient(135deg, #6a0dad, #9b59b6);
-            padding: 40px;
-            font-family: Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
         }
+
         .container {
-            background: white;
+            background: var(--bg-card);
             max-width: 900px;
-            margin: auto;
-            padding: 40px;
-            border-radius: 18px;
+            margin: 0 auto;
+            padding: 40px 50px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
         }
-        h2 {
-            font-family: "Poppins", sans-serif;
-            color: #6a0dad;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 35px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* --- FORM GRID & INPUTS --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
         input, textarea {
             width: 100%;
-            margin-bottom: 15px;
-            padding: 12px;
+            padding: 14px 16px;
             border-radius: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border);
+            background: #fdfdfd;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: var(--transition);
         }
-        button {
-            background: #6a0dad;
+
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: #ffffff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+
+        /* --- BUTTON --- */
+        button[type="submit"] {
+            background: var(--primary);
             color: white;
-            border: none;
-            padding: 14px 30px;
+            border: 1px solid var(--primary);
+            padding: 16px 30px;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 40px;
+            font-family: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .container { padding: 30px 20px; margin: 10px; }
         }
     </style>
 </head>
@@ -45,22 +184,56 @@
 <body>
 
 <div class="container">
-    <h2>Edit Resume</h2>
+    <div class="header">
+        <h2>Edit Information</h2>
+        <a href="resume-preview.html" class="back-btn"><i class="fas fa-times"></i> Cancel</a>
+    </div>
 
     <form onsubmit="saveEdit(event)">
-        <h3>Personal Information</h3>
-        <input id="fullName" placeholder="Full Name">
-        <input id="email" placeholder="Email">
-        <input id="phone" placeholder="Phone">
-          <h3>Professional Summary</h3>
+        
+        <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>Full Name</label>
+                <input id="fullName" placeholder="e.g. Jane Doe">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input id="email" placeholder="e.g. jane@example.com">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input id="phone" placeholder="e.g. +1 234 567 8900">
+            </div>
+        </div>
 
-        <textarea id="summary" placeholder="Summary"></textarea>
-        <textarea id="education" placeholder="Education"></textarea>
-        <textarea id="experience" placeholder="Experience"></textarea>
-        <textarea id="skills" placeholder="Skills"></textarea>
-        <textarea id="projects" placeholder="Projects"></textarea>
+        <h3><i class="fas fa-briefcase"></i> Professional Details</h3>
+        <div class="form-group full-width">
+            <label>Professional Summary</label>
+            <textarea id="summary" placeholder="Write a brief overview of your career and key achievements..."></textarea>
+        </div>
+        
+        <div class="form-group full-width">
+            <label>Work Experience</label>
+            <textarea id="experience" placeholder="Company Name | Job Title | Dates&#10;- Key responsibility or achievement"></textarea>
+        </div>
+        
+        <div class="form-group full-width">
+            <label>Education</label>
+            <textarea id="education" placeholder="University Name | Degree | Year"></textarea>
+        </div>
+        
+        <div class="form-group full-width">
+            <label>Skills</label>
+            <textarea id="skills" placeholder="Skill 1, Skill 2, Skill 3..."></textarea>
+        </div>
+        
+        <div class="form-group full-width">
+            <label>Projects</label>
+            <textarea id="projects" placeholder="Project Name | Tech Stack&#10;- Brief description of the project"></textarea>
+        </div>
 
-        <button type="submit">Save & Preview</button>
+        <button type="submit"><i class="fas fa-save"></i> Save & Preview</button>
     </form>
 </div>
 
@@ -69,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = JSON.parse(localStorage.getItem("resumeData"));
     if (!data) {
         alert("No resume data found");
-        window.location.href = "/resume-options.html";
+        window.location.href = "template-selection.html";
         return;
     }
 
@@ -98,7 +271,7 @@ function saveEdit(e) {
     };
 
     localStorage.setItem("resumeData", JSON.stringify(updatedData));
-    window.location.href = "/resume-preview.html";
+    window.location.href = "resume-preview.html";
 }
 </script>
 
