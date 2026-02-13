@@ -252,20 +252,17 @@
     </div>
 
     <script>
-        // Formats the date string into "Month Day, Year at Time AM/PM"
+        // Formats the date string into a clean "Feb 14, 2026 at 2:30 PM" format
         function formatReadableDate(dateString) {
             const dateObj = new Date(dateString);
             
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            };
+            const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+            const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
             
-            return dateObj.toLocaleDateString(undefined, options);
+            const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+            const formattedTime = dateObj.toLocaleTimeString('en-US', timeOptions);
+            
+            return `${formattedDate} at ${formattedTime}`;
         }
 
         const user = JSON.parse(localStorage.getItem("loggedUser"));
@@ -288,10 +285,18 @@
             
             data.forEach(r=>{
                 const formattedDate = formatReadableDate(r.created_at);
+                
+                // Check if the title is an ugly auto-generated date and clean it up
+                let displayTitle = r.resume_name || "Untitled Resume";
+                if (displayTitle.includes("Resume - ") && displayTitle.length > 15) {
+                    const shortDate = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    displayTitle = `Resume Version (${shortDate})`;
+                }
+
                 list.innerHTML+=`
                     <div class="card">
                         <div>
-                            <h4>${r.resume_name || "Untitled Resume"}</h4>
+                            <h4>${displayTitle}</h4>
                             <small><i class="far fa-clock"></i> ${formattedDate}</small>
                         </div>
                         <button onclick="openResume(${r.id})">Open Editor <i class="fas fa-arrow-right"></i></button>
