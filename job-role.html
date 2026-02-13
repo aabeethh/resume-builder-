@@ -2,252 +2,310 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ATS Resume Analyzer</title>
+<title>ATS Resume Analyzer | Resume Builder</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+    /* --- MINIMAL THEME VARIABLES --- */
     :root {
-        --primary: #8B5CF6;
-        --secondary: #EC4899;
-        --accent: #06B6D4;
-        --bg-dark: #0f0c29;
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --text-white: #ffffff;
-        --text-gray: #b3b3b3;
+        --primary: #2563eb;       /* Royal Blue */
+        --primary-dark: #1e40af;
+        --text-main: #0f172a;     /* Dark Slate */
+        --text-light: #64748b;    /* Light Slate */
+        --bg-body: #f8fafc;       /* Light Gray Background */
+        --bg-card: #ffffff;       /* White Card Background */
+        --border: #e2e8f0;
+        --danger: #ef4444;        /* Soft Red for missing keywords */
+        --danger-light: #fee2e2;
+        --success: #10b981;
+        --transition: all 0.2s ease;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        margin: 0;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        background: var(--bg-dark);
-        background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
-        color: var(--text-white);
+        background-color: var(--bg-body);
+        color: var(--text-main);
         min-height: 100vh;
-        padding: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         overflow-x: hidden;
+        padding: 20px;
     }
 
-    /* --- Animated Background --- */
-    .blob {
-        position: fixed; width: 500px; height: 500px;
-        background: var(--primary); border-radius: 50%;
-        filter: blur(120px); opacity: 0.2; z-index: -1;
-        animation: float 20s infinite alternate;
-    }
-    .blob-2 { background: var(--accent); top: -100px; right: -100px; animation-delay: -5s; }
-    
-    @keyframes float {
-        0% { transform: translate(0, 0); }
-        100% { transform: translate(50px, 50px); }
-    }
+    /* --- Remove Background Blobs for Minimal Look --- */
+    .blob { display: none; }
 
+    /* --- Dashboard Container --- */
     .container {
-        max-width: 900px;
-        margin: 40px auto;
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        padding: 50px;
-        border-radius: 30px;
-        border: 1px solid var(--glass-border);
-        box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-        animation: fadeInUp 0.8s ease-out;
-        text-align: center;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        max-width: 1100px;
+        width: 100%;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    h2 {
-        font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;
-        background: linear-gradient(to right, #fff, var(--accent));
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    p { color: var(--text-gray); margin-bottom: 40px; font-size: 1.1rem; }
+    /* --- Two Column Dashboard Grid --- */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: stretch;
+    }
 
-    /* --- Drop Zone --- */
+    /* --- Left Panel: Upload & Inputs --- */
+    .left-panel {
+        display: flex;
+        flex-direction: column;
+    }
+
+    h2 { 
+        font-weight: 700; 
+        font-size: 1.8rem; 
+        margin-bottom: 8px; 
+        color: var(--text-main);
+        letter-spacing: -0.5px; 
+    }
+    
+    p { 
+        color: var(--text-light); 
+        margin-bottom: 25px; 
+        font-size: 1rem;
+    }
+
+    /* --- Styled Drop Zone (Clean) --- */
     .drop-zone {
-        border: 2px dashed rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.02);
-        padding: 50px;
-        border-radius: 20px;
-        text-align: center;
-        font-weight: 600;
-        color: var(--text-gray);
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 30px 20px;
+        background: var(--bg-body);
+        color: var(--text-light);
         cursor: pointer;
-        margin-bottom: 30px;
-        transition: 0.3s;
-        position: relative;
-        overflow: hidden;
+        margin-bottom: 20px;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .drop-zone i {
+        font-size: 30px;
+        color: var(--text-light);
+        transition: var(--transition);
     }
 
-    .drop-zone:hover {
-        border-color: var(--accent);
-        background: rgba(6, 182, 212, 0.05);
-        transform: scale(1.01);
+    .drop-zone.dragover {
+        border-color: var(--primary);
+        background: #eff6ff; /* Light blue */
+        color: var(--primary);
     }
-
+    
+    .drop-zone.dragover i { color: var(--primary); }
+    
     .drop-zone.ready {
-        border-color: #2ecc71;
-        background: rgba(46, 204, 113, 0.1);
-        color: #2ecc71;
+        border-color: var(--success);
+        background: #f0fdf4;
+        color: var(--success);
+    }
+    .drop-zone.ready i { color: var(--success); }
+
+    .drop-zone span { 
+        font-size: 0.95rem; 
+        font-weight: 500;
     }
 
-    /* --- Inputs & Selects --- */
+    /* --- Inputs & Selects (Minimalist) --- */
     input, select {
         width: 100%;
-        padding: 16px;
-        margin-top: 15px;
-        border-radius: 12px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255,255,255,0.05);
-        color: white;
-        font-size: 1rem;
-        transition: 0.3s;
-        outline: none;
+        padding: 12px 16px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-main);
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: var(--transition);
     }
 
     input:focus, select:focus {
         border-color: var(--primary);
-        background: rgba(255,255,255,0.1);
-        box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    select option {
+        background-color: #ffffff;
+        color: #0f172a;
+        font-size: 0.95rem;
     }
 
-    select option { background: #0f0c29; color: white; }
-
-    /* --- Buttons --- */
-    button {
-        width: 100%;
-        padding: 16px;
-        margin-top: 20px;
-        border-radius: 50px;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        border: none;
-        transition: 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    /* Analyze Button */
-    button[onclick="analyzeResume()"] {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: white;
-        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
-    }
-    button[onclick="analyzeResume()"]:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(139, 92, 246, 0.5);
-        filter: brightness(1.2);
-    }
-
-    /* Dashboard Button */
-    button[onclick="goDashboard()"] {
-        background: transparent;
-        border: 2px solid var(--glass-border);
-        color: var(--text-gray);
-    }
-    button[onclick="goDashboard()"]:hover {
-        border-color: white;
-        color: white;
-        background: rgba(255,255,255,0.05);
-    }
-
-    /* Copy Button */
-    button[onclick="copyKeywords()"] {
-        background: var(--accent);
-        color: #000;
-        width: auto;
-        display: inline-block;
-        padding: 12px 30px;
-    }
-    button[onclick="copyKeywords()"]:hover {
-        background: white;
-        transform: scale(1.05);
-    }
-
-    /* --- Search Results --- */
+    /* --- Search Results Dropdown --- */
     .role-results {
-        background: rgba(15, 23, 42, 0.95);
-        border: 1px solid var(--glass-border);
-        border-radius: 12px;
-        margin-top: 5px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-top: -10px;
+        margin-bottom: 15px;
         max-height: 200px;
         overflow-y: auto;
         position: absolute;
-        width: calc(100% - 100px); /* Adjust based on padding */
-        left: 50%; transform: translateX(-50%);
-        z-index: 10;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        width: 100%;
+        z-index: 9999; /* Increased to ensure it floats above dropdowns */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        display: none; /* Handled by JS dynamically if empty */
     }
     
-    /* Scrollbar for results */
+    .role-results:not(:empty) { display: block; }
+
     .role-results::-webkit-scrollbar { width: 6px; }
-    .role-results::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+    .role-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
     .role-item {
-        padding: 12px 20px;
+        padding: 10px 16px;
         cursor: pointer;
-        text-align: left;
-        border-bottom: 1px solid rgba(255,255,255,0.03);
-        transition: 0.2s;
+        font-size: 0.95rem;
+        border-bottom: 1px solid var(--bg-body);
+        transition: var(--transition);
     }
 
     .role-item:hover {
+        background: #eff6ff;
+        color: var(--primary);
+        padding-left: 20px;
+    }
+
+    /* --- Button Effects (Solid & Professional) --- */
+    .button-group { 
+        display: flex; 
+        gap: 15px; 
+        margin-top: auto;
+    }
+    
+    button {
+        flex: 1;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-primary {
         background: var(--primary);
         color: white;
-        padding-left: 25px;
+        border: 1px solid var(--primary);
+    }
+    
+    .btn-primary:hover { 
+        background: var(--primary-dark); 
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline { 
+        background: white; 
+        color: var(--text-main);
+        border: 1px solid var(--border);
+    }
+    
+    .btn-outline:hover { 
+        background: var(--bg-body); 
+        border-color: var(--text-light);
     }
 
-    /* --- Results Section --- */
-    #result {
-        margin-top: 40px;
-        padding-top: 30px;
-        border-top: 1px solid var(--glass-border);
-        animation: fadeInUp 0.5s ease;
+    /* --- Right Panel: Results --- */
+    .right-panel {
+        background: var(--bg-body);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 450px;
     }
 
-    #result h3 { color: var(--danger); font-size: 1.5rem; margin-bottom: 20px; }
+    /* Empty State Placeholder */
+    .empty-state {
+        text-align: center;
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .empty-state i { font-size: 3rem; opacity: 0.3; }
+    .empty-state span { font-size: 1.05rem; font-weight: 500; }
 
+    /* Results Content */
+    #result { width: 100%; text-align: center; animation: fadeIn 0.4s ease; }
+    #result h3 { color: var(--danger); font-size: 1.3rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
     .keyword-box {
-        background: rgba(255, 71, 87, 0.1);
-        border: 1px solid rgba(255, 71, 87, 0.3);
+        background: white;
+        border: 1px dashed var(--border);
         padding: 25px;
-        border-radius: 16px;
+        border-radius: 12px;
         margin: 20px 0;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         justify-content: center;
+        min-height: 150px;
+        align-content: flex-start;
     }
 
     .keyword {
-        background: rgba(255, 71, 87, 0.2);
-        color: #ffcccb;
-        padding: 8px 16px;
+        background: var(--danger-light);
+        color: var(--danger);
+        padding: 6px 14px;
         border-radius: 50px;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 600;
-        border: 1px solid rgba(255, 71, 87, 0.4);
-        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        border: 1px solid #fca5a5;
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         opacity: 0;
         transform: scale(0.5);
     }
 
-    /* Staggered animation for keywords */
-    .keyword:nth-child(n) { animation-delay: 0.1s; }
-    .keyword:nth-child(2n) { animation-delay: 0.2s; }
-    .keyword:nth-child(3n) { animation-delay: 0.3s; }
+    .keyword:nth-child(n) { animation-delay: 0.05s; }
+    .keyword:nth-child(2n) { animation-delay: 0.1s; }
+    .keyword:nth-child(3n) { animation-delay: 0.15s; }
 
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes popIn { to { opacity: 1; transform: scale(1); } }
 
+    /* Mobile Adjustments */
+    @media (max-width: 800px) {
+        .dashboard-grid { grid-template-columns: 1fr; gap: 30px; }
+        .right-panel { min-height: 350px; }
+        .container { padding: 30px 20px; }
+        .button-group { flex-direction: column; }
+    }
 </style>
 </head>
 
@@ -257,85 +315,134 @@
 <div class="blob blob-2"></div>
 
 <div class="container">
-    <h2><i class="fas fa-radar" style="color: var(--accent); margin-right: 10px;"></i>ATS Resume Analyzer</h2>
-    <p>Upload your resume and check your compatibility score against AI filters.</p>
-
-    <div class="drop-zone" id="dropZone">
-        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
-        <span id="dropText">Drag & Drop PDF or Click to Upload</span>
-        <input type="file" id="fileInput" accept=".pdf" hidden>
-    </div>
-
-    <div style="position: relative;">
-        <input type="text" placeholder="🔍 Search for your target role..." onkeyup="searchRole(this.value)">
-        <div class="role-results" id="roleResults"></div>
-    </div>
-
-    <select id="roleSelect">
-        <option value="">Select Job Role manually</option>
-    </select>
-
-    <button onclick="analyzeResume()">
-        <i class="fas fa-microchip"></i> Run Analysis
-    </button>
-    
-    <button onclick="goDashboard()">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
-    </button>
-
-    <div id="result" style="display:none">
-        <h3><i class="fas fa-exclamation-triangle"></i> Missing ATS Keywords</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 10px;">Add these words to your resume to pass the bot filters:</p>
+    <div class="dashboard-grid">
         
-        <div class="keyword-box" id="missingKeywords"></div>
+        <div class="left-panel">
+            <h2><i class="fas fa-radar" style="color: var(--primary); margin-right: 8px;"></i>Role Matcher</h2>
+            <p>Upload your resume and check compatibility against AI job filters.</p>
 
-        <button onclick="copyKeywords()">
-            <i class="fas fa-copy"></i> Copy Keywords
-        </button>
-        
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt" id="dropIcon"></i>
+                <span id="dropText">Drag & Drop PDF or Click to Upload</span>
+                <input type="file" id="fileInput" accept=".pdf" hidden>
+            </div>
+
+            <div style="position: relative;">
+                <input type="text" placeholder="🔍 Search for your target role..." onkeyup="searchRole(this.value)">
+                <div class="role-results" id="roleResults"></div>
+            </div>
+
+            <select id="roleSelect">
+                <option value="">Select Job Role manually</option>
+            </select>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="analyzeResume()">
+                    <i class="fas fa-microchip"></i> Run Analysis
+                </button>
+                <button class="btn-outline" onclick="goDashboard()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
         </div>
 
+        <div class="right-panel">
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-search"></i>
+                <span>Keyword analysis will appear here</span>
+            </div>
+
+            <div id="result" style="display:none">
+                <h3><i class="fas fa-exclamation-triangle"></i> Missing ATS Keywords</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">Add these exact words to your resume to pass the bot filters:</p>
+                
+                <div class="keyword-box" id="missingKeywords"></div>
+
+                <button class="btn-outline" onclick="copyKeywords()" style="margin: 0 auto; width: auto; padding: 10px 20px;">
+                    <i class="fas fa-copy"></i> Copy Keywords
+                </button>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-// ================== JOB ROLES (LOGIC UNTOUCHED) ==================
+// ================== EXPANDED JOB ROLES (LOGIC UNTOUCHED) ==================
 const roleKeywords = {
- "Software Engineer":["JavaScript","HTML","CSS","APIs","Git"],
- "Frontend Developer":["React","CSS","JavaScript","Accessibility"],
- "Backend Developer":["Node.js","Databases","REST","Auth"],
- "Full Stack Developer":["React","Node.js","SQL","Git"],
- "Data Analyst":["Excel","SQL","Python","Statistics"],
- "Data Scientist":["Python","ML","Pandas","NumPy"],
- "DevOps Engineer":["Docker","Kubernetes","CI/CD","AWS"],
- "Cloud Engineer":["AWS","Azure","Terraform"],
- "Cyber Security Analyst":["Security","PenTesting"],
- "UI UX Designer":["Figma","Wireframes","UX"],
- "Mobile App Developer":["Android","iOS","Flutter"],
- "AI Engineer":["ML","TensorFlow","Python"],
- "QA Engineer":["Testing","Automation","Selenium"],
- "Product Manager":["Roadmap","Agile","Strategy"],
- "Business Analyst":["Documentation","Analysis"],
- "HR Executive":["Recruitment","HR Policies"],
- "Digital Marketer":["SEO","Analytics"],
- "Content Writer":["SEO","Copywriting"],
- "Graphic Designer":["Photoshop","Creativity"],
- "Network Engineer":["Networking","Firewalls"],
- "Database Administrator":["SQL","Backups"],
- "Game Developer":["Unity","C#"],
- "Blockchain Developer":["Solidity","Smart Contracts"],
- "Embedded Engineer":["C","Microcontrollers"],
- "Finance Analyst":["Finance","Excel"],
- "Accountant":["GST","Tally"],
- "Sales Executive":["Sales","CRM"],
- "Operations Manager":["Process","Operations"],
- "Teacher":["Teaching","Planning"],
- "Student":["Projects","Learning"]
+ // Software & Engineering
+ "Software Engineer": ["JavaScript", "HTML", "CSS", "APIs", "Git", "REST", "Agile"],
+ "Frontend Developer": ["React", "CSS", "JavaScript", "Accessibility", "Vue", "TypeScript", "Responsive Design"],
+ "Backend Developer": ["Node.js", "Databases", "REST", "Auth", "Python", "Java", "Microservices", "API"],
+ "Full Stack Developer": ["React", "Node.js", "SQL", "Git", "MongoDB", "Express", "REST"],
+ "DevOps Engineer": ["Docker", "Kubernetes", "CI/CD", "AWS", "Jenkins", "Linux", "Automation", "Terraform"],
+ "Cloud Engineer": ["AWS", "Azure", "Terraform", "GCP", "Docker", "IaaS", "Cloud Security"],
+ "Site Reliability Engineer": ["Linux", "Kubernetes", "Monitoring", "CI/CD", "Automation", "Python", "SLA"],
+ "QA Engineer": ["Testing", "Automation", "Selenium", "Jira", "Postman", "Cypress", "Bug Tracking"],
+ "Mobile App Developer": ["Android", "iOS", "Flutter", "React Native", "Swift", "Kotlin", "Mobile UI"],
+ "Game Developer": ["Unity", "C#", "Unreal Engine", "C++", "3D Modeling", "Game Physics"],
+ "Blockchain Developer": ["Solidity", "Smart Contracts", "Web3", "Cryptography", "Ethereum"],
+ "Embedded Engineer": ["C", "Microcontrollers", "C++", "IoT", "RTOS", "Hardware"],
+ "Network Engineer": ["Networking", "Firewalls", "Cisco", "Routing", "TCP/IP", "VPN"],
+ "IT Support Specialist": ["Troubleshooting", "Active Directory", "Ticketing", "Windows", "Networking", "Hardware Support"],
+
+ // Data & AI
+ "Data Analyst": ["Excel", "SQL", "Python", "Statistics", "Tableau", "Data Visualization", "Power BI"],
+ "Data Scientist": ["Python", "ML", "Pandas", "NumPy", "Predictive Modeling", "R", "Algorithms"],
+ "Data Engineer": ["SQL", "ETL", "Spark", "Hadoop", "Python", "Data Warehousing", "AWS"],
+ "Machine Learning Engineer": ["Python", "TensorFlow", "PyTorch", "NLP", "Deep Learning", "Algorithms"],
+ "AI Engineer": ["ML", "TensorFlow", "Python", "Computer Vision", "NLP", "Deep Learning"],
+
+ // Design & Product
+ "UI UX Designer": ["Figma", "Wireframes", "UX", "Prototyping", "User Research", "Adobe XD"],
+ "UX Researcher": ["User Interviews", "Usability Testing", "Wireframing", "Persona", "Figma", "A/B Testing"],
+ "Product Designer": ["Prototyping", "Figma", "Design Thinking", "User-Centered", "UI/UX", "Visual Design"],
+ "Product Manager": ["Roadmap", "Agile", "Strategy", "Jira", "Stakeholder Management", "User Stories", "Go-to-market"],
+ "Scrum Master": ["Agile", "Scrum", "Kanban", "Sprint Planning", "Jira", "Facilitation"],
+ "Graphic Designer": ["Photoshop", "Creativity", "Illustrator", "InDesign", "Branding", "Typography"],
+
+ // Business, Management & Sales
+ "Business Analyst": ["Documentation", "Analysis", "Requirements Gathering", "SQL", "Process Modeling", "UML"],
+ "Project Manager": ["PMP", "Agile", "Scrum", "Risk Management", "Budgeting", "Scheduling", "Leadership"],
+ "Operations Manager": ["Process", "Operations", "KPIs", "Supply Chain", "Vendor Management", "Strategy"],
+ "Sales Executive": ["Sales", "CRM", "B2B", "Lead Generation", "Negotiation", "Cold Calling"],
+ "Account Executive": ["B2B Sales", "CRM", "Negotiation", "Lead Generation", "Closing", "Account Management"],
+ "Supply Chain Manager": ["Logistics", "Procurement", "Inventory Management", "ERP", "Negotiation", "Vendor Management"],
+
+ // Marketing
+ "Digital Marketer": ["SEO", "Analytics", "Google Ads", "SEM", "Campaign Management", "Social Media"],
+ "SEO Specialist": ["SEO", "Google Analytics", "Keyword Research", "On-page", "Link Building", "Ahrefs"],
+ "Social Media Manager": ["Content Strategy", "Hootsuite", "Copywriting", "Campaigns", "Engagement", "Brand Awareness"],
+ "Content Writer": ["SEO", "Copywriting", "Editing", "WordPress", "Content Strategy", "Blogging"],
+ 
+ // Finance & Accounting
+ "Finance Analyst": ["Finance", "Excel", "Financial Modeling", "Forecasting", "Variance Analysis", "Reporting"],
+ "Accountant": ["GST", "Tally", "QuickBooks", "Reconciliation", "Taxation", "Accounts Payable"],
+ "Investment Banker": ["Financial Modeling", "Valuation", "M&A", "Excel", "Bloomberg", "Pitch Books"],
+
+ // Traditional Engineering
+ "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Thermodynamics", "Manufacturing", "Design", "FEA"],
+ "Electrical Engineer": ["Circuit Design", "PCB", "AutoCAD Electrical", "Testing", "MATLAB", "Power Systems"],
+ "Civil Engineer": ["AutoCAD", "Structural Analysis", "Project Management", "Surveying", "AutoCAD Civil 3D"],
+
+ // HR & Admin
+ "HR Executive": ["Recruitment", "HR Policies", "Onboarding", "Employee Relations", "Payroll", "Compliance"],
+ "Talent Acquisition Specialist": ["Sourcing", "Applicant Tracking Systems", "Interviewing", "Onboarding", "LinkedIn Recruiter", "Networking"],
+ 
+ // Other/Miscellaneous
+ "Cyber Security Analyst": ["Security", "PenTesting", "Firewalls", "Vulnerability Assessment", "SIEM", "Incident Response"],
+ "Database Administrator": ["SQL", "Backups", "Oracle", "MySQL", "Performance Tuning", "Database Security"],
+ "Teacher": ["Teaching", "Planning", "Curriculum Development", "Classroom Management", "Communication"],
+ "Student": ["Projects", "Learning", "Research", "Teamwork", "Problem Solving", "Time Management"]
 };
 
-// Populate dropdown
+// Populate dropdown (UPDATED FIX)
 const roleSelect = document.getElementById("roleSelect");
-Object.keys(roleKeywords).forEach(role=>{
-    roleSelect.innerHTML += `<option value="${role}">${role}</option>`;
+Object.keys(roleKeywords).forEach(role => {
+    const option = document.createElement("option");
+    option.value = role;
+    option.textContent = role;
+    roleSelect.appendChild(option);
 });
 
 // ================== ROLE SEARCH ==================
@@ -354,6 +461,8 @@ function searchRole(text){
         div.onclick = () => {
             roleSelect.value = role;
             resultBox.innerHTML = "";
+            // Clear input text visually
+            document.querySelector("input[type='text']").value = role;
         };
         resultBox.appendChild(div);
     });
@@ -363,6 +472,7 @@ function searchRole(text){
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("fileInput");
 const dropText = document.getElementById("dropText");
+const dropIcon = document.getElementById("dropIcon");
 let extractedText = "";
 
 dropZone.onclick = () => fileInput.click();
@@ -381,7 +491,8 @@ async function handleFile(file){
     }
 
     dropZone.classList.add("ready");
-    dropText.innerHTML = `<i class='fas fa-check-circle' style='color:#2ecc71; font-size:24px;'></i><br>${file.name} Uploaded`;
+    dropIcon.className = "fas fa-check-circle";
+    dropText.innerHTML = `${file.name} Uploaded`;
 
     const reader = new FileReader();
     reader.onload = async ()=>{
@@ -414,7 +525,7 @@ function analyzeResume(){
     box.innerHTML="";
     
     if(missing.length === 0) {
-        box.innerHTML = "<span style='color: #2ecc71'>🎉 Perfect Match! No missing keywords.</span>";
+        box.innerHTML = "<span style='color: var(--success); font-weight: 600;'><i class='fas fa-check-circle'></i> Perfect Match! No missing keywords.</span>";
     } else {
         missing.forEach(k=>{
             box.innerHTML+=`<span class="keyword">${k}</span>`;
@@ -422,21 +533,25 @@ function analyzeResume(){
     }
 
     localStorage.setItem("missingKeywords",JSON.stringify(missing));
-    document.getElementById("result").style.display="block";
     
-    // Smooth scroll to results
-    document.getElementById("result").scrollIntoView({behavior: 'smooth'});
+    // UI Updates
+    document.getElementById("emptyState").style.display = "none";
+    document.getElementById("result").style.display = "block";
 }
 
 // ================== BUTTONS ==================
 function copyKeywords(){
     const kw = JSON.parse(localStorage.getItem("missingKeywords")) || [];
+    if(kw.length === 0) {
+        alert("No keywords to copy!");
+        return;
+    }
     navigator.clipboard.writeText(kw.join(", "));
     alert("Keywords copied to clipboard!");
 }
 
 function goDashboard(){
-    window.location.href="/dashboard.html";
+    window.location.href="dashboard.html";
 }
 </script>
 
