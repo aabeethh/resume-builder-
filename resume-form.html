@@ -2,119 +2,168 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resume Details | ResumeElite</title>
+    <title>Resume Details | Resume Builder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- MINIMAL THEME VARIABLES --- */
         :root {
-            --primary: #6a0dad;
-            --secondary: #9b59b6;
-            --accent: #00d4ff;
-            --bg: #0f0c29;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary: #2563eb;       /* Royal Blue */
+            --primary-dark: #1e40af;
+            --text-main: #0f172a;     /* Dark Slate */
+            --text-light: #64748b;    /* Light Slate */
+            --bg-body: #f8fafc;       /* Light Gray Background */
+            --bg-card: #ffffff;       /* White Card Background */
+            --border: #e2e8f0;
+            --success-light: #ecfdf5;
+            --success-border: #10b981;
+            --success-text: #047857;
+            --info-light: #eff6ff;
+            --info-border: #3b82f6;
+            --info-text: #1d4ed8;
+            --transition: all 0.2s ease;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            margin: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            background: radial-gradient(circle at top right, #1b1464 0%, #0f0c29 100%);
-            color: white;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 40px 20px;
             overflow-x: hidden;
         }
 
-        /* --- Animated Background --- */
-        .blob {
-            position: fixed;
-            width: 500px; height: 500px;
-            background: var(--primary);
-            filter: blur(120px);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: -1;
-            animation: float 25s infinite alternate;
-        }
-        .blob-2 { background: var(--accent); bottom: -100px; right: -100px; animation-delay: -5s; }
+        /* --- REMOVED BLOBS FOR MINIMAL LOOK --- */
+        .blob { display: none; }
 
-        @keyframes float {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(100px, 50px) scale(1.1); }
+        /* --- NAVIGATION HEADER --- */
+        .nav-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* --- Main Container (Glassmorphism) --- */
+        .nav-left { flex: 1; display: flex; justify-content: flex-start; }
+        .nav-center { flex: 1; display: flex; justify-content: center; }
+        .nav-right { flex: 1; }
+
+        .brand { 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px;
+        }
+        .brand span { color: var(--primary); }
+
+        .nav-btn {
+            text-decoration: none; 
+            color: var(--text-main); 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: var(--transition);
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+        .nav-btn:hover { 
+            background: var(--bg-body); 
+            border-color: var(--text-light);
+            transform: translateX(-3px);
+        }
+
+        /* --- Main Container --- */
         .container {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             max-width: 900px;
-            margin: 0 auto;
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-            animation: fadeInUp 0.8s ease-out;
+            margin: 40px auto;
+            padding: 50px 60px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
-            font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, var(--accent));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .header-section {
+            margin-bottom: 40px;
+            text-align: center;
         }
 
-        .subtitle { color: rgba(255,255,255,0.6); margin-bottom: 40px; line-height: 1.6; font-size: 1.05rem; }
+        h2 {
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            margin-bottom: 10px;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle { 
+            color: var(--text-light); 
+            line-height: 1.6; 
+            font-size: 1.05rem; 
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
         /* --- ATS Note Box --- */
         .ats-score-note {
-            background: rgba(39, 174, 96, 0.1);
-            border-left: 4px solid #27ae60;
-            padding: 20px;
+            background: var(--success-light);
+            border-left: 4px solid var(--success-border);
+            color: var(--success-text);
+            padding: 16px 20px;
             border-radius: 8px;
             margin-bottom: 40px;
-            font-size: 14px;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            animation: slideIn 0.6s ease 0.2s backwards;
+            gap: 12px;
+            font-weight: 500;
         }
 
         /* --- Form Sections --- */
         .section {
             margin-bottom: 40px;
-            opacity: 0;
-            animation: slideIn 0.6s ease forwards;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
         }
-
-        /* Staggered Animation Delay for Sections */
-        .section:nth-child(1) { animation-delay: 0.1s; }
-        .section:nth-child(2) { animation-delay: 0.2s; }
-        .section:nth-child(3) { animation-delay: 0.3s; }
-        .section:nth-child(4) { animation-delay: 0.4s; }
-        .section:nth-child(5) { animation-delay: 0.5s; }
-        .section:nth-child(6) { animation-delay: 0.6s; }
-        .section:nth-child(7) { animation-delay: 0.7s; }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        
+        .section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
         .section h3 {
-            font-size: 1.4rem; color: var(--accent); margin-bottom: 20px;
-            border-bottom: 1px solid var(--border); padding-bottom: 10px;
+            font-size: 1.25rem; 
+            color: var(--text-main); 
+            margin-bottom: 20px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section h3 i {
+            color: var(--primary);
+            font-size: 1.1rem;
         }
 
         /* --- Inputs & Textareas --- */
@@ -125,72 +174,208 @@
         }
 
         input, textarea {
-            width: 100%; padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            width: 100%; 
+            padding: 14px 16px;
+            background: #fdfdfd;
             border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white; font-family: inherit; font-size: 14px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            color: var(--text-main); 
+            font-family: inherit; 
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8;
         }
 
         input:focus, textarea:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent);
+            background: #ffffff;
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        textarea { min-height: 120px; resize: vertical; }
+        textarea { 
+            min-height: 120px; 
+            resize: vertical; 
+            line-height: 1.5;
+        }
 
         /* --- Hints & Tips --- */
-        .hint { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; font-style: italic; }
-        
         .ats-tip {
-            background: rgba(52, 152, 219, 0.1);
-            border-left: 3px solid #3498db;
-            padding: 12px;
+            background: var(--info-light);
+            border-left: 3px solid var(--info-border);
+            color: var(--info-text);
+            padding: 10px 15px;
             margin-top: 15px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.8);
-            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            font-weight: 500;
         }
 
         /* --- Buttons --- */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
         .submit-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 16px 35px;
-            border-radius: 50px; font-weight: 700; font-size: 16px;
-            cursor: pointer; transition: 0.3s; width: 100%; margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+            background: var(--primary);
+            color: white; 
+            border: 1px solid var(--primary); 
+            padding: 16px 30px;
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: var(--transition); 
+            width: 100%; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: inherit;
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5);
-            filter: brightness(1.2);
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         .back-btn {
-            background: transparent; border: 2px solid var(--border);
-            color: rgba(255,255,255,0.6); padding: 14px 30px;
-            border-radius: 50px; font-weight: 600; cursor: pointer;
-            transition: 0.3s; margin-top: 20px; display: block; width: 100%;
+            background: white; 
+            border: 1px solid var(--border);
+            color: var(--text-main); 
+            padding: 14px 30px;
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer;
+            transition: var(--transition); 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
         }
 
         .back-btn:hover {
-            background: rgba(255,255,255,0.1);
-            color: white; border-color: white;
+            background: var(--bg-body);
+            border-color: var(--text-light);
         }
 
         /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-light); }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; margin: 20px; }
+            .field-group { grid-template-columns: 1fr; }
+            .nav-center { display: none; } /* Hide center branding on small screens */
+        }
 
     </style>
 </head>
+
+<body>
+
+    <div class="blob"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="nav-header">
+        <div class="nav-left">
+            <a href="dashboard.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+        <div class="nav-center">
+            <div class="brand">Resume<span>Builder</span></div>
+        </div>
+        <div class="nav-right"></div>
+    </div>
+
+    <div class="container">
+
+        <div class="header-section">
+            <h2>Resume Details</h2>
+            <p class="subtitle">
+                Fill in all details to create a high-scoring ATS resume (90+ score). Use keywords from job descriptions, quantify achievements with numbers, and follow the examples.
+            </p>
+        </div>
+
+        <div class="ats-score-note">
+            <i class="fas fa-lightbulb" style="font-size: 1.2rem;"></i>
+            <span><strong>ATS Scoring Tip:</strong> Include metrics (e.g., "improved by 60%"), action verbs (e.g., "Led", "Architected"), and exact job keywords.</span>
+        </div>
+
+        <form onsubmit="goToTemplates(event)">
+
+            <div class="section">
+                <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                <div class="field-group">
+                    <input type="text" id="fullName" placeholder="Full Name (e.g., Alexander J. Thompson)" required>
+                    <input type="text" id="jobTitle" placeholder="Professional Title (e.g., Senior Software Engineer)" required>
+                    <input type="text" id="location" placeholder="Location (e.g., San Francisco, CA 94105)" required>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                    <input type="text" id="phone" placeholder="Phone Number" required>
+                    <input id="linkedin" placeholder="LinkedIn URL">
+                    <input type="url" id="github" placeholder="GitHub URL">
+                </div>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Use a professional email and include LinkedIn/GitHub to boost credibility.</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-align-left"></i> Professional Summary</h3>
+                <textarea id="summary" placeholder="Results-driven Senior Software Engineer with 8+ years of experience..."></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> This is the first section ATS reads—pack it with job-specific keywords.</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-briefcase"></i> Work Experience</h3>
+                <textarea id="experience" placeholder="Job Title | Company Name, Location | Start Date – End Date&#10;- Led [project] that [result]...&#10;- Architected [technology] using [tools]..." required></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> ATS loves numbers—include user counts, percentages, time savings.</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-code"></i> Technical Skills</h3>
+                <textarea id="skills" placeholder="JavaScript (ES6+), Python, React.js, Node.js, AWS..."></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Include 15-25 skills. Use standard terms (e.g., 'JavaScript' not 'JS').</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                <textarea id="education" placeholder="Degree Name | Institution Name, Location | Graduation Year&#10;GPA: X.X/4.0" required></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Use full names (e.g., 'Bachelor of Science') to match keyword searches.</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-project-diagram"></i> Notable Projects</h3>
+                <textarea id="projects" placeholder="Project Title&#10;- Architected [description] using [technologies]..." required></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Projects show skills in action—include technologies and results.</div>
+            </div>
+
+            <div class="section">
+                <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                <textarea id="certifications" placeholder="Certification Name (Year)"></textarea>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Certifications are keyword gold—they can push your score over 90.</div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="submit-btn">
+                    Continue to Template Selection <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+
+
+        </form>
+
+    </div>
 
 <script>
 // LOGIC UNTOUCHED
@@ -221,91 +406,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("certifications").value = resumeData.certifications || "";
     }
 });
-</script>
 
-<body>
-
-    <div class="blob"></div>
-    <div class="blob blob-2"></div>
-
-    <div class="container">
-
-        <h2>Resume Details</h2>
-        <p class="subtitle">
-            Fill in all details to create a high-scoring ATS resume (90+ score). Use keywords from job descriptions, quantify achievements with numbers, and follow the examples.
-        </p>
-
-        <div class="ats-score-note">
-            <i class="fas fa-lightbulb" style="color: #2ecc71;"></i>
-            <span>ATS Scoring Tip: Include metrics (e.g., "improved by 60%"), action verbs (e.g., "Led", "Architected"), and exact job keywords.</span>
-        </div>
-
-        <form onsubmit="goToTemplates(event)">
-
-            <div class="section">
-                <h3>Personal Information</h3>
-                <div class="field-group">
-                    <input type="text" id="fullName" placeholder="Full Name (e.g., Alexander J. Thompson)" required>
-                    <input type="text" id="jobTitle" placeholder="Professional Title (e.g., Senior Software Engineer)" required>
-                    <input type="text" id="location" placeholder="Location (e.g., San Francisco, CA 94105)" required>
-                    <input type="email" id="email" placeholder="Email Address" required>
-                    <input type="text" id="phone" placeholder="Phone Number" required>
-                    <input  id="linkedin" placeholder="LinkedIn URL">
-                    <input type="url" id="github" placeholder="GitHub URL">
-                </div>
-                <div class="ats-tip">ATS Tip: Use a professional email and include LinkedIn/GitHub to boost credibility.</div>
-            </div>
-
-            <div class="section">
-                <h3>Professional Summary</h3>
-                <textarea id="summary" placeholder="Results-driven Senior Software Engineer with 8+ years of experience..."></textarea>
-                <div class="ats-tip">ATS Tip: This is the first section ATS reads—pack it with job-specific keywords.</div>
-            </div>
-
-            <div class="section">
-                <h3>Work Experience</h3>
-                <textarea id="experience" placeholder="Job Title | Company Name, Location | Start Date – End Date&#10;- Led [project] that [result]...&#10;- Architected [technology] using [tools]..." required></textarea>
-                <div class="ats-tip">ATS Tip: ATS loves numbers—include user counts, percentages, time savings.</div>
-            </div>
-
-            <div class="section">
-                <h3>Technical Skills</h3>
-                <textarea id="skills" placeholder="JavaScript (ES6+), Python, React.js, Node.js, AWS..."></textarea>
-                <div class="ats-tip">ATS Tip: Include 15-25 skills. Use standard terms (e.g., 'JavaScript' not 'JS').</div>
-            </div>
-
-            <div class="section">
-                <h3>Education</h3>
-                <textarea id="education" placeholder="Degree Name | Institution Name, Location | Graduation Year&#10;GPA: X.X/4.0" required></textarea>
-                <div class="ats-tip">ATS Tip: Use full names (e.g., 'Bachelor of Science') to match keyword searches.</div>
-            </div>
-
-            <div class="section">
-                <h3>Notable Projects</h3>
-                <textarea id="projects" placeholder="Project Title&#10;- Architected [description] using [technologies]..." required></textarea>
-                <div class="ats-tip">ATS Tip: Projects show skills in action—include technologies and results.</div>
-            </div>
-
-            <div class="section">
-                <h3>Certifications</h3>
-                <textarea id="certifications" placeholder="Certification Name (Year)"></textarea>
-                <div class="ats-tip">ATS Tip: Certifications are keyword gold—they can push your score over 90.</div>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                Continue to Template Selection <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-            </button>
-
-        </form>
-
-        <button class="back-btn" onclick="location.href='resume-options.html'">
-            <i class="fas fa-arrow-left"></i> Back to Options
-        </button>
-
-    </div>
-
-<script>
-// LOGIC UNTOUCHED
 function goToTemplates(event) {
     event.preventDefault();
 
@@ -326,7 +427,7 @@ function goToTemplates(event) {
     };
 
     localStorage.setItem("resumeData", JSON.stringify(resumeData));
-    window.location.href = "/template-selection.html";
+    window.location.href = "template-selection.html";
 }
 </script>
 
