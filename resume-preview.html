@@ -340,9 +340,11 @@
         }
 
         function editResume() {
-            // Updated to redirect to your form page
-            window.location.href = "form-edit.html";
-        }
+    // FIX: Save the currently viewed data back into local storage 
+    // so the Edit page knows what to load!
+    localStorage.setItem("resumeData", JSON.stringify(data));
+    window.location.href = "form-edit.html"; // (or form-edit.html depending on your file name)
+}
 
         function goToDashboard() {
             window.location.href = "dashboard.html";
