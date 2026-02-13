@@ -1,158 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Register | ResumeElite</title>
+    <title>Register | Resume Builder</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- MINIMAL THEME VARIABLES --- */
         :root {
-            --primary: #6a0dad;
-            --accent: #00d4ff;
-            --bg-dark: #0f0c29;
-            --glass: rgba(255, 255, 255, 0.1);
-            --border: rgba(255, 255, 255, 0.2);
-            --text: #ffffff;
-            --danger: #ff4757;
-            --success: #2ecc71;
+            --primary: #2563eb;       /* Royal Blue */
+            --primary-dark: #1e40af;
+            --text-main: #0f172a;     /* Dark Slate */
+            --text-light: #64748b;    /* Light Slate */
+            --bg-body: #f8fafc;       /* Light Gray Background */
+            --bg-card: #ffffff;       /* White Card Background */
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --transition: all 0.2s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             height: 100vh;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at center, #1b1464 0%, #0f0c29 100%);
+            background-color: var(--bg-body);
+            color: var(--text-main);
             overflow: hidden;
-            position: relative;
+            padding: 20px;
         }
 
-        /* --- ANIMATED BACKGROUND --- */
-        .blob {
-            position: absolute; width: 600px; height: 600px;
-            background: var(--primary); border-radius: 50%;
-            filter: blur(100px); opacity: 0.3; z-index: -1;
-            animation: float 20s infinite alternate;
-        }
-        .blob-2 { background: var(--accent); width: 400px; height: 400px; bottom: -50px; right: -50px; animation-delay: -5s; }
-        
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
-        }
+        /* --- REMOVED BLOBS FOR MINIMAL LOOK --- */
+        .blob { display: none; }
 
-        /* --- REGISTER CARD (3D TILT) --- */
+        /* --- REGISTER CARD (CLEAN, PROFESSIONAL & STATIC) --- */
         .register-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 50px 40px;
-            width: 420px;
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            text-align: center;
+            background: var(--bg-card);
+            padding: 45px 40px;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
-            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+            text-align: center;
         }
 
         h1 {
-            margin-bottom: 30px; font-size: 2rem; font-weight: 700; color: white;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            margin-bottom: 30px; 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--text-main);
+            letter-spacing: -0.5px;
         }
 
         /* --- INPUT GROUPS --- */
-        .input-group { position: relative; margin-bottom: 25px; width: 100%; }
+        .input-group { 
+            position: relative; 
+            margin-bottom: 20px; 
+            width: 100%; 
+            text-align: left;
+        }
 
         .input-group i.main-icon {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.5); transition: 0.3s;
+            position: absolute; 
+            left: 16px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            color: var(--text-light); 
+            transition: var(--transition);
+            font-size: 0.95rem;
         }
 
         .input-group input {
-            width: 100%; padding: 15px 50px;
-            background: rgba(255,255,255,0.05);
+            width: 100%; 
+            padding: 14px 16px 14px 45px;
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 50px;
-            color: white; font-size: 15px; outline: none;
-            transition: 0.3s;
+            border-radius: 8px;
+            color: var(--text-main); 
+            font-size: 0.95rem; 
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
         }
 
-        .input-group input::placeholder { color: rgba(255,255,255,0.3); }
+        .input-group input::placeholder { color: #94a3b8; }
 
         .input-group input:focus {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .input-group input:focus + i.main-icon { color: var(--accent); }
+        .input-group input:focus + i.main-icon { color: var(--primary); }
 
         /* --- EYE ICON --- */
         .toggle-password {
-            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s;
+            position: absolute; 
+            right: 16px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            color: var(--text-light); 
+            cursor: pointer; 
+            transition: var(--transition);
+            font-size: 0.95rem;
         }
-        .toggle-password:hover { color: white; }
+        .toggle-password:hover { color: var(--text-main); }
 
         /* --- PASSWORD STRENGTH --- */
         .validation-list {
-            text-align: left; background: rgba(0,0,0,0.2);
-            padding: 15px; border-radius: 12px; margin-bottom: 20px;
-            display: none; border: 1px solid var(--border);
+            text-align: left; 
+            background: #f1f5f9;
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 20px;
+            display: none; 
+            border: 1px solid var(--border);
         }
 
         .validation-item {
-            display: flex; align-items: center; margin-bottom: 5px;
-            color: rgba(255,255,255,0.5); font-size: 0.85rem; transition: 0.3s;
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 8px;
+            color: var(--text-light); 
+            font-size: 0.85rem; 
+            transition: var(--transition);
+            font-weight: 500;
         }
         .validation-item:last-child { margin-bottom: 0; }
 
-        .validation-item i { margin-right: 10px; font-size: 12px; transition: 0.3s; }
+        .validation-item i { 
+            margin-right: 10px; 
+            font-size: 14px; 
+            transition: var(--transition); 
+        }
         
         .validation-item.valid { color: var(--success); }
-        .validation-item.valid i { transform: scale(1.2); }
+        .validation-item.valid i { transform: scale(1.1); }
         
         .validation-item.invalid { color: var(--danger); }
 
         /* --- BUTTON --- */
         button[type="submit"] {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, var(--primary), #9b59b6);
-            color: white; border: none; border-radius: 50px;
-            font-size: 16px; font-weight: 700; cursor: pointer;
-            transition: 0.3s; box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
-            text-transform: uppercase; letter-spacing: 1px;
+            width: 100%; 
+            padding: 14px;
+            background: var(--primary);
+            color: white; 
+            border: 1px solid var(--primary); 
+            border-radius: 8px;
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         button[type="submit"]:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(106, 13, 173, 0.5);
-            filter: brightness(1.2);
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        /* Shake Animation for Error */
+        /* Shake Animation for Error (Kept for functional UX feedback) */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-        .shake { animation: shake 0.4s ease-in-out; border-color: var(--danger) !important; }
+        .shake { 
+            animation: shake 0.4s ease-in-out; 
+            border-color: var(--danger) !important; 
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
 
         /* --- LINKS --- */
-        p { margin-top: 25px; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
-        a { color: var(--accent); text-decoration: none; font-weight: 600; transition: 0.3s; }
-        a:hover { color: white; text-shadow: 0 0 10px var(--accent); }
+        p { 
+            margin-top: 25px; 
+            font-size: 0.95rem; 
+            color: var(--text-light); 
+        }
+        
+        a { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: var(--transition); 
+        }
+        
+        a:hover { 
+            color: var(--primary-dark); 
+            text-decoration: underline; 
+        }
 
     </style>
 </head>
@@ -166,13 +214,13 @@
         <h1>Start Building</h1>
 
         <div class="input-group">
-            <i class="fas fa-user main-icon"></i>
             <input type="text" id="username" placeholder="Choose Username" required>
+            <i class="fas fa-user main-icon"></i>
         </div>
 
         <div class="input-group">
-            <i class="fas fa-lock main-icon"></i>
             <input type="password" id="password" placeholder="Create Password" required onkeyup="validatePassword()">
+            <i class="fas fa-lock main-icon"></i>
             <i class="fas fa-eye-slash toggle-password" id="togglePasswordIcon" onclick="togglePassword()"></i>
         </div>
 
@@ -199,15 +247,7 @@
     </form>
 
     <script>
-        // 1. Tilt Effect Logic
-        const card = document.querySelector('.register-container');
-        document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.clientX) / 25;
-            const y = (window.innerHeight / 2 - e.clientY) / 25;
-            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-        });
-
-        // 2. Toggle Password Visibility
+        // 1. Toggle Password Visibility
         function togglePassword() {
             const passwordField = document.getElementById("password");
             const toggleIcon = document.getElementById("togglePasswordIcon");
@@ -215,7 +255,7 @@
             if (passwordField.type === "password") {
                 passwordField.type = "text";
                 toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
-                toggleIcon.style.color = "var(--accent)";
+                toggleIcon.style.color = "var(--primary)"; 
             } else {
                 passwordField.type = "password";
                 toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
@@ -223,7 +263,7 @@
             }
         }
 
-        // 3. Password Strength Logic
+        // 2. Password Strength Logic
         function validatePassword() {
             const password = document.getElementById("password").value;
             const validationList = document.getElementById("validation-list");
@@ -254,7 +294,7 @@
             return allValid;
         }
 
-        // 4. Submit Registration
+        // 3. Submit Registration
         function register(event) {
             event.preventDefault();
             const button = document.getElementById('submitBtn');
@@ -267,34 +307,33 @@
             }
 
             const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-            button.style.opacity = '0.7';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Creating...';
+            button.style.opacity = '0.8';
             button.disabled = true;
 
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
            fetch("http://localhost:5000/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-})
-.then(res => res.json())  
-.then(data => {
-    if (data.success) {
-        alert("Registration successful!");
-        window.location.href = "login.html";
-    } else {
-        alert(data.message || "Registration failed");
-    }
-})
-.catch(() => alert("Failed to connect to server."))
-.finally(() => {
-    button.innerHTML = originalText;
-    button.style.opacity = '1';
-    button.disabled = false;
-});
-
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())  
+            .then(data => {
+                if (data.success) {
+                    alert("Registration successful!");
+                    window.location.href = "login.html";
+                } else {
+                    alert(data.message || "Registration failed");
+                }
+            })
+            .catch(() => alert("Failed to connect to server."))
+            .finally(() => {
+                button.innerHTML = originalText;
+                button.style.opacity = '1';
+                button.disabled = false;
+            });
         }
     </script>
 </body>
