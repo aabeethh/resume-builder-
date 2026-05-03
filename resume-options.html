@@ -299,33 +299,76 @@
         fileInput.onchange = e => processPDF(e.target.files[0]);
 
         function parsePdfResumeText(rawText) {
-            const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "" };
+            const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "", jobTitle: "", location: "", linkedin: "", github: "", projects: "", certifications: "" };
             if (!rawText) return data;
             const lines = rawText.replace(/\r/g, "").split("\n").map(l => l.trim()).filter(Boolean);
             const joined = lines.join(" ");
+            
+            // Extract email
             const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
             if (emailMatch) data.email = emailMatch[0];
-            const phoneMatch = joined.match(/(\+?\d[\d\s\-]{8,}\d)/);
+            
+            // Extract phone
+            const phoneMatch = joined.match(/(\+?\d[\d\s\-()]{8,}\d)/);
             if (phoneMatch) data.phone = phoneMatch[0];
-            data.name = lines.find(l => l.length < 35 && !l.includes("@") && !/\d/.test(l) && l.split(" ").length <= 4) || "Your Name";
+            
+            // Extract LinkedIn URL
+            const linkedinMatch = joined.match(/(?:https?:\/\/)?(www\.)?linkedin\.com\/[^\s]+/i);
+            if (linkedinMatch) data.linkedin = linkedinMatch[0];
+            
+            // Extract GitHub URL
+            const githubMatch = joined.match(/(?:https?:\/\/)?(www\.)?github\.com\/[^\s]+/i);
+            if (githubMatch) data.github = githubMatch[0];
+            
+            // Extract name (usually first line with < 35 chars, no emails, no numbers)
+            data.name = lines.find(l => l.length < 50 && !l.includes("@") && !l.match(/\d{4,}/) && l.split(" ").length <= 5) || "Your Name";
+            
             let current = null;
             let summaryFallback = "";
+            
             lines.forEach((line, index) => {
-                const l = line.toLowerCase();
-                if (line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || line.match(/(\+?\d[\d\s\-]{8,}\d)/)) return;
-                if (/summary|professional summary|objective|profile/.test(l)) { current = "summary"; return; }
-                if (/experience|employment|work history|career history/.test(l)) { current = "experience"; return; }
-                if (/education|qualification|academic|degree/.test(l)) { current = "education"; return; }
-                if (/skills|technical skills|technologies|competencies/.test(l)) { current = "skills"; return; }
+                const l = line.toLowerCase().trim();
+                
+                // Skip lines that are contact info
+                if (line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || line.match(/(\+?\d[\d\s\-()]{8,}\d)/)) return;
+                
+                // Section detection with improved patterns
+                if (/^(professional\s)?(summary|objective|profile|about)$/i.test(l) || /^(professional\s)?(summary|objective|profile|about)\s*[:−-]/i.test(line)) { 
+                    current = "summary"; return; 
+                }
+                if (/^(work\s)?(experience|employment|career|history)$/i.test(l) || /^(work\s)?(experience|employment|career|history)\s*[:−-]/i.test(line)) { 
+                    current = "experience"; return; 
+                }
+                if (/^(education|qualification|academic|degree|university)$/i.test(l) || /^(education|qualification|academic|degree|university)\s*[:−-]/i.test(line)) { 
+                    current = "education"; return; 
+                }
+                if (/^(technical\s)?(skills|technologies|competencies|expertise|tools)$/i.test(l) || /^(technical\s)?(skills|technologies|competencies|expertise|tools)\s*[:−-]/i.test(line)) { 
+                    current = "skills"; return; 
+                }
+                if (/^(projects|portfolio|notable\s+projects)$/i.test(l) || /^(projects|portfolio|notable\s+projects)\s*[:−-]/i.test(line)) { 
+                    current = "projects"; return; 
+                }
+                if (/^(certification|certifications|licenses|awards)$/i.test(l) || /^(certification|certifications|licenses|awards)\s*[:−-]/i.test(line)) { 
+                    current = "certifications"; return; 
+                }
+                
+                // Accumulate content under current section
                 if (current) {
                     const cleanedLine = line.replace(/^\s*[-•*]\s*/, "").trim();
-                    if (cleanedLine) data[current] += cleanedLine + " ";
+                    if (cleanedLine && cleanedLine.length > 1) {
+                        data[current] += cleanedLine + " ";
+                    }
                 } else if (!data.summary && index < 10 && line.length > 20) {
                     summaryFallback += line + " ";
                 }
             });
+            
+            // Use fallback summary if none detected
             if (!data.summary.trim() && summaryFallback.trim()) data.summary = summaryFallback.trim();
+            
+            // Clean up all fields
             Object.keys(data).forEach(key => { data[key] = data[key].trim(); });
+            
             return data;
         }
 
@@ -368,6 +411,9 @@
                 }
 
                 const resumeData = parsePdfResumeText(extractedText);
+                
+                console.log("[PDF EXTRACTED DATA]", resumeData);
+                console.log("[EXTRACTED TEXT]", extractedText);
 
                 localStorage.setItem("resumeData", JSON.stringify(resumeData));
                 localStorage.setItem("resumeSource", "pdf");
