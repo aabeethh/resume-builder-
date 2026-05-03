@@ -256,7 +256,7 @@
                     <input type="file" id="resumeFile" accept=".pdf" hidden>
                 </div>
 
-                <button onclick="continueWithPDF()">Continue with PDF</button>
+                <button id="continuePdfBtn" onclick="continueWithPDF()" disabled style="opacity:0.4; cursor:not-allowed;">Continue with PDF</button>
             </div>
 
             <div class="option-card">
@@ -474,13 +474,20 @@
 
                 dropText.innerHTML = "<i class='fas fa-check-circle'></i> Resume Synced!";
                 dropText.style.color = "var(--accent)";
+
+                // Enable the continue button now that PDF is parsed
+                const btn = document.getElementById("continuePdfBtn");
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.cursor = "pointer";
             };
 
             reader.readAsArrayBuffer(file);
         }
 
         function continueWithPDF() {
-            if (!localStorage.getItem("resumeData")) { alert("Upload a resume first"); return; }
+            const data = localStorage.getItem("resumeData");
+            if (!data) { alert("Please upload and process a PDF first."); return; }
             window.location.href = "template-selection.html";
         }
 

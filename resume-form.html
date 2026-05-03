@@ -325,10 +325,8 @@
                     <input type="text" id="location" placeholder="Location (e.g., San Francisco, CA 94105)" required>
                     <input type="email" id="email" placeholder="Email Address" required>
                     <input type="text" id="phone" placeholder="Phone Number" required>
-                    <input id="linkedin" placeholder="LinkedIn URL">
-                    <input type="url" id="github" placeholder="GitHub URL">
                 </div>
-                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Use a professional email and include LinkedIn/GitHub to boost credibility.</div>
+                <div class="ats-tip"><i class="fas fa-info-circle" style="margin-right: 5px;"></i> <strong>ATS Tip:</strong> Use a professional email and include your phone number for recruiter contact.</div>
             </div>
 
             <div class="section">
@@ -396,8 +394,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("location").value = resumeData.location || "";
         document.getElementById("email").value = resumeData.email || "";
         document.getElementById("phone").value = resumeData.phone || "";
-        document.getElementById("linkedin").value = resumeData.linkedin || "";
-        document.getElementById("github").value = resumeData.github || "";
         document.getElementById("summary").value = resumeData.summary || "";
         document.getElementById("experience").value = resumeData.experience || "";
         document.getElementById("skills").value = resumeData.skills || "";
@@ -416,8 +412,6 @@ function goToTemplates(event) {
         location: document.getElementById("location").value,
         email: document.getElementById("email").value,
         phone: document.getElementById("phone").value,
-        linkedin: document.getElementById("linkedin").value,
-        github: document.getElementById("github").value,
         summary: document.getElementById("summary").value,
         experience: document.getElementById("experience").value,
         skills: document.getElementById("skills").value,

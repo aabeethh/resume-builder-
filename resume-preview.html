@@ -331,13 +331,14 @@
             templates.forEach(t => t.style.display = "none");
             templates[cfg.index].style.display = "block";
 
-            // Build contact line — only include non-empty parts
+            // Build contact line — linkedin/github only shown when extracted from PDF
+            const resumeSource = localStorage.getItem("resumeSource");
             const contactParts = [
                 data.location,
                 data.email,
                 data.phone,
-                data.linkedin,
-                data.github
+                resumeSource === "pdf" ? data.linkedin : null,
+                resumeSource === "pdf" ? data.github : null
             ].filter(v => v && v.trim());
             const contactLine = contactParts.join(" | ");
 
