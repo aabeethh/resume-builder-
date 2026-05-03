@@ -187,51 +187,75 @@
     <div class="container">
 
         <div class="resume template-clean" id="t0">
-            <h1 id="n"></h1><p id="c" style="font-style: italic; color: #666;"></p>
+            <h1 id="n"></h1>
+            <p id="jt" style="font-weight: 600; color: #333;"></p>
+            <p id="c" style="font-style: italic; color: #666;"></p>
             <h3>Professional Summary</h3><p id="s"></p>
             <h3>Experience</h3><p id="e" style="white-space: pre-wrap;"></p>
+            <h3>Projects</h3><p id="pr" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed"></p>
             <h3>Skills</h3><ul id="sk"></ul>
+            <h3>Certifications</h3><p id="cert"></p>
         </div>
 
         <div class="resume template-ats" id="t2">
-            <h1 id="n2"></h1><p id="c2" style="text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px;"></p>
+            <h1 id="n2"></h1>
+            <p id="jt2" style="text-align: center; text-transform: uppercase; letter-spacing: 1px;"></p>
+            <p id="c2" style="text-align: center; border-bottom: 1px solid #000; padding-bottom: 10px;"></p>
             <h3>Summary</h3><p id="s2"></p>
             <h3>Experience</h3><p id="e2" style="white-space: pre-wrap;"></p>
+            <h3>Projects</h3><p id="pr2" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed2"></p>
             <h3>Skills</h3><p id="sk2"></p>
+            <h3>Certifications</h3><p id="cert2"></p>
         </div>
 
         <div class="resume template-modern" id="t3">
-            <h1 id="n3"></h1><p id="c3" style="color: #64748b; font-weight: 500;"></p>
+            <h1 id="n3"></h1>
+            <p id="jt3" style="color: #2563eb; font-weight: 600; font-size: 1.1rem;"></p>
+            <p id="c3" style="color: #64748b; font-weight: 500;"></p>
             <h3>Profile</h3><p id="s3"></p>
             <h3>Experience</h3><p id="e3" style="white-space: pre-wrap;"></p>
+            <h3>Projects</h3><p id="pr3" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed3"></p>
             <h3>Expertise</h3><ul id="sk3"></ul>
+            <h3>Certifications</h3><p id="cert3"></p>
         </div>
 
         <div class="resume template-technical" id="t6">
-            <h1 id="n6"></h1><p id="c6"></p>
+            <h1 id="n6"></h1>
+            <p id="jt6" style="font-weight: 600;"></p>
+            <p id="c6"></p>
             <h3>Summary</h3><p id="s6"></p>
             <h3>Work History</h3><p id="e6" style="white-space: pre-wrap;"></p>
+            <h3>Projects</h3><p id="pr6" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed6"></p>
             <h3>Tech Stack</h3><ul id="sk6"></ul>
+            <h3>Certifications</h3><p id="cert6"></p>
         </div>
 
         <div class="resume template-academic" id="t7">
-            <h1 id="n7"></h1><p id="c7" style="text-align: center; font-style: italic;"></p>
+            <h1 id="n7"></h1>
+            <p id="jt7" style="text-align: center; font-style: italic;"></p>
+            <p id="c7" style="text-align: center; font-style: italic;"></p>
             <h3>Abstract</h3><p id="s7"></p>
             <h3>Research Experience</h3><p id="e7" style="white-space: pre-wrap;"></p>
+            <h3>Research Projects</h3><p id="pr7" style="white-space: pre-wrap;"></p>
             <h3>Education</h3><p id="ed7"></p>
             <h3>Skills</h3><ul id="sk7"></ul>
+            <h3>Certifications</h3><p id="cert7"></p>
         </div>
 
         <div class="resume template-corporate" id="t9">
-            <h1 id="n9"></h1><p id="c9"></p>
+            <h1 id="n9"></h1>
+            <p id="jt9" style="font-weight: 600; color: #2563eb;"></p>
+            <p id="c9"></p>
             <section><h3>Summary</h3><p id="s9"></p></section>
             <section><h3>Experience</h3><p id="e9" style="white-space: pre-wrap;"></p></section>
+            <section><h3>Projects</h3><p id="pr9" style="white-space: pre-wrap;"></p></section>
             <section><h3>Education</h3><p id="ed9"></p></section>
             <section><h3>Skills</h3><ul id="sk9"></ul></section>
+            <section><h3>Certifications</h3><p id="cert9"></p></section>
         </div>
 
     </div>
@@ -288,6 +312,9 @@
                     return;
                 }
 
+                data.summary = (data.summary || data.profile || data.objective || "").trim();
+                selectedTemplate = TEMPLATE_CONFIG[selectedTemplate] ? selectedTemplate : "clean";
+
                 renderTemplate(selectedTemplate);
             } catch (err) {
                 console.error("Resume load error:", err);
@@ -305,10 +332,13 @@
             templates[cfg.index].style.display = "block";
 
             setText("n" + s, data.name);
-            setText("c" + s, `${data.email || ""} | ${data.phone || ""}`);
-            setText("s" + s, data.summary);
+            setText("jt" + s, data.jobTitle || "");
+            setText("c" + s, `${data.location || ""} | ${data.email || ""} | ${data.phone || ""}`);
+            setText("s" + s, data.summary || data.profile || data.objective);
             setText("e" + s, data.experience);
+            setText("pr" + s, data.projects);
             setText("ed" + s, data.education);
+            setText("cert" + s, data.certifications || "");
 
             const sk = document.getElementById("sk" + s);
             if (sk) {

@@ -198,12 +198,28 @@
                 <input id="fullName" placeholder="e.g. Jane Doe">
             </div>
             <div class="form-group">
+                <label>Professional Title</label>
+                <input id="jobTitle" placeholder="e.g. Senior Software Engineer">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input id="location" placeholder="e.g. San Francisco, CA">
+            </div>
+            <div class="form-group">
                 <label>Email Address</label>
                 <input id="email" placeholder="e.g. jane@example.com">
             </div>
             <div class="form-group">
                 <label>Phone Number</label>
                 <input id="phone" placeholder="e.g. +1 234 567 8900">
+            </div>
+            <div class="form-group">
+                <label>LinkedIn URL</label>
+                <input id="linkedin" placeholder="e.g. linkedin.com/in/janedoe">
+            </div>
+            <div class="form-group">
+                <label>GitHub URL</label>
+                <input id="github" placeholder="e.g. github.com/janedoe">
             </div>
         </div>
 
@@ -232,6 +248,11 @@
             <label>Projects</label>
             <textarea id="projects" placeholder="Project Name | Tech Stack&#10;- Brief description of the project"></textarea>
         </div>
+        
+        <div class="form-group full-width">
+            <label>Certifications</label>
+            <textarea id="certifications" placeholder="Certification Name (Year)"></textarea>
+        </div>
 
         <button type="submit"><i class="fas fa-save"></i> Save & Preview</button>
     </form>
@@ -246,28 +267,38 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    fullName.value = data.name || "";
-    email.value = data.email || "";
-    phone.value = data.phone || "";
-    summary.value = data.summary || "";
-    education.value = data.education || "";
-    experience.value = data.experience || "";
-    skills.value = data.skills || "";
-    projects.value = data.projects || "";
+    document.getElementById("fullName").value = data.name || "";
+    document.getElementById("jobTitle").value = data.jobTitle || "";
+    document.getElementById("location").value = data.location || "";
+    document.getElementById("email").value = data.email || "";
+    document.getElementById("phone").value = data.phone || "";
+    document.getElementById("linkedin").value = data.linkedin || "";
+    document.getElementById("github").value = data.github || "";
+    document.getElementById("summary").value = data.summary || "";
+    document.getElementById("education").value = data.education || "";
+    document.getElementById("experience").value = data.experience || "";
+    document.getElementById("skills").value = data.skills || "";
+    document.getElementById("projects").value = data.projects || "";
+    document.getElementById("certifications").value = data.certifications || "";
 });
 
 function saveEdit(e) {
     e.preventDefault();
 
     const updatedData = {
-        name: fullName.value,
-        email: email.value,
-        phone: phone.value,
-        summary: summary.value,
-        education: education.value,
-        experience: experience.value,
-        skills: skills.value,
-        projects: projects.value
+        name: document.getElementById("fullName").value,
+        jobTitle: document.getElementById("jobTitle").value,
+        location: document.getElementById("location").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        linkedin: document.getElementById("linkedin").value,
+        github: document.getElementById("github").value,
+        summary: document.getElementById("summary").value,
+        education: document.getElementById("education").value,
+        experience: document.getElementById("experience").value,
+        skills: document.getElementById("skills").value,
+        projects: document.getElementById("projects").value,
+        certifications: document.getElementById("certifications").value
     };
 
     localStorage.setItem("resumeData", JSON.stringify(updatedData));
