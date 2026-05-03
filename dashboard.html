@@ -333,9 +333,26 @@
         <label>Change Photo</label>
         <input type="file" id="photoInput" accept="image/*" style="padding: 10px; background: white;">
 
-        <div class="action-btns">
+        <!-- Reset Password Section -->
+        <div id="resetSection" style="display:none; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+            <label>New Password</label>
+            <input type="password" id="newPasswordInput" placeholder="Enter new password" style="margin-bottom:10px;">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPasswordInput" placeholder="Confirm new password">
+            <button class="save-btn" onclick="submitResetPassword()" style="margin-top:14px; background: var(--primary);">
+                <i class="fas fa-key" style="margin-right: 8px;"></i> Update Password
+            </button>
+            <button onclick="toggleReset()" style="margin-top:8px; background:white; color:var(--text-light); border:1px solid var(--border); padding:10px; border-radius:10px; font-family:inherit; width:100%; cursor:pointer;">
+                Cancel
+            </button>
+        </div>
+
+        <div class="action-btns" id="mainActionBtns">
             <button class="save-btn" onclick="saveProfile()">
                 <i class="fas fa-check" style="margin-right: 8px;"></i> Save Changes
+            </button>
+            <button class="save-btn" onclick="toggleReset()" style="background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border);">
+                <i class="fas fa-key" style="margin-right: 8px;"></i> Reset Password
             </button>
             <button class="logout-btn" onclick="logout()">
                 <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Log Out
@@ -455,6 +472,42 @@
             document.getElementById("profilePanel").classList.remove("active");
             document.getElementById("overlay").classList.remove("active");
         }
+        /* ================= RESET PASSWORD ================= */
+        function toggleReset() {
+            const section = document.getElementById("resetSection");
+            const mainBtns = document.getElementById("mainActionBtns");
+            const visible = section.style.display !== "none";
+            section.style.display = visible ? "none" : "block";
+            mainBtns.style.display = visible ? "flex" : "none";
+            if (!visible) {
+                document.getElementById("newPasswordInput").value = "";
+                document.getElementById("confirmPasswordInput").value = "";
+            }
+        }
+
+        function submitResetPassword() {
+            const newPass = document.getElementById("newPasswordInput").value.trim();
+            const confirmPass = document.getElementById("confirmPasswordInput").value.trim();
+            if (!newPass || newPass.length < 6) { alert("Password must be at least 6 characters."); return; }
+            if (newPass !== confirmPass) { alert("Passwords do not match."); return; }
+
+            fetch(`${API}/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, newPassword: newPass })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Password updated successfully!");
+                    toggleReset();
+                } else {
+                    alert("Failed to update password. Try again.");
+                }
+            })
+            .catch(() => alert("Server error."));
+        }
+
     </script>
 
 </body>

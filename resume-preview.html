@@ -331,9 +331,19 @@
             templates.forEach(t => t.style.display = "none");
             templates[cfg.index].style.display = "block";
 
+            // Build contact line — only include non-empty parts
+            const contactParts = [
+                data.location,
+                data.email,
+                data.phone,
+                data.linkedin,
+                data.github
+            ].filter(v => v && v.trim());
+            const contactLine = contactParts.join(" | ");
+
             setText("n" + s, data.name);
             setText("jt" + s, data.jobTitle || "");
-            setText("c" + s, `${data.location || ""} | ${data.email || ""} | ${data.phone || ""}`);
+            setText("c" + s, contactLine);
             setText("s" + s, data.summary || data.profile || data.objective);
             setText("e" + s, data.experience);
             setText("pr" + s, data.projects);

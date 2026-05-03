@@ -188,6 +188,22 @@ app.get("/resume/:id", (req, res) => {
 });
 
 
+/* ================= RESET PASSWORD ================= */
+app.post("/reset-password", (req, res) => {
+    const { userId, newPassword } = req.body;
+    if (!userId || !newPassword) return res.json({ success: false, message: "Missing fields" });
+
+    db.query(
+        "UPDATE users SET password = ? WHERE id = ?",
+        [newPassword, userId],
+        (err, result) => {
+            if (err) { console.error("Reset password error:", err); return res.json({ success: false }); }
+            if (result.affectedRows === 0) return res.json({ success: false, message: "User not found" });
+            res.json({ success: true });
+        }
+    );
+});
+
 app.listen(5000, () =>
     console.log(" Server running on port 5000")
 );

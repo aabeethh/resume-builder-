@@ -302,27 +302,81 @@
             const data = { name: "", email: "", phone: "", summary: "", experience: "", education: "", skills: "", jobTitle: "", location: "", linkedin: "", github: "", projects: "", certifications: "" };
             if (!rawText) return data;
             const lines = rawText.replace(/\r/g, "").split("\n").map(l => l.trim()).filter(Boolean);
+            // joined with pipe separators preserved for contact-line parsing
             const joined = lines.join(" ");
-            
+
             // Extract email
             const emailMatch = joined.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
             if (emailMatch) data.email = emailMatch[0];
-            
+
             // Extract phone
             const phoneMatch = joined.match(/(\+?\d[\d\s\-()]{8,}\d)/);
-            if (phoneMatch) data.phone = phoneMatch[0];
+            if (phoneMatch) data.phone = phoneMatch[0].trim();
+
+            // Extract LinkedIn — handle pipes, spaces, raw slugs
+            const linkedinMatch = joined.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([A-Za-z0-9\-_%]+)/i);
+            if (linkedinMatch) data.linkedin = "linkedin.com/in/" + linkedinMatch[1];
+
+            // Extract GitHub — handle pipes, spaces, raw slugs
+            const githubMatch = joined.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9\-_%]+)/i);
+            if (githubMatch) data.github = "github.com/" + githubMatch[1];
+
+            // Extract name — first short line, no digits/email
+            data.name = lines.find(l => l.length < 50 && !l.includes("@") && !l.match(/\d{4,}/) && l.split(" ").length <= 6) || "Your Name";
+
+            // Extract jobTitle — line after name that looks like a title (no @, no digits, short)
+            const nameIdx = lines.indexOf(data.name);
+            for (let i = nameIdx + 1; i < Math.min(nameIdx + 5, lines.length); i++) {
+                const candidate = lines[i];
+                if (!candidate.includes("@") && !candidate.match(/\d{5,}/) && candidate.length < 80 
+                    && !candidate.match(/linkedin|github|http/i)
+                    && candidate.split(" ").length >= 2 && candidate.split(" ").length <= 8) {
+                    // skip if it's the contact pipe line
+                    if (!candidate.includes("|") || candidate.split("|").length < 3) {
+                        data.jobTitle = candidate;
+                        break;
+                    }
+                }
+            }
+
+            // Extract location — FIRST: scan pipe-separated contact lines (most reliable)
+            lines.forEach(line => {
+                if (data.location) return;
+                if (line.includes("|")) {
+                    line.split("|").map(s => s.trim()).forEach(part => {
+                        if (data.location) return;
+                        // location token: no @, no 5+ digit sequence, not a url, reasonable length
+                        if (!part.includes("@") && !part.match(/\d{5,}/) && !part.match(/linkedin|github|http/i)
+                            && part.length > 1 && part.length < 60
+                            && !part.match(/^\+?\d[\d\s\-()]{4,}$/)) { // skip pure phone numbers
+                            data.location = part;
+                        }
+                    });
+                }
+            });
+            // Fallback: "Location:" label or City, Country pattern
+            if (!data.location) {
+                const locationPatterns = [
+                    /location\s*[:\-]\s*([^\n|,]{2,40})/i,
+                    /\b([A-Za-z\s]+,\s*India|[A-Za-z\s]+,\s*USA|[A-Za-z\s]+,\s*UK)\b/i,
+                    /\b([A-Za-z\s]+,\s*[A-Za-z]{2,}(?:\s*\d{6})?)\b/
+                ];
+                for (const pat of locationPatterns) {
+                    const m = joined.match(pat);
+                    if (m) {
+                        const loc = (m[1] || m[0]).trim();
+                        if (loc.length < 60 && !loc.includes("@") && !loc.includes("http")) {
+                            data.location = loc;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!data.location) { // extra fallback block close placeholder
+                const _unused = null;
             
-            // Extract LinkedIn URL
-            const linkedinMatch = joined.match(/(?:https?:\/\/)?(www\.)?linkedin\.com\/[^\s]+/i);
-            if (linkedinMatch) data.linkedin = linkedinMatch[0];
-            
-            // Extract GitHub URL
-            const githubMatch = joined.match(/(?:https?:\/\/)?(www\.)?github\.com\/[^\s]+/i);
-            if (githubMatch) data.github = githubMatch[0];
-            
-            // Extract name (usually first line with < 35 chars, no emails, no numbers)
-            data.name = lines.find(l => l.length < 50 && !l.includes("@") && !l.match(/\d{4,}/) && l.split(" ").length <= 5) || "Your Name";
-            
+            }
+
             let current = null;
             let summaryFallback = "";
             
